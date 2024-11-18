@@ -8,11 +8,11 @@
 - **언어**: Java 21
 - **프레임워크**: Spring Boot 3.5.5
 - **빌드 도구**: Gradle
-- **IDE**: IntelliJ IDEA
 
 ### 개발기간
 
 ### 개발환경
+- OS : Windows 11
 - IDE: IntelliJ IDEA
 
 
