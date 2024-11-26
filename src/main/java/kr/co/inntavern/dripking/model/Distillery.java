@@ -1,5 +1,6 @@
 package kr.co.inntavern.dripking.model;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import jakarta.persistence.*;
 
 @Entity

@@ -3,10 +3,10 @@ package kr.co.inntavern.dripking.model;
 import jakarta.persistence.*;
 
 @Entity
-public class User {
+public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long user_id;
+    private Long member_id;
 
     @Column
     private String authentication_id;
