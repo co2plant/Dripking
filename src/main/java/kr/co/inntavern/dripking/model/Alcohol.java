@@ -9,7 +9,8 @@ import java.util.Set;
 public class Alcohol {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long alcohol_id;
+    @Column(name = "alcohol_id", unique = true, nullable = false)
+    private Long id;
 
     @Column
     private String name;

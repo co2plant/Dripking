@@ -1,20 +1,31 @@
 package kr.co.inntavern.dripking.model;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import jakarta.persistence.*;
 
 @Entity
 public class Distillery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long distillery_id;
+    @Column(name="distillery_id", unique = true, nullable = false)
+    private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private String address;
 
-    @Column
+    @Column(nullable = false)
     private String description;
+
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    public String getAddress(){
+        return address;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
 }
