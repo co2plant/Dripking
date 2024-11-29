@@ -1,7 +1,11 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 public class Distillery {
     @Id
@@ -19,13 +23,4 @@ public class Distillery {
     private String description;
 
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-    public String getAddress(){
-        return address;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
 }
