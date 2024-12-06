@@ -10,5 +10,6 @@ public interface AlcoholRepository extends JpaRepository<Alcohol, Long> {
     List<Alcohol> findAll();
 
     Alcohol save(Alcohol alcohol);
+
     Optional<Alcohol> findById(Long id);
 }
