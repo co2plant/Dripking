@@ -34,6 +34,9 @@ public class Alcohol {
     @Column
     private Time datetime;
 
+    @Column(nullable = false)
+    private String href;
+
     @ManyToMany
     @JoinTable(
             name = "alcohol_tag",

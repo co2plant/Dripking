@@ -22,5 +22,6 @@ public class Distillery {
     @Column(nullable = false)
     private String description;
 
-
+    @Column(nullable = false)
+    private String href;
 }
