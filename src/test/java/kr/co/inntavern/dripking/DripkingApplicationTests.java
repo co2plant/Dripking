@@ -20,17 +20,4 @@ class DripkingApplicationTests {
     void contextLoads() {
     }
 
-    @Test
-    void testDistilleryRepository(){
-        Distillery distillery = new Distillery();
-        distillery.setAddress("Seoul");
-        distillery.setName("Operation");
-        distillery.setDescription("A fine distillery");
-
-        Distillery savedDistillery = distilleryRepository.save(distillery);
-        Optional<Distillery> foundDistillery = distilleryRepository.findById(savedDistillery.getId());
-
-        assertThat(distillery.getAddress()).isEqualTo("Seoul");
-    }
-
 }

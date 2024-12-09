@@ -1,11 +1,19 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Time;
 import java.util.Set;
 
 @Entity
+@Setter
+@Getter
+@Builder
+@AllArgsConstructor
 public class Alcohol {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,4 +53,8 @@ public class Alcohol {
     )
 
     private Set<Tag> tags;
+
+    public Alcohol() {
+
+    }
 }

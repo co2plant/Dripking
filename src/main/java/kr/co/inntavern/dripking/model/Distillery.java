@@ -1,12 +1,16 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
+@Builder
 @Entity
+@AllArgsConstructor
 public class Distillery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +28,8 @@ public class Distillery {
 
     @Column(nullable = false)
     private String href;
+
+    public Distillery() {
+
+    }
 }
