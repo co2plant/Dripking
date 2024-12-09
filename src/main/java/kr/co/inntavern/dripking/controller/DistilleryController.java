@@ -26,4 +26,9 @@ public class DistilleryController {
     public void createDistillery(@RequestBody Distillery newDistillery){
         distilleryService.createDistillery(newDistillery);
     }
+
+    @GetMapping("/api/distillerie/{distilleryId}")
+    public Distillery getDistillery(Long distilleryId){
+        return distilleryService.getDistillery(distilleryId);
+    }
 }
