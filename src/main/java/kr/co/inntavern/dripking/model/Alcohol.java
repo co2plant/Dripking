@@ -1,10 +1,7 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Time;
 import java.util.Set;
@@ -14,6 +11,7 @@ import java.util.Set;
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Alcohol {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,16 +43,4 @@ public class Alcohol {
     @Column(nullable = false)
     private String href;
 
-    @ManyToMany
-    @JoinTable(
-            name = "alcohol_tag",
-            joinColumns = @JoinColumn(name = "alcohol_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-
-    private Set<Tag> tags;
-
-    public Alcohol() {
-
-    }
 }
