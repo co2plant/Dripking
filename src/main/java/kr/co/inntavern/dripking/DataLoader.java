@@ -25,8 +25,8 @@ public class DataLoader {
                         .id((long) i)
                         .name("Distillery " + i)
                         .address("Address " + i)
-                        .description("Description " + i)
-                        .href("http://naver.com" + i)
+                        .description("Distillery Description " + i)
+                        .href("https://upload.wikimedia.org/wikipedia/commons/e/e5/ENIAC-changing_a_tube.jpg")
                         .build();
                 distilleryRepository.save(distillerys);
 
@@ -54,8 +54,8 @@ public class DataLoader {
                         .name("Alcohol " + i)
                         .strength(40 + i)
                         .size(700 + i)
-                        .description("Description " + i)
-                        .href("http://naver.com" + i)
+                        .description("Alcohol Description " + i)
+                        .href("https://upload.wikimedia.org/wikipedia/commons/e/e5/ENIAC-changing_a_tube.jpg")
                         .build();
                 alcoholRepository.save(alcohols);
             }

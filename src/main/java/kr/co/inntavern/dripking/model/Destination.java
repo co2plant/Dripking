@@ -1,16 +1,14 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Setter
 @Getter
 @Entity
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Destination {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +26,4 @@ public class Destination {
 
     @Column
     private float longitude;//경도
-
-    public Destination() {
-
-    }
 }

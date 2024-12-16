@@ -11,7 +11,7 @@ import lombok.Setter;
 @Builder
 @Entity
 @AllArgsConstructor
-public class Distillery {
+public class Distillery extends Item{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="distillery_id", unique = true, nullable = false)
