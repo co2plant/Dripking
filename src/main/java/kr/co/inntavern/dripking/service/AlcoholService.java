@@ -12,15 +12,15 @@ public class AlcoholService {
     @Autowired
     private AlcoholRepository alcoholRepository;
 
-    public List<Alcohol> getDistilleries(){
+    public List<Alcohol> findAll(){
         return alcoholRepository.findAll();
     }
 
-    public Alcohol createDistillery(Alcohol alcohol){
+    public Alcohol createAlcohol(Alcohol alcohol){
         return alcoholRepository.save(alcohol);
     }
 
-    public Alcohol getDistillery(Long Id){
+    public Alcohol findById(Long Id){
         return alcoholRepository.findById(Id).orElse(null);
     }
 
