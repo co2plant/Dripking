@@ -1,7 +1,7 @@
 package kr.co.inntavern.dripking.controller;
 
 import kr.co.inntavern.dripking.model.Destination;
-import kr.co.inntavern.dripking.repository.DestinationRepository;
+import kr.co.inntavern.dripking.service.DestinationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,16 +13,16 @@ import java.util.List;
 public class DestinationController
 {
     @Autowired
-    DestinationRepository destinationRepository;
+    DestinationService destinationService;
 
     @GetMapping("/api/destinations")
     public List<Destination> getDestinations()
     {
-        return destinationRepository.findAll();
+        return destinationService.findAll();
     }
 
     @GetMapping("/api/destination/{destinationId}")
     public Destination getDestination(@PathVariable Long destinationId) {
-        return destinationRepository.findById((Long)destinationId).orElse(null);
+        return destinationService.findById(destinationId);
     }
 }
