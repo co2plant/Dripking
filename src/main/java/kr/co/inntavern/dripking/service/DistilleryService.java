@@ -14,15 +14,15 @@ public class DistilleryService {
 
     //양조장 목록을 반환하는 메소드
     //
-    public List<Distillery> getDistilleries(){
+    public List<Distillery> findAll(){
         return distilleryRepository.findAll();
     }
 
-    public Distillery createDistillery(Distillery distillery){
-        return distilleryRepository.save(distillery);
+    public void createDistillery(Distillery distillery){
+        distilleryRepository.save(distillery);
     }
 
-    public Distillery getDistillery(Long Id){
+    public Distillery findById(Long Id){
         return distilleryRepository.findById(Id).orElse(null);
     }
 

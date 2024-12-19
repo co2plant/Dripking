@@ -4,8 +4,6 @@ import kr.co.inntavern.dripking.model.Distillery;
 import kr.co.inntavern.dripking.service.DistilleryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -16,7 +14,7 @@ public class DistilleryController {
 
     @GetMapping("/api/distilleries")
     public List<Distillery> getDistilleries(){
-        return distilleryService.getDistilleries();
+        return distilleryService.findAll();
     }
 
     @PostMapping("/api/distilleries")
@@ -26,6 +24,6 @@ public class DistilleryController {
 
     @GetMapping("/api/distillery/{distilleryId}")
     public Distillery getDistillery(@PathVariable Long distilleryId){
-        return distilleryService.getDistillery(distilleryId);
+        return distilleryService.findById(distilleryId);
     }
 }
