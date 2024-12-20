@@ -1,5 +1,6 @@
 package kr.co.inntavern.dripking.service;
 
+import kr.co.inntavern.dripking.model.Alcohol;
 import kr.co.inntavern.dripking.model.Distillery;
 import kr.co.inntavern.dripking.repository.DistilleryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,4 +27,7 @@ public class DistilleryService {
         return distilleryRepository.findById(Id).orElse(null);
     }
 
+    public List<Distillery> searchByName(String name){
+        return distilleryRepository.findByName(name);
+    }
 }

@@ -1,5 +1,6 @@
 package kr.co.inntavern.dripking.service;
 
+import kr.co.inntavern.dripking.model.Alcohol;
 import kr.co.inntavern.dripking.model.Destination;
 import kr.co.inntavern.dripking.repository.DestinationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,5 +19,9 @@ public class DestinationService {
 
     public Destination findById(Long Id){
         return destinationRepository.findById(Id).orElse(null);
+    }
+
+    public List<Destination> searchByName(String name){
+        return destinationRepository.findByName(name);
     }
 }
