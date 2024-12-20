@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Destination {
+public class Destination extends Item{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "destination_id", unique = true, nullable = false)
@@ -18,7 +18,7 @@ public class Destination {
     @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(columnDefinition = "TEXT", length = 1000)
     private String description;
 
     @Column

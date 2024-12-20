@@ -8,7 +8,8 @@ import java.sql.Time;
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long review_id;
+    @Column(name = "review_id", unique = true, nullable = false)
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "member_id")

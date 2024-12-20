@@ -5,15 +5,16 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-public class Trip {
+public class Trip extends Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long trip_id;
+    @Column(name = "trip_id", unique = true, nullable = false)
+    private Long id;
 
     @Column
     private String name;
 
-    @Column(length = 1000)
+    @Column(columnDefinition = "TEXT", length = 1000)
     private String description;
 
     @Column

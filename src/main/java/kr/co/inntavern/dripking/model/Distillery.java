@@ -23,7 +23,7 @@ public class Distillery extends Item{
     @Column(nullable = false)
     private String address;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", length = 1000)
     private String description;
 
     @Column(nullable = false)

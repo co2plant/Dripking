@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Time;
-import java.util.Set;
 
 @Entity
 @Setter
@@ -12,7 +11,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Alcohol {
+public class Alcohol extends Item{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "alcohol_id", unique = true, nullable = false)
