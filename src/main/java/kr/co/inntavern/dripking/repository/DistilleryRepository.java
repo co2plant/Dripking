@@ -12,5 +12,6 @@ public interface DistilleryRepository extends JpaRepository<Distillery, Long> {
     List<Distillery> findAll();
     Distillery save(Distillery distillery);
     Optional<Distillery> findById(Long id);
-    List<Distillery> findByName(String name);
+    List<Distillery> findAllByNameContainingIgnoreCase(String name);
+
 }

@@ -28,6 +28,6 @@ public class DistilleryService {
     }
 
     public List<Distillery> searchByName(String name){
-        return distilleryRepository.findByName(name);
+        return distilleryRepository.findAllByNameContainingIgnoreCase(name);
     }
 }

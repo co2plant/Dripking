@@ -14,7 +14,7 @@ public class SearchController {
     @Autowired
     SearchService searchService;
 
-    @GetMapping("/api/search/{name}")
+    @GetMapping("/api/search/{dtype}/{name}")
     public List<Item> searchByName(@PathVariable String name){
         return searchService.searchByName(name);
     }

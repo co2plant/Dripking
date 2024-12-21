@@ -26,4 +26,9 @@ public class DistilleryController {
     public Distillery getDistillery(@PathVariable Long distilleryId){
         return distilleryService.findById(distilleryId);
     }
+
+    @GetMapping("/api/distillery/search/{name}")
+    public List<Distillery> getDistilleryByName(@PathVariable String name){
+        return distilleryService.searchByName(name);
+    }
 }

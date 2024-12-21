@@ -26,5 +26,9 @@ public class AlcoholController {
         return alcoholService.findById((Long)alcoholId);
     }
 
+    @GetMapping("/api/alcohol/search/{name}")
+    public List<Alcohol> getAlcoholByName(@PathVariable String name){
+        return alcoholService.searchByName(name);
+    }
 }
 

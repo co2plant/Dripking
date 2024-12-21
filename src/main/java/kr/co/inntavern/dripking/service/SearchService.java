@@ -20,9 +20,9 @@ public class SearchService {
 
     public List<Item> searchByName(String name){
         List<Item> items = null;
-        items.addAll(alcoholRepository.findByName(name));
-        items.addAll(destinationRepository.findByName(name));
-        items.addAll(distilleryRepository.findByName(name));
+        items.addAll(alcoholRepository.findAllByNameContainingIgnoreCase(name));
+        items.addAll(destinationRepository.findAllByNameContainingIgnoreCase(name));
+        items.addAll(distilleryRepository.findAllByNameContainingIgnoreCase(name));
 
         return items;
     }

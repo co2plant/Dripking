@@ -13,5 +13,5 @@ public interface AlcoholRepository extends JpaRepository<Alcohol, Long> {
 
     Optional<Alcohol> findById(Long id);
 
-    List<Alcohol> findByName(String name);
+    List<Alcohol> findAllByNameContainingIgnoreCase(String name);
 }

@@ -26,6 +26,6 @@ public class AlcoholService {
     }
 
     public List<Alcohol> searchByName(String name){
-        return alcoholRepository.findByName(name);
+        return alcoholRepository.findAllByNameContainingIgnoreCase(name);
     }
 }

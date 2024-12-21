@@ -22,6 +22,6 @@ public class DestinationService {
     }
 
     public List<Destination> searchByName(String name){
-        return destinationRepository.findByName(name);
+        return destinationRepository.findAllByNameContainingIgnoreCase(name);
     }
 }
