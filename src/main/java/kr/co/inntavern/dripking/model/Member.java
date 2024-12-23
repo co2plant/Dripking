@@ -1,20 +1,23 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
+import lombok.Setter;
 
 @Entity
+@Setter
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long member_id;
+    @Column(name = "member_id")
+    private Long id;
 
     @Column
-    private String authentication_id;
+    private String authentication_email;
 
     @Column
     private String authentication_pw;
 
-    @Column
+    @Column(unique = true)
     private String name;
 
     @Column
@@ -22,19 +25,4 @@ public class Member {
 
     @Column
     private String address;
-
-    @Column(unique=true)
-    private String email_address;
 }
-
-/**
- * User {
- *     user_id Long PK
- *     authentication_id Varchar(50)
- *     authentication_pw Varchar(255)
- *     name Varchar
- *     phoneNumber String
- *     address String
- *     email_address String "unique"
- * }
- */
