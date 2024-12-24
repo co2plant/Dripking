@@ -26,8 +26,8 @@ public class DestinationController
         return destinationService.findById(destinationId);
     }
 
-    @GetMapping("/api/destination/search/{name}")
-    public List<Destination> getDestinationByName(@PathVariable String name){
-        return destinationService.searchByName(name);
+    @GetMapping("/api/destination/search/{searchKeyword}")
+    public List<Destination> getDestinationByName(@PathVariable String searchKeyword){
+        return destinationService.searchByName(searchKeyword);
     }
 }

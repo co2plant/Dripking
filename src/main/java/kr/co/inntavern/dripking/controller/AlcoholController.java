@@ -9,9 +9,7 @@ import java.util.List;
 
 @RestController
 public class AlcoholController {
-    @Autowired
-    AlcoholService alcoholService;
-
+    private AlcoholService alcoholService;
 
     @GetMapping("/api/alcohols")
     public List<Alcohol> getAlcohols(){
@@ -27,5 +25,6 @@ public class AlcoholController {
     public List<Alcohol> getAlcoholByName(@PathVariable String searchKeyword){
         return alcoholService.searchByName(searchKeyword);
     }
+
 }
 

@@ -10,8 +10,7 @@ import java.util.List;
 
 @Service
 public class AlcoholService {
-    @Autowired
-    private AlcoholRepository alcoholRepository;
+    private  AlcoholRepository alcoholRepository;
 
     public List<Alcohol> findAll(){
         return alcoholRepository.findAll();
