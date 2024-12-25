@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class LoginController {
+public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
 
-    public LoginController(AuthenticationManager authenticationManager) {
+    public AuthenticationController(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 
@@ -23,6 +23,8 @@ public class LoginController {
         Authentication authenticationResponse =
                 this.authenticationManager.authenticate(authenticationRequest);
         // ...
+
+        return ResponseEntity.ok().build();
     }
 
     public record LoginRequest(String email, String password) {

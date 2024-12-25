@@ -13,7 +13,7 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "member_id")
-    private Member member;
+    private User user;
 
     @Column
     private float Rating;
