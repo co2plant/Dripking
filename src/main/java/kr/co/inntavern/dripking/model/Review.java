@@ -12,8 +12,8 @@ public class Review {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
-    private User user;
+    @JoinColumn(name = "user_id")
+    private Users users;
 
     @Column
     private float Rating;
