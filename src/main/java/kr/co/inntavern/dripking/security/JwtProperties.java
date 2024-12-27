@@ -1,4 +1,4 @@
-package kr.co.inntavern.dripking.config;
+package kr.co.inntavern.dripking.security;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package kr.co.inntavern.dripking.config;
+package kr.co.inntavern.dripking.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
