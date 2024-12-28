@@ -1,14 +1,18 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 
 import java.sql.Time;
 
 @Entity
+@RequiredArgsConstructor
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "review_id", unique = true, nullable = false)
+    @Column(name = "review_id", unique = true, nullable=false)
+    //@NotNull
     private Long id;
 
     @ManyToOne

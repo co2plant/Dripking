@@ -1,14 +1,18 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
 
 @Entity
+@RequiredArgsConstructor
 public class Trip extends Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "trip_id", unique = true, nullable = false)
+    @Column(name = "trip_id", unique = true, nullable=false)
+    //@NotNull
     private Long id;
 
     @Column

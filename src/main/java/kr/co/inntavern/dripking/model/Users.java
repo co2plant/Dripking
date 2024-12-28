@@ -1,21 +1,21 @@
 package kr.co.inntavern.dripking.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Builder
 public class Users{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "user_id", unique = true, nullable=false)
+    //@NotNull
     private Long id;
 
     @Column
@@ -28,6 +28,7 @@ public class Users{
     private boolean isLocked;
 
     @Column
+    @JsonIgnore
     private String authentication_pw;
 
     @Column(unique = true)

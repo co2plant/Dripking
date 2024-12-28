@@ -1,14 +1,18 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
 
 @Entity
+@RequiredArgsConstructor
 public class Plan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "plan_id", unique = true, nullable = false)
+    @Column(name = "plan_id", unique = true, nullable=false)
+    //@NotNull
     private Long id;
 
     @Column

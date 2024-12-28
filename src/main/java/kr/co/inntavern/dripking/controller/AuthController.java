@@ -3,7 +3,9 @@ package kr.co.inntavern.dripking.controller;
 import kr.co.inntavern.dripking.Reponse.LoginResponse;
 import kr.co.inntavern.dripking.Request.LoginRequest;
 import kr.co.inntavern.dripking.security.JwtIssuer;
+import kr.co.inntavern.dripking.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +28,7 @@ public class AuthController {
     }
 
     @GetMapping("/secured")
-    public String secured(){
-        return "logged in";
+    public String secured(@AuthenticationPrincipal UserPrincipal userPrincipal){
+        return "logged in" + userPrincipal.getEmail() + ", "+ userPrincipal.getId();
     }
 }

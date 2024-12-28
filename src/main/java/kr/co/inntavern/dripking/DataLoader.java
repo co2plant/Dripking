@@ -19,18 +19,14 @@ public class DataLoader {
                         .build();
                 destinationRepository.save(destinations);
 
-
-
-                Distillery distillerys = Distillery.builder()
+                Distillery distilleries = Distillery.builder()
                         .id((long) i)
                         .name("Distillery " + i)
                         .address("Address " + i)
                         .description("Distillery Description " + i)
                         .href("https://upload.wikimedia.org/wikipedia/commons/e/e5/ENIAC-changing_a_tube.jpg")
                         .build();
-                distilleryRepository.save(distillerys);
-
-
+                distilleryRepository.save(distilleries);
 
                 Tag tags = Tag.builder()
                         .id((long) i)

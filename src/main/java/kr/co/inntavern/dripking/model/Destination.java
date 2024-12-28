@@ -1,6 +1,7 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Setter
@@ -8,11 +9,12 @@ import lombok.*;
 @Entity
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class Destination extends Item{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name= "destination_id", unique = true, nullable = false)
+    @Column(name= "destination_id", unique = true, nullable=false)
+    //@NotNull
     private Long id;
 
     @Column(nullable = false)

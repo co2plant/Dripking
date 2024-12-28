@@ -1,20 +1,20 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 @Setter
 @Getter
 @Builder
 @Entity
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class Distillery extends Item{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="distillery_id", unique = true, nullable = false)
+    @Column(name="distillery_id", unique = true, nullable=false)
+    //@NotNull
     private Long id;
 
     @Column(nullable = false)
@@ -28,8 +28,4 @@ public class Distillery extends Item{
 
     @Column(nullable = false)
     private String href;
-
-    public Distillery() {
-
-    }
 }

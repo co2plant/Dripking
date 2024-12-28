@@ -1,16 +1,20 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
 @MappedSuperclass
+@RequiredArgsConstructor
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
+    @Column(name = "id", unique = true, nullable=false)
+    //@NotNull
     private Long id;
 
     @Column(nullable = false)
