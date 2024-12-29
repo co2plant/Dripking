@@ -1,27 +1,31 @@
 package kr.co.inntavern.dripking.service;
 
-import kr.co.inntavern.dripking.model.Alcohol;
 import kr.co.inntavern.dripking.model.Destination;
 import kr.co.inntavern.dripking.repository.DestinationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class DestinationService {
-    @Autowired
-    DestinationRepository destinationRepository;
+    private final DestinationRepository destinationRepository;
+    public DestinationService(DestinationRepository destinationRepository){
+        this.destinationRepository = destinationRepository;
+    }
 
-    public List<Destination> findAll(){
-        return destinationRepository.findAll();
+    public Page<Destination> findAll(int page){
+        Pageable pageable = PageRequest.of(page, 10);
+        return destinationRepository.findAll(pageable);
+    }
+
+    public Page<Destination> searchByName(int page, String name){
+        Pageable pageable = PageRequest.of(page, 10);
+        return destinationRepository.findAllByNameContainingIgnoreCase(pageable, name);
     }
 
     public Destination findById(Long Id){
         return destinationRepository.findById(Id).orElse(null);
     }
 
-    public List<Destination> searchByName(String name){
-        return destinationRepository.findAllByNameContainingIgnoreCase(name);
-    }
 }

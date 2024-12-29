@@ -1,22 +1,29 @@
 package kr.co.inntavern.dripking.service;
 
-import kr.co.inntavern.dripking.model.Alcohol;
 import kr.co.inntavern.dripking.model.Distillery;
 import kr.co.inntavern.dripking.repository.DistilleryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class DistilleryService {
-    @Autowired
-    private DistilleryRepository distilleryRepository;
+    private final DistilleryRepository distilleryRepository;
 
+    public DistilleryService(DistilleryRepository distilleryRepository){
+        this.distilleryRepository = distilleryRepository;
+    }
     //양조장 목록을 반환하는 메소드
     //
-    public List<Distillery> findAll(){
-        return distilleryRepository.findAll();
+    public Page<Distillery> findAll(int page){
+        Pageable pageable = PageRequest.of(page, 10);
+        return distilleryRepository.findAll(pageable);
+    }
+
+    public Page<Distillery> searchByName(int page, String name){
+        Pageable pageable = PageRequest.of(page, 10);
+        return distilleryRepository.findAllByNameContainingIgnoreCase(pageable, name);
     }
 
     public void createDistillery(Distillery distillery){
@@ -27,7 +34,4 @@ public class DistilleryService {
         return distilleryRepository.findById(Id).orElse(null);
     }
 
-    public List<Distillery> searchByName(String name){
-        return distilleryRepository.findAllByNameContainingIgnoreCase(name);
-    }
 }

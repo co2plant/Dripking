@@ -2,19 +2,27 @@ package kr.co.inntavern.dripking.controller;
 
 import kr.co.inntavern.dripking.model.Distillery;
 import kr.co.inntavern.dripking.service.DistilleryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 public class DistilleryController {
-
-    @Autowired
-    DistilleryService distilleryService;
+    private final DistilleryService distilleryService;
+    public DistilleryController(DistilleryService distilleryService){
+        this.distilleryService = distilleryService;
+    }
 
     @GetMapping("/api/distilleries")
-    public List<Distillery> getDistilleries(){
-        return distilleryService.findAll();
+    public ResponseEntity<Page<Distillery>> getAlcohols(@RequestParam(value="page", defaultValue="0") int page){
+        Page<Distillery> paging = distilleryService.findAll(page);
+        return ResponseEntity.ok(paging);
+    }
+
+    @GetMapping("/api/distilleries/search/{searchKeyword}")
+    public ResponseEntity<Page<Distillery>> getAlcoholByName(@RequestParam(value="page", defaultValue="0") int page, @PathVariable String searchKeyword){
+        Page<Distillery> paging = distilleryService.searchByName(page, searchKeyword);
+        return ResponseEntity.ok(paging);
     }
 
     @PostMapping("/api/distilleries")
@@ -27,8 +35,5 @@ public class DistilleryController {
         return distilleryService.findById(distilleryId);
     }
 
-    @GetMapping("/api/distillery/search/{name}")
-    public List<Distillery> getDistilleryByName(@PathVariable String name){
-        return distilleryService.searchByName(name);
-    }
+
 }
