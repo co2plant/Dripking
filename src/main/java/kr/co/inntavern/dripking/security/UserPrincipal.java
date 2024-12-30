@@ -1,8 +1,8 @@
 package kr.co.inntavern.dripking.security;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -14,6 +14,8 @@ public class UserPrincipal implements UserDetails
 {
     private final Long id;
     private final String email;
+    @JsonIgnore
+    private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
 
     @Override

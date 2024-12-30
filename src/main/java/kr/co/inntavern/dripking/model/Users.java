@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Builder
@@ -18,26 +19,23 @@ public class Users{
     //@NotNull
     private Long id;
 
-    @Column
-    private String authentication_email;
+    private String email;
 
-    @Column
+    private String role;
+
     private boolean isEmailVerified;
 
-    @Column
     private boolean isLocked;
 
-    @Column
     @JsonIgnore
-    private String authentication_pw;
+    private String password;
 
     @Column(unique = true)
     private String nickname;
 
-    @Column
     private String phoneNumber;
 
-    @Column
     private String address;
+
 
 }

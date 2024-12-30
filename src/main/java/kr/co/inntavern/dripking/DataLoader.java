@@ -56,8 +56,8 @@ public class DataLoader {
                 Users users = Users.builder()
                         .id((long) i)
                         .nickname("User " + i)
-                        .authentication_email("User" + i + "@example.com")
-                        .authentication_pw("password")
+                        .email("User" + i + "@example.com")
+                        .password("password")
                         .build();
                 usersRepository.save(users);
             }
