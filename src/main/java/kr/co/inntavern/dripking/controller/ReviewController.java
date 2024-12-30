@@ -1,7 +1,6 @@
 package kr.co.inntavern.dripking.controller;
 
-import kr.co.inntavern.dripking.dto.ReviewDTO;
-import kr.co.inntavern.dripking.model.Destination;
+import kr.co.inntavern.dripking.dto.ReviewRequestDTO;
 import kr.co.inntavern.dripking.model.Review;
 import kr.co.inntavern.dripking.service.ReviewService;
 import org.springframework.data.domain.Page;
@@ -27,8 +26,8 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<Review> createReview(@RequestBody ReviewDTO reviewDTO){
-        Review createdReview = reviewService.createReview(reviewDTO);
+    public ResponseEntity<Review> createReview(@RequestBody ReviewRequestDTO reviewRequestDTO){
+        Review createdReview = reviewService.createReview(reviewRequestDTO);
         return ResponseEntity.ok(createdReview);
     }
 }

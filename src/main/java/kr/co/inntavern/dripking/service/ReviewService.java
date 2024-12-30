@@ -1,8 +1,10 @@
 package kr.co.inntavern.dripking.service;
 
-import kr.co.inntavern.dripking.dto.ReviewDTO;
+import kr.co.inntavern.dripking.dto.ReviewRequestDTO;
 import kr.co.inntavern.dripking.model.Review;
+import kr.co.inntavern.dripking.model.Users;
 import kr.co.inntavern.dripking.repository.ReviewRepository;
+import kr.co.inntavern.dripking.repository.UsersRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,9 +14,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReviewService {
     private final ReviewRepository reviewRepository;
+    private final UsersRepository usersRepository;
     
-    public ReviewService(ReviewRepository reviewRepository){
+    public ReviewService(ReviewRepository reviewRepository, UsersRepository usersRepository){
         this.reviewRepository = reviewRepository;
+        this.usersRepository = usersRepository;
+
     }
 
     // ---------------------------------------------------------------------
@@ -38,14 +43,19 @@ public class ReviewService {
     // ---------------------------------------------------------------------
     // Create Methods: 엔티티를 생성하는 메서드
     // ---------------------------------------------------------------------
-    public Review createReview(ReviewDTO reviewDTO){
+    public Review createReview(ReviewRequestDTO reviewRequestDTO){
+        Users users = usersRepository.findById(reviewRequestDTO.getUser_id())
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 유저가 존재하지 않습니다."));
         Review review = new Review();
-        //user에 관한 내용은 login 기능이 구현되면 추가할 예정
-        review.setRating(reviewDTO.getRating());
-        review.setReviewType(reviewDTO.getReviewType());
-        review.setTarget_id(reviewDTO.getTarget_id());
-        review.setContents(reviewDTO.getContents());
-        return reviewRepository.save(review);
+        review.setUsers(users); //user에 관한 내용은 login 기능이 구현되면 추가할 예정
+
+        review.setRating(reviewRequestDTO.getRating());
+        review.setReviewType(reviewRequestDTO.getReviewType());
+        review.setTarget_id(reviewRequestDTO.getTarget_id());
+        review.setContents(reviewRequestDTO.getContents());
+        Review savedReview = reviewRepository.save(review);
+
+        return savedReview;
     }
 
     // ---------------------------------------------------------------------

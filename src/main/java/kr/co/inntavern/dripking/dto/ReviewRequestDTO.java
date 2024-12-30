@@ -6,12 +6,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ReviewDTO {
-    private Byte Rating;
-
-    private String contents;
-
-    private Long target_id;
-
+public class ReviewRequestDTO {
+    private Long user_id;
     private ReviewType reviewType;
+    private Long target_id;
+    private Byte rating;
+    private String contents;
 }
