@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/alcohols")
 public class AlcoholController {
     private final AlcoholService alcoholService;
 
@@ -14,21 +15,40 @@ public class AlcoholController {
         this.alcoholService = alcoholService;
     }
 
-    @GetMapping("/api/alcohols")
-    public ResponseEntity<Page<Alcohol>> getAlcohols(@RequestParam(value="page", defaultValue="0") int page){
-        Page<Alcohol> paging = alcoholService.findAll(page);
+    @GetMapping
+    public ResponseEntity<Page<Alcohol>> getAllAlcohols(@RequestParam(value="page", defaultValue="0") int page){
+        Page<Alcohol> paging = alcoholService.getAllAlcohols(page);
         return ResponseEntity.ok(paging);
     }
 
-    @GetMapping("/api/alcohol/search/{searchKeyword}")
-    public ResponseEntity<Page<Alcohol>> getAlcoholByName(@RequestParam(value="page", defaultValue="0") int page, @PathVariable String searchKeyword){
-        Page<Alcohol> paging = alcoholService.searchByName(page, searchKeyword);
+    @GetMapping("/{alcoholId}")
+    public Alcohol getAlcoholById(@PathVariable Long alcoholId) {
+        return alcoholService.getAlcoholById(alcoholId);
+    }
+
+    @GetMapping("/search/{searchKeyword}")
+    public ResponseEntity<Page<Alcohol>> searchAlcoholsByName(@RequestParam(value="page", defaultValue="0") int page, @PathVariable String searchKeyword){
+        Page<Alcohol> paging = alcoholService.getAllAlcoholsByName(page, searchKeyword);
         return ResponseEntity.ok(paging);
     }
 
-    @GetMapping("/api/alcohol/{alcoholId}")
-    public Alcohol getAlcohol(@PathVariable Long alcoholId) {
-        return alcoholService.findById(alcoholId);
+    @PostMapping
+    public ResponseEntity<Alcohol> createAlcohol(@RequestBody Alcohol alcohol){
+        Alcohol createdAlcohol = alcoholService.createAlcohol(alcohol);
+        return ResponseEntity.ok(createdAlcohol);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Alcohol> updateAlcohol(@PathVariable Long id, @RequestBody Alcohol alcohol){
+        Alcohol updatedAlcohol = alcoholService.updateAlcohol(alcohol.getId(), alcohol);
+        return ResponseEntity.ok(updatedAlcohol);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAlcohol(@PathVariable Long id)
+    {
+        alcoholService.deleteAlcoholById(id);
+        return ResponseEntity.ok().build();
     }
 
 

@@ -1,13 +1,9 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Set;
 
 @Entity
 @Builder
@@ -21,7 +17,6 @@ public class Tag {
     //@NotNull
     private Long id;
 
-    @Column
     private String name;
 
     @Column(columnDefinition = "TEXT", length = 1000)

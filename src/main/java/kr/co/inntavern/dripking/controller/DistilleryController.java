@@ -7,32 +7,47 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/distilleries")
 public class DistilleryController {
     private final DistilleryService distilleryService;
     public DistilleryController(DistilleryService distilleryService){
         this.distilleryService = distilleryService;
     }
 
-    @GetMapping("/api/distilleries")
-    public ResponseEntity<Page<Distillery>> getAlcohols(@RequestParam(value="page", defaultValue="0") int page){
-        Page<Distillery> paging = distilleryService.findAll(page);
+    @GetMapping
+    public ResponseEntity<Page<Distillery>> getAllDistilleries(@RequestParam(value="page", defaultValue="0") int page){
+        Page<Distillery> paging = distilleryService.getAllDistilleries(page);
         return ResponseEntity.ok(paging);
     }
 
-    @GetMapping("/api/distilleries/search/{searchKeyword}")
-    public ResponseEntity<Page<Distillery>> getAlcoholByName(@RequestParam(value="page", defaultValue="0") int page, @PathVariable String searchKeyword){
-        Page<Distillery> paging = distilleryService.searchByName(page, searchKeyword);
+    @GetMapping("/{distilleryId}")
+    public Distillery getDistilleryById(@PathVariable Long distilleryId) {
+        return distilleryService.getDistilleryById(distilleryId);
+    }
+
+    @GetMapping("/search/{searchKeyword}")
+    public ResponseEntity<Page<Distillery>> searchDistilleriesByName(@RequestParam(value="page", defaultValue="0") int page, @PathVariable String searchKeyword){
+        Page<Distillery> paging = distilleryService.getAllDistilleriesByName(page, searchKeyword);
         return ResponseEntity.ok(paging);
     }
 
-    @PostMapping("/api/distilleries")
-    public void createDistillery(@RequestBody Distillery newDistillery){
-        distilleryService.createDistillery(newDistillery);
+    @PostMapping
+    public ResponseEntity<Distillery> createDistillery(@RequestBody Distillery distillery){
+        Distillery createdDistillery = distilleryService.createDistillery(distillery);
+        return ResponseEntity.ok(createdDistillery);
     }
 
-    @GetMapping("/api/distillery/{distilleryId}")
-    public Distillery getDistillery(@PathVariable Long distilleryId){
-        return distilleryService.findById(distilleryId);
+    @PutMapping("/{id}")
+    public ResponseEntity<Distillery> updateDistillery(@PathVariable Long id, @RequestBody Distillery distillery){
+        Distillery updatedDistillery = distilleryService.updateDistillery(distillery.getId(), distillery);
+        return ResponseEntity.ok(updatedDistillery);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDistillery(@PathVariable Long id)
+    {
+        distilleryService.deleteDistilleryById(id);
+        return ResponseEntity.ok().build();
     }
 
 
