@@ -1,9 +1,10 @@
 package kr.co.inntavern.dripking.controller;
 
 import kr.co.inntavern.dripking.dto.ReviewRequestDTO;
-import kr.co.inntavern.dripking.model.Review;
+import kr.co.inntavern.dripking.dto.ReviewResponseDTO;
 import kr.co.inntavern.dripking.service.ReviewService;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,17 +18,18 @@ public class ReviewController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Review>> getAllReviews(@RequestParam(required=false,value="page", defaultValue="0") int page,
+    public ResponseEntity<Page<ReviewResponseDTO>> getAllReviews(@RequestParam(required=false,value="page", defaultValue="0") int page,
                                                       @RequestParam(required=false,value="size", defaultValue="10") int size,
                                                       @RequestParam(required=false, value="orderby", defaultValue="rating") String criteria,
                                                       @RequestParam(required=false, value="sort", defaultValue="DESC") String sort){
-        Page<Review> paging = reviewService.getAllReviews(page, size, criteria, sort);
+        Page<ReviewResponseDTO> paging = reviewService.getAllReviews(page, size, criteria, sort);
         return ResponseEntity.ok(paging);
     }
 
     @PostMapping
-    public ResponseEntity<Review> createReview(@RequestBody ReviewRequestDTO reviewRequestDTO){
-        Review createdReview = reviewService.createReview(reviewRequestDTO);
-        return ResponseEntity.ok(createdReview);
+    public ResponseEntity<Void> createReview(@RequestBody ReviewRequestDTO reviewRequestDTO){
+        reviewService.createReview(reviewRequestDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

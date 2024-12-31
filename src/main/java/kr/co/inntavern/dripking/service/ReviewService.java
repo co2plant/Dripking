@@ -1,6 +1,7 @@
 package kr.co.inntavern.dripking.service;
 
 import kr.co.inntavern.dripking.dto.ReviewRequestDTO;
+import kr.co.inntavern.dripking.dto.ReviewResponseDTO;
 import kr.co.inntavern.dripking.model.Review;
 import kr.co.inntavern.dripking.model.Users;
 import kr.co.inntavern.dripking.repository.ReviewRepository;
@@ -25,11 +26,11 @@ public class ReviewService {
     // ---------------------------------------------------------------------
     // Select Methods: 모든 엔티티를 페이지 형태로 반환하는 메서드
     // ---------------------------------------------------------------------
-    public Page<Review> getAllReviews(int page, int size, String criteria, String sort){
+    public Page<ReviewResponseDTO> getAllReviews(int page, int size, String criteria, String sort){
         Pageable pageable = (sort.equals("ASC") ?
                 PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, criteria))
                 : PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, criteria)));
-        return reviewRepository.findAll(pageable);
+        return reviewRepository.findAll(pageable).map(this::mapToReviewResponseDTO);
     }
 
     // ---------------------------------------------------------------------
@@ -43,7 +44,7 @@ public class ReviewService {
     // ---------------------------------------------------------------------
     // Create Methods: 엔티티를 생성하는 메서드
     // ---------------------------------------------------------------------
-    public Review createReview(ReviewRequestDTO reviewRequestDTO){
+    public void createReview(ReviewRequestDTO reviewRequestDTO){
         Users users = usersRepository.findById(reviewRequestDTO.getUser_id())
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 유저가 존재하지 않습니다."));
         Review review = new Review();
@@ -53,9 +54,7 @@ public class ReviewService {
         review.setReviewType(reviewRequestDTO.getReviewType());
         review.setTarget_id(reviewRequestDTO.getTarget_id());
         review.setContents(reviewRequestDTO.getContents());
-        Review savedReview = reviewRepository.save(review);
-
-        return savedReview;
+        reviewRepository.save(review);
     }
 
     // ---------------------------------------------------------------------
@@ -71,5 +70,17 @@ public class ReviewService {
     public void deleteReviewById(Long id){
         reviewRepository.deleteById(id);
     }
-    
+
+    private ReviewResponseDTO mapToReviewResponseDTO(Review review){
+        ReviewResponseDTO responseDTO = new ReviewResponseDTO();
+        responseDTO.setId(review.getId());
+        responseDTO.setNickname(review.getUsers().getNickname());
+        responseDTO.setReviewType(review.getReviewType());
+        responseDTO.setTarget_id(review.getTarget_id());
+        responseDTO.setRating(review.getRating());
+        responseDTO.setContents(review.getContents());
+        responseDTO.setCreatedTime(review.getCreatedTime());
+        responseDTO.setModifiedTime(review.getModifiedTime());
+        return responseDTO;
+    }
 }
