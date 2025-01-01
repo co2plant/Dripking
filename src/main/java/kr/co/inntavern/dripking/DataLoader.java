@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DataLoader {
     @Bean
-    public CommandLineRunner loadData(DistilleryRepository distilleryRepository, AlcoholRepository alcoholRepository, DestinationRepository destinationRepository, CategoryRepository categoryRepository, TagRepository tagRepository, UsersRepository usersRepository){
-        return args ->{
-            for(int i=0; i<100; i++){
+    public CommandLineRunner loadData(DistilleryRepository distilleryRepository, AlcoholRepository alcoholRepository, DestinationRepository destinationRepository, CategoryRepository categoryRepository, TagRepository tagRepository, UsersRepository usersRepository, ReviewRepository reviewRepository) {
+        return args -> {
+            for (int i = 0; i < 100; i++) {
                 Destination destinations = Destination.builder()
                         .id((long) i)
                         .name("Destination " + i)
@@ -60,6 +60,16 @@ public class DataLoader {
                         .password("password")
                         .build();
                 usersRepository.save(users);
+
+                Review reviews = Review.builder()
+                        .id((long) i)
+                        .rating((byte) 10)
+                        .reviewType(ReviewType.valueOf("DESTINATION"))
+                        .target_id((long) i)
+                        .contents("Contents " + i)
+                        .users(usersRepository.findById((long) 1).get())
+                        .build();
+                reviewRepository.save(reviews);
             }
         };
     }

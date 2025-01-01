@@ -21,7 +21,12 @@ public class ReviewController {
     public ResponseEntity<Page<ReviewResponseDTO>> getAllReviews(@RequestParam(required=false,value="page", defaultValue="0") int page,
                                                       @RequestParam(required=false,value="size", defaultValue="10") int size,
                                                       @RequestParam(required=false, value="orderby", defaultValue="rating") String criteria,
-                                                      @RequestParam(required=false, value="sort", defaultValue="DESC") String sort){
+                                                      @RequestParam(required=false, value="sort", defaultValue="DESC") String sort,
+                                                      @RequestParam(required = false, value="user_id") Long user_id){
+        if(user_id != null){
+            Page<ReviewResponseDTO> paging = reviewService.getAllReviewsByUserID(page, size, criteria, sort, user_id);
+            return ResponseEntity.ok(paging);
+        }
         Page<ReviewResponseDTO> paging = reviewService.getAllReviews(page, size, criteria, sort);
         return ResponseEntity.ok(paging);
     }
@@ -31,5 +36,19 @@ public class ReviewController {
         reviewService.createReview(reviewRequestDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> updateReview(@RequestParam Long id, @RequestBody ReviewRequestDTO reviewRequestDTO){
+        reviewService.updateReview(id, reviewRequestDTO);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping()
+    public ResponseEntity<Void> deleteReview(@RequestParam Long id){
+        reviewService.deleteReview(id);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

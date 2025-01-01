@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ReviewService {
     private final ReviewRepository reviewRepository;
@@ -20,7 +22,6 @@ public class ReviewService {
     public ReviewService(ReviewRepository reviewRepository, UsersRepository usersRepository){
         this.reviewRepository = reviewRepository;
         this.usersRepository = usersRepository;
-
     }
 
     // ---------------------------------------------------------------------
@@ -31,6 +32,13 @@ public class ReviewService {
                 PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, criteria))
                 : PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, criteria)));
         return reviewRepository.findAll(pageable).map(this::mapToReviewResponseDTO);
+    }
+
+    public Page<ReviewResponseDTO> getAllReviewsByUserID(int page, int size, String criteria, String sort, Long user_id){
+        Pageable pageable = (sort.equals("ASC") ?
+                PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, criteria))
+                : PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, criteria)));
+        return reviewRepository.findAllByUserId(user_id, pageable).map(this::mapToReviewResponseDTO);
     }
 
     // ---------------------------------------------------------------------
@@ -48,7 +56,7 @@ public class ReviewService {
         Users users = usersRepository.findById(reviewRequestDTO.getUser_id())
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 유저가 존재하지 않습니다."));
         Review review = new Review();
-        review.setUsers(users); //user에 관한 내용은 login 기능이 구현되면 추가할 예정
+        review.setUsers(users); //user 에 관한 내용은 login 기능이 구현되면 추가할 예정
 
         review.setRating(reviewRequestDTO.getRating());
         review.setReviewType(reviewRequestDTO.getReviewType());
@@ -60,14 +68,22 @@ public class ReviewService {
     // ---------------------------------------------------------------------
     // Update Methods: 엔티티를 수정하는 메서드
     // ---------------------------------------------------------------------
-    public Review updateReview(Long id, Review Review){
-        return reviewRepository.save(Review);
+    public void updateReview(Long id, ReviewRequestDTO reviewRequestDTO){
+        Optional<Review> review = reviewRepository.findById(id);
+        if(review.isEmpty()){
+            throw new IllegalArgumentException("해당 ID의 리뷰가 존재하지 않습니다.");
+        }
+
+        review.get().setReviewType(reviewRequestDTO.getReviewType());
+        review.get().setRating(reviewRequestDTO.getRating());
+        review.get().setContents(reviewRequestDTO.getContents());
+        reviewRepository.save(review.orElse(null));
     }
 
     // ---------------------------------------------------------------------
     // Delete Methods: 엔티티를 삭제하는 메서드
     // ---------------------------------------------------------------------
-    public void deleteReviewById(Long id){
+    public void deleteReview(Long id){
         reviewRepository.deleteById(id);
     }
 
