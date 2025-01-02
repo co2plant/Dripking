@@ -3,6 +3,7 @@ package kr.co.inntavern.dripking.service;
 import kr.co.inntavern.dripking.dto.ReviewRequestDTO;
 import kr.co.inntavern.dripking.dto.ReviewResponseDTO;
 import kr.co.inntavern.dripking.model.Review;
+import kr.co.inntavern.dripking.model.ReviewType;
 import kr.co.inntavern.dripking.model.Users;
 import kr.co.inntavern.dripking.repository.ReviewRepository;
 import kr.co.inntavern.dripking.repository.UsersRepository;
@@ -39,6 +40,14 @@ public class ReviewService {
                 PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, criteria))
                 : PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, criteria)));
         return reviewRepository.findAllByUserId(user_id, pageable).map(this::mapToReviewResponseDTO);
+    }
+
+    public Page<ReviewResponseDTO> getAllReviewsByTargetID(int page, int size, String criteria, String sort, String reviewType, Long target_id){
+        Pageable pageable = (sort.equals("ASC") ?
+                PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, criteria))
+                : PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, criteria)));
+        ReviewType reviewTypeEnum = ReviewType.valueOf(reviewType.toUpperCase());
+        return reviewRepository.findAllByTargetId(target_id, reviewTypeEnum, pageable).map(this::mapToReviewResponseDTO);
     }
 
     // ---------------------------------------------------------------------
@@ -95,8 +104,8 @@ public class ReviewService {
         responseDTO.setTarget_id(review.getTarget_id());
         responseDTO.setRating(review.getRating());
         responseDTO.setContents(review.getContents());
-        responseDTO.setCreatedTime(review.getCreatedTime());
-        responseDTO.setModifiedTime(review.getModifiedTime());
+        responseDTO.setCreatedTime(review.getCreatedAt());
+        responseDTO.setModifiedTime(review.getModifiedAt());
         return responseDTO;
     }
 }

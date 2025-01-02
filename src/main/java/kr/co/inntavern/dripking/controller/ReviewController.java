@@ -22,9 +22,15 @@ public class ReviewController {
                                                       @RequestParam(required=false,value="size", defaultValue="10") int size,
                                                       @RequestParam(required=false, value="orderby", defaultValue="rating") String criteria,
                                                       @RequestParam(required=false, value="sort", defaultValue="DESC") String sort,
-                                                      @RequestParam(required = false, value="user_id") Long user_id){
+                                                      @RequestParam(required = false, value="user_id") Long user_id,
+                                                      @RequestParam(required=false, value="reviewType") String reviewType,
+                                                      @RequestParam(required=false, value="target_id") Long target_id){
         if(user_id != null){
             Page<ReviewResponseDTO> paging = reviewService.getAllReviewsByUserID(page, size, criteria, sort, user_id);
+            return ResponseEntity.ok(paging);
+        }
+        if(user_id==null && target_id!=null && reviewType!=null){
+            Page<ReviewResponseDTO> paging = reviewService.getAllReviewsByTargetID(page, size, criteria, sort, reviewType, target_id);
             return ResponseEntity.ok(paging);
         }
         Page<ReviewResponseDTO> paging = reviewService.getAllReviews(page, size, criteria, sort);
