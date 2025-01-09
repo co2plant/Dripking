@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.List;
+
 @Setter
 @Getter
 @Builder
@@ -27,5 +29,9 @@ public class Distillery extends Item{
     private String description;
 
     @Column(nullable = false)
-    private String href;
+    private String img_url;
+
+    @OneToMany
+    @JoinColumn(name = "alcohol_id")
+    private List<Alcohol> alcohol;
 }

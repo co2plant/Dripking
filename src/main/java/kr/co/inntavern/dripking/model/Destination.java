@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.List;
+
 @Setter
 @Getter
 @Entity
@@ -28,4 +30,8 @@ public class Destination extends Item{
 
     @Column
     private float longitude;//경도
+
+    @OneToMany
+    @JoinColumn(name = "distillery_id")
+    private List<Distillery> distillery;
 }

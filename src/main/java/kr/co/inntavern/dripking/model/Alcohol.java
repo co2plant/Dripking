@@ -35,6 +35,14 @@ public class Alcohol extends Item{
     @Column
     private float size;
 
+//    @Column
+//    private int numberOfBottles;
+
+//    @Column
+//    private int caskNumber;
+
+//    @Column float rating;
+
     @Column(columnDefinition = "TEXT", length = 1000)
     private String description;
 

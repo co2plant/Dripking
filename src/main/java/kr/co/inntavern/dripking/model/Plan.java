@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @RequiredArgsConstructor
@@ -29,4 +30,8 @@ public class Plan {
 
     @Column
     private Long location_id;
+
+    @OneToMany
+    @JoinColumn(name = "trip_id")
+    private List<Trip> trip;
 }
