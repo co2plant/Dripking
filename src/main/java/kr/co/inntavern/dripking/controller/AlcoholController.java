@@ -16,7 +16,9 @@ public class AlcoholController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Alcohol>> getAllAlcohols(@RequestParam(value="page", defaultValue="0") int page){
+    public ResponseEntity<Page<Alcohol>> getAllAlcohols(@RequestParam(required=false,value="page", defaultValue="0") int page,
+                                                        @RequestParam(required=false,value="size", defaultValue="10") int size,
+                                                        @RequestParam(required=false, value="sort", defaultValue="DESC") String sort){
         Page<Alcohol> paging = alcoholService.getAllAlcohols(page);
         return ResponseEntity.ok(paging);
     }

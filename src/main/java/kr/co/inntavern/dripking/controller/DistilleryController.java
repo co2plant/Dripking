@@ -15,7 +15,9 @@ public class DistilleryController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Distillery>> getAllDistilleries(@RequestParam(value="page", defaultValue="0") int page){
+    public ResponseEntity<Page<Distillery>> getAllDistilleries(@RequestParam(required=false,value="page", defaultValue="0") int page,
+                                                               @RequestParam(required=false,value="size", defaultValue="10") int size,
+                                                               @RequestParam(required=false, value="sort", defaultValue="DESC") String sort){
         Page<Distillery> paging = distilleryService.getAllDistilleries(page);
         return ResponseEntity.ok(paging);
     }
@@ -26,7 +28,8 @@ public class DistilleryController {
     }
 
     @GetMapping("/search/{searchKeyword}")
-    public ResponseEntity<Page<Distillery>> searchDistilleriesByName(@RequestParam(value="page", defaultValue="0") int page, @PathVariable String searchKeyword){
+    public ResponseEntity<Page<Distillery>> searchDistilleriesByName(@RequestParam(value="page", defaultValue="0") int page,
+                                                                     @PathVariable String searchKeyword){
         Page<Distillery> paging = distilleryService.getAllDistilleriesByName(page, searchKeyword);
         return ResponseEntity.ok(paging);
     }

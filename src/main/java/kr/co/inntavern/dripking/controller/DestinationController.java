@@ -18,7 +18,9 @@ public class DestinationController
     }
 
     @GetMapping
-    public ResponseEntity<Page<Destination>> getAllDestinations(@RequestParam(value="page", defaultValue="0") int page){
+    public ResponseEntity<Page<Destination>> getAllDestinations(@RequestParam(required=false,value="page", defaultValue="0") int page,
+                                                                @RequestParam(required=false,value="size", defaultValue="10") int size,
+                                                                @RequestParam(required=false, value="sort", defaultValue="DESC") String sort){
         Page<Destination> paging = destinationService.getAllDestinations(page);
         return ResponseEntity.ok(paging);
     }
@@ -29,7 +31,7 @@ public class DestinationController
     }
 
     @GetMapping("/search/{searchKeyword}")
-    public ResponseEntity<Page<Destination>> searchDestinationsByName(@RequestParam(value="page", defaultValue="0") int page, @PathVariable String searchKeyword){
+    public ResponseEntity<Page<Destination>> searchDestinationsByName(@RequestParam(required=false, value="page", defaultValue="0") int page, @PathVariable String searchKeyword){
         Page<Destination> paging = destinationService.getAllDestinationsByName(page, searchKeyword);
         return ResponseEntity.ok(paging);
     }
