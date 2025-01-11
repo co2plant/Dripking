@@ -26,6 +26,10 @@ public class Alcohol extends Item{
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @ManyToOne
+    @JoinColumn(name = "distillery_id")
+    private Distillery distillery;
+
     @Column
     private float strength;
 

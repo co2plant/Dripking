@@ -7,6 +7,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AlcoholService {
     private final  AlcoholRepository alcoholRepository;
@@ -37,6 +39,10 @@ public class AlcoholService {
     public Page<Alcohol> getAllAlcoholsByName(int page, String name){
         Pageable pageable = PageRequest.of(page, 10);
         return alcoholRepository.findAllByNameContainingIgnoreCase(pageable, name);
+    }
+
+    public List<Alcohol> getAllAlcoholsByDistilleryId(Long distilleryId){
+        return alcoholRepository.findAllByDistilleryId(distilleryId);
     }
 
     // ---------------------------------------------------------------------

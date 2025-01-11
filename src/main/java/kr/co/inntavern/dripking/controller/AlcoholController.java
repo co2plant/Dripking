@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/alcohols")
 public class AlcoholController {
@@ -21,6 +23,12 @@ public class AlcoholController {
                                                         @RequestParam(required=false, value="sort", defaultValue="DESC") String sort){
         Page<Alcohol> paging = alcoholService.getAllAlcohols(page);
         return ResponseEntity.ok(paging);
+    }
+
+    @GetMapping("/distillery")
+    public ResponseEntity<List<Alcohol>> getAllAlcoholsByDistilleryId(@RequestParam(required=true, value="distillery") Long distilleryId){
+        List<Alcohol> alcohols = alcoholService.getAllAlcoholsByDistilleryId(distilleryId);
+        return ResponseEntity.ok(alcohols);
     }
 
     @GetMapping("/{alcoholId}")
