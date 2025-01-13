@@ -1,22 +1,48 @@
 package kr.co.inntavern.dripking.service;
 
+import jakarta.transaction.Transactional;
+import kr.co.inntavern.dripking.Request.SignInRequest;
+import kr.co.inntavern.dripking.Request.SignUpRequest;
 import kr.co.inntavern.dripking.model.Users;
+import kr.co.inntavern.dripking.repository.UsersRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UsersService {
-    private static final String EXISTING_EMAIL = "test@test.com";
+    private final UsersRepository usersRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public Optional<Users> findByEmail(String email) {
-        if (! EXISTING_EMAIL.equalsIgnoreCase(email)) return Optional.empty();
+    public UsersService(UsersRepository usersRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.usersRepository = usersRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
-        var user = new Users();
-        user.setId(1L);
-        user.setEmail(EXISTING_EMAIL);
-        user.setPassword("$2a$12$phGOFjE6gXYMWSOgSj2qFe6CuYhH7v5KWF8mmyp01FGXJ4KtfSSxi"); // test
-        user.setRole("ROLE_ADMIN");
-        return Optional.of(user);
+    public boolean checkEmailDuplicate(String email){
+        return usersRepository.existsByEmail(email);
+    }
+
+    public boolean checkNicknameDuplicate(String nickname){
+        return usersRepository.existsByNickname(nickname);
+    }
+
+    public void userSignUp(SignUpRequest signUpRequest) {
+        usersRepository.save(signUpRequest.toEntity());
+    }
+
+    public void userSignUpWithEncodedPassword(SignUpRequest signUpRequest, String password) {
+        String encodedPassword = passwordEncoder.encode(password);
+        usersRepository.save(signUpRequest.toEntity(encodedPassword));
+    }
+
+    public Users userSignIn(SignInRequest signInRequest) {
+        Optional<Users> users = usersRepository.findByEmail(signInRequest.getEmail());
+
+        return users
+                .filter(user -> user.getPassword().equals(signInRequest.getPassword()))
+                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
     }
 }
