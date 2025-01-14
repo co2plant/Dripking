@@ -25,7 +25,7 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Users users;
+    private User user;
 
     @Enumerated(EnumType.STRING)
     private ReviewType reviewType;

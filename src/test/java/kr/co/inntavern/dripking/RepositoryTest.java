@@ -3,7 +3,7 @@ package kr.co.inntavern.dripking;
 import kr.co.inntavern.dripking.model.Review;
 import kr.co.inntavern.dripking.model.ReviewType;
 import kr.co.inntavern.dripking.repository.ReviewRepository;
-import kr.co.inntavern.dripking.repository.UsersRepository;
+import kr.co.inntavern.dripking.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +19,7 @@ public class RepositoryTest {
     @Autowired
     ReviewRepository reviewRepository;
     @Autowired
-    private UsersRepository usersRepository;
+    private UserRepository userRepository;
 
     @Test
     void findAllReviewsByUserID(){
@@ -27,7 +27,7 @@ public class RepositoryTest {
         Review review = Review.builder()
                 .contents("Review Content")
                 .reviewType(ReviewType.ALCOHOL)
-                .users(usersRepository.findById((long)1).get())
+                .user(userRepository.findById((long)1).get())
                 .build();
 
         reviewRepository.save(review);

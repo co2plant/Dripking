@@ -2,33 +2,36 @@ package kr.co.inntavern.dripking.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
-@RequiredArgsConstructor
-@Builder
-public class Users{
+@NoArgsConstructor
+@Table(name="site_user")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", unique = true, nullable=false)
+    @Column(name = "user_id", unique = true, nullable = false)
     //@NotNull
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String email;
 
-    private String role;
+    @JsonIgnore
+    @Column(nullable = false)
+    private String password;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Authority> roles = new HashSet<>();
 
     private boolean isEmailVerified;
 
     private boolean isLocked;
-
-    @JsonIgnore
-    private String password;
 
     @Column(unique = true)
     private String nickname;
@@ -36,6 +39,4 @@ public class Users{
     private String phoneNumber;
 
     private String address;
-
-
 }

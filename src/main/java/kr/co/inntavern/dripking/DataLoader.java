@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DataLoader {
     @Bean
-    public CommandLineRunner loadData(DistilleryRepository distilleryRepository, AlcoholRepository alcoholRepository, DestinationRepository destinationRepository, CategoryRepository categoryRepository, TagRepository tagRepository, UsersRepository usersRepository, ReviewRepository reviewRepository) {
+    public CommandLineRunner loadData(DistilleryRepository distilleryRepository, AlcoholRepository alcoholRepository, DestinationRepository destinationRepository, CategoryRepository categoryRepository, TagRepository tagRepository, UserRepository userRepository, ReviewRepository reviewRepository) {
         return args -> {
             Category categories = Category.builder()
                     .name("Whisky")
@@ -50,12 +50,12 @@ public class DataLoader {
                         .build();
                 alcoholRepository.save(alcohols);
 
-                Users users = Users.builder()
-                        .nickname("User " + i)
-                        .email("User" + i + "@example.com")
-                        .password("password")
-                        .build();
-                usersRepository.save(users);
+                User user = new User();
+                user.setNickname("User" + i);
+                user.setEmail("User" + i + "@example.com");
+                user.setPassword("password");
+
+                userRepository.save(user);
 
                 Review reviews = Review.builder()
                         .rating((byte) 10)
@@ -63,7 +63,7 @@ public class DataLoader {
                         .target_id((long) i)
                         .contents("리버시블이라활용도가좋네요.어느정도두께감이있어서따뜻할것같아요.플리스촉감도좋고,부드럽네요.착용해보니양쪽다무난하니다예쁘네요.블랙색상이라때도안타고좋아요.무난해서암때나착용가능해서좋아요.\n" +
                                 "\n" + i)
-                        .users(usersRepository.findById((long) 1).get())
+                        .user(userRepository.findById((long) 1).get())
                         .build();
                 reviewRepository.save(reviews);
             }

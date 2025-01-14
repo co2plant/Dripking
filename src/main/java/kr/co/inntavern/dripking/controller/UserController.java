@@ -1,9 +1,11 @@
 package kr.co.inntavern.dripking.controller;
 
 import jakarta.validation.Valid;
+import kr.co.inntavern.dripking.Request.SignInRequest;
 import kr.co.inntavern.dripking.Request.SignUpRequest;
-import kr.co.inntavern.dripking.service.UsersService;
+import kr.co.inntavern.dripking.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,11 +17,13 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
-public class UsersController {
-    private final UsersService usersService;
+public class UserController {
+    private final UserService userService;
+    private final AuthenticationManager authenticationManager;
 
-    public UsersController (UsersService usersService){
-        this.usersService = usersService;
+    public UserController(UserService userService, AuthenticationManager authenticationManager){
+        this.userService = userService;
+        this.authenticationManager = authenticationManager;
     }
 
     @PostMapping("/signup")
@@ -38,8 +42,13 @@ public class UsersController {
             return ResponseEntity.badRequest().body(errorMap);
         }
 
-        usersService.userSignUp(signUpRequest);
+        userService.userSignUpWithEncodedPassword(signUpRequest);
 
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<?> signIn(@Valid @RequestBody SignInRequest signInRequest){
         return ResponseEntity.ok().build();
     }
 }

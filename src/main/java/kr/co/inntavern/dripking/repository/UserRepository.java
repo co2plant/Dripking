@@ -1,16 +1,16 @@
 package kr.co.inntavern.dripking.repository;
 
-import kr.co.inntavern.dripking.model.Users;
+import kr.co.inntavern.dripking.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UsersRepository extends JpaRepository<Users, Long> {
-    Users save(Users users);
-    Optional<Users> findByEmail(String email);
-    Optional<Users> findById(Long id);
+public interface UserRepository extends JpaRepository<User, Long> {
+    User save(User user);
+    Optional<User> findByEmail(String email);
+    Optional<User> findById(Long id);
     boolean existsByEmail(String email);
     boolean existsByNickname(String nickname);
 }
