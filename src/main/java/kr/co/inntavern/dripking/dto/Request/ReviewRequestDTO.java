@@ -1,4 +1,4 @@
-package kr.co.inntavern.dripking.dto;
+package kr.co.inntavern.dripking.dto.Request;
 
 import kr.co.inntavern.dripking.model.ReviewType;
 import lombok.Getter;

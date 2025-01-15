@@ -1,24 +1,31 @@
 package kr.co.inntavern.dripking.service;
 
 import jakarta.transaction.Transactional;
-import kr.co.inntavern.dripking.Request.SignInRequest;
-import kr.co.inntavern.dripking.Request.SignUpRequest;
+import kr.co.inntavern.dripking.dto.Request.SignInRequest;
+import kr.co.inntavern.dripking.dto.Request.SignUpRequest;
+import kr.co.inntavern.dripking.model.Authority;
 import kr.co.inntavern.dripking.model.User;
+import kr.co.inntavern.dripking.repository.AuthorityRepository;
 import kr.co.inntavern.dripking.repository.UserRepository;
+import kr.co.inntavern.dripking.security.CustomUserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
-@Transactional
 public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final AuthorityRepository authorityRepository;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, CustomUserDetailsService customUserDetailsService, AuthorityRepository authorityRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.customUserDetailsService = customUserDetailsService;
+        this.authorityRepository = authorityRepository;
     }
 
     public boolean checkEmailDuplicate(String email){
@@ -29,21 +36,25 @@ public class UserService {
         return userRepository.existsByNickname(nickname);
     }
 
+    @Transactional
     public void userSignUp(SignUpRequest signUpRequest) {
-        userRepository.save(signUpRequest.toEntity());
-    }
+        Set<Authority> roles = new HashSet<>();
+        Authority authority = Authority.builder().name(signUpRequest.getUserRole()).build();
+        authorityRepository.save(authority);
+        roles.add(authority);
 
-    public void userSignUpWithEncodedPassword(SignUpRequest signUpRequest) {
-        String encodedPassword = passwordEncoder.encode(signUpRequest.getPassword());
-        userRepository.save(signUpRequest.toEntity(encodedPassword));
+        User user = new User();
+        user.setEmail(signUpRequest.getEmail());
+        user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+        user.setRoles(roles);
+        user.setNickname(signUpRequest.getNickname());
+        user.setLocked(false);
+        //isEmailVerified <- 조정 필요
+
+        userRepository.save(user);
     }
 
     public User userSignIn(SignInRequest signInRequest) {
-        Optional<User> users = userRepository.findByEmail(signInRequest.getEmail());
-        if(users.isEmpty()) throw new IllegalArgumentException("ss Invalid email or password");
-
-        return users
-                .filter(user -> user.getPassword().equals(passwordEncoder.encode(signInRequest.getPassword())))
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+        return userRepository.findByEmail(signInRequest.getEmail()).orElseThrow();
     }
 }

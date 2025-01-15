@@ -15,19 +15,19 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Getter
-public class UserDetailsImpl implements UserDetails {
+public class CustomUserDetails implements UserDetails {
     private Long id;
     private String email;
     @JsonIgnore
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public static UserDetailsImpl build(User user){
+    public static CustomUserDetails build(User user){
         List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toList());
 
-        return new UserDetailsImpl(
+        return new CustomUserDetails(
                 user.getId(),
                 user.getEmail(),
                 user.getPassword(),
@@ -79,7 +79,7 @@ public class UserDetailsImpl implements UserDetails {
             return false;
         }
 
-        UserDetailsImpl user = (UserDetailsImpl) o;
+        CustomUserDetails user = (CustomUserDetails) o;
         return Objects.equals(id, user.id);
     }
 

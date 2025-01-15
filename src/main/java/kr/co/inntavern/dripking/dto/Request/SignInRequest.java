@@ -1,9 +1,8 @@
-package kr.co.inntavern.dripking.Request;
+package kr.co.inntavern.dripking.dto.Request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import kr.co.inntavern.dripking.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,12 +24,4 @@ public class SignInRequest {
 
     @JsonProperty("rememberMe")
     private boolean rememberMe;
-
-    public User toEntity(){
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(password);
-
-        return user;
-    }
 }

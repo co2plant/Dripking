@@ -1,10 +1,10 @@
-package kr.co.inntavern.dripking.Request;
+package kr.co.inntavern.dripking.dto.Request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import kr.co.inntavern.dripking.model.User;
+import kr.co.inntavern.dripking.security.UserRole;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,21 +33,6 @@ public class SignUpRequest {
     @JsonProperty("agreeToTerms")
     private boolean agreeToTerms;
 
-    public User toEntity(){
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setNickname(nickname);
-
-        return user;
-    }
-
-    public User toEntity(String encodedPassword){
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(encodedPassword);
-        user.setNickname(nickname);
-
-        return user;
-    }
+    @JsonProperty("userRole")
+    private UserRole userRole;
 }
