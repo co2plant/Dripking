@@ -69,8 +69,7 @@ public class UserController {
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(new JwtResponse(jwt,
-                customUserDetails.getId(),
-                customUserDetails.getUsername(),
+                customUserDetails.getNickname(),
                 customUserDetails.getEmail(),
                 roles),
                 httpHeaders, HttpStatus.OK);

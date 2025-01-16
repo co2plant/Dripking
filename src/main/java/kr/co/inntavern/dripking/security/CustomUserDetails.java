@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Getter
 public class CustomUserDetails implements UserDetails {
     private Long id;
+    private String nickname;
     private String email;
     @JsonIgnore
     private String password;
@@ -30,6 +31,7 @@ public class CustomUserDetails implements UserDetails {
         return new CustomUserDetails(
                 user.getId(),
                 user.getEmail(),
+                user.getNickname(),
                 user.getPassword(),
                 authorities
         );
@@ -38,6 +40,10 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities(){
         return authorities;
+    }
+
+    public String getNickname(){
+        return nickname;
     }
 
     @Override
