@@ -1,7 +1,6 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
@@ -16,7 +15,6 @@ public class Destination extends Item{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "destination_id", unique = true, nullable=false)
-    //@NotNull
     private Long id;
 
     @Column(nullable = false)
@@ -34,4 +32,10 @@ public class Destination extends Item{
     @OneToMany
     @JoinColumn(name = "distillery_id")
     private List<Distillery> distillery;
+
+    @Column(nullable = false)
+    private String img_url;
+
+    @Enumerated(EnumType.STRING)
+    private ItemType itemType;
 }

@@ -11,7 +11,6 @@ public class Trip extends Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "trip_id", unique = true, nullable=false)
-    //@NotNull
     private Long id;
 
     private String name;

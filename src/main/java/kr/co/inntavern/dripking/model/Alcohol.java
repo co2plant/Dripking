@@ -1,7 +1,6 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.sql.Time;
@@ -16,7 +15,6 @@ public class Alcohol extends Item{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "alcohol_id", unique = true, nullable=false)
-    //@NotNull
     private Long id;
 
     @Column
@@ -54,6 +52,9 @@ public class Alcohol extends Item{
     private Time datetime;
 
     @Column(nullable = false)
-    private String href;
+    private String img_url;
+
+    @Enumerated(EnumType.STRING)
+    private ItemType itemType;
 
 }

@@ -20,7 +20,6 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id", unique = true, nullable=false)
-    //@NotNull
     private Long id;
 
     @ManyToOne

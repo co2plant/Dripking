@@ -1,7 +1,6 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -14,7 +13,6 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable=false)
-    //@NotNull
     private Long id;
 
     @Column(nullable = false)
@@ -24,8 +22,11 @@ public class Item {
     private String description;
 
     @Column
-    private float Rating;
+    private float rating;
+
+    @Enumerated(EnumType.STRING)
+    private ItemType itemType;
 
     @Column
-    private int dtype;
+    private String img_url;
 }

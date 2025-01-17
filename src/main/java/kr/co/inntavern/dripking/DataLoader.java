@@ -15,13 +15,14 @@ public class DataLoader {
                     .name("Whisky")
                     .description("맥아 효소로 녹말을 포함하고 있는 곡물 재료를 당화시키고 발효[5] 및 증류하여 오크통에 숙성시킨 증류주. 간단히 말해서 목통숙성곡물증류주(木桶熟成穀物蒸溜酒)라고 할 수 있다.")
                     .build();
-
             categoryRepository.save(categories);
 
             for (int i = 0; i < 100; i++) {
                 Destination destinations = Destination.builder()
                         .name("Destination " + i)
                         .description("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book." + i)
+                        .img_url("https://upload.wikimedia.org/wikipedia/commons/e/ea/Taipei_Skyline_2022.06.29.jpg")
+                        .itemType(ItemType.DESTINATION)
                         .build();
                 destinationRepository.save(destinations);
 
@@ -29,7 +30,8 @@ public class DataLoader {
                         .name("Distillery " + i)
                         .address("Address " + i)
                         .description("Distillery Description " + i)
-                        .img_url("https://upload.wikimedia.org/wikipedia/commons/d/d9/Jameson_Distillery_in_Midleton%2C_2016.jpg")
+                        .img_url("https://upload.wikimedia.org/wikipedia/commons/f/f0/Yamazaki_Distillery_%E5%B1%B1%E5%B4%8E%E8%92%B8%E7%95%99%E6%89%8005.jpg")
+                        .itemType(ItemType.DISTILLERY)
                         .build();
                 distilleryRepository.save(distilleries);
 
@@ -46,7 +48,8 @@ public class DataLoader {
                         .description("Alcohol Description " + i)
                         .distillery(distilleryRepository.findById((long) 1).get())
                         .category(categoryRepository.findById((long) 1).get())
-                        .href("https://upload.wikimedia.org/wikipedia/commons/e/e5/Jim_Beam_White_Label.jpg")
+                        .img_url("https://upload.wikimedia.org/wikipedia/commons/e/e5/Jim_Beam_White_Label.jpg")
+                        .itemType(ItemType.ALCOHOL)
                         .build();
                 alcoholRepository.save(alcohols);
 
