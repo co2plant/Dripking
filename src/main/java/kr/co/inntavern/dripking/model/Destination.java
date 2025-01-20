@@ -29,10 +29,6 @@ public class Destination extends Item{
     @Column
     private float longitude;//경도
 
-    @OneToMany
-    @JoinColumn(name = "distillery_id")
-    private List<Distillery> distillery;
-
     @Column(nullable = false)
     private String img_url;
 

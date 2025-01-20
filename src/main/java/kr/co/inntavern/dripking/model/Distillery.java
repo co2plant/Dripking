@@ -29,9 +29,9 @@ public class Distillery extends Item{
     @Column(nullable = false)
     private String img_url;
 
-    @OneToMany
-    @JoinColumn(name = "alcohol_id")
-    private List<Alcohol> alcohol;
+    @ManyToOne
+    @JoinColumn(name = "destination_id")
+    private Destination destination;
 
     @Enumerated(EnumType.STRING)
     private ItemType itemType;

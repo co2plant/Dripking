@@ -3,9 +3,11 @@ package kr.co.inntavern.dripking.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Entity
+@Getter
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor

@@ -1,7 +1,7 @@
 package kr.co.inntavern.dripking.controller;
 
 import jakarta.validation.Valid;
-import kr.co.inntavern.dripking.dto.Reponse.JwtResponse;
+import kr.co.inntavern.dripking.dto.Response.JwtResponse;
 import kr.co.inntavern.dripking.dto.Request.SignInRequest;
 import kr.co.inntavern.dripking.dto.Request.SignUpRequest;
 import kr.co.inntavern.dripking.security.JwtUtils;
