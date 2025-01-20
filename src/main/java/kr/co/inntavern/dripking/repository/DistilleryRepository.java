@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface DistilleryRepository extends JpaRepository<Distillery, Long> {
     Page<Distillery> findAll(Pageable pageable);
     Distillery save(Distillery distillery);
+    Page<Distillery> findAllByDestinationId(Pageable pageable, Long destinationId);
     Optional<Distillery> findById(Long id);
     Page<Distillery> findAllByNameContainingIgnoreCase(Pageable pageable, String name);
 

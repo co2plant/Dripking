@@ -1,5 +1,6 @@
 package kr.co.inntavern.dripking.service;
 
+import kr.co.inntavern.dripking.dto.Response.AlcoholResponseDTO;
 import kr.co.inntavern.dripking.model.Alcohol;
 import kr.co.inntavern.dripking.repository.AlcoholRepository;
 import org.springframework.data.domain.Page;
@@ -20,9 +21,9 @@ public class AlcoholService {
     // ---------------------------------------------------------------------
     // Select Methods: 모든 엔티티를 페이지 형태로 반환하는 메서드
     // ---------------------------------------------------------------------
-    public Page<Alcohol> getAllAlcohols(int page){
+    public Page<AlcoholResponseDTO> getAllAlcohols(int page){
         Pageable pageable = PageRequest.of(page, 10);
-        return alcoholRepository.findAll(pageable);
+        return alcoholRepository.findAll(pageable).map(this::mapToAlcoholResponseDTO);
     }
 
     // ---------------------------------------------------------------------
@@ -36,13 +37,14 @@ public class AlcoholService {
     // ---------------------------------------------------------------------
     // Select Methods: 이름이 포함된(대소문자 무시) 컬럼을 검색하여 페이지 형태로 반환하는 메서드
     // ---------------------------------------------------------------------
-    public Page<Alcohol> getAllAlcoholsByName(int page, String name){
+    public Page<AlcoholResponseDTO> getAllAlcoholsByName(int page, String name){
         Pageable pageable = PageRequest.of(page, 10);
-        return alcoholRepository.findAllByNameContainingIgnoreCase(pageable, name);
+        return alcoholRepository.findAllByNameContainingIgnoreCase(pageable, name).map(this::mapToAlcoholResponseDTO);
     }
 
-    public List<Alcohol> getAllAlcoholsByDistilleryId(Long distilleryId){
-        return alcoholRepository.findAllByDistilleryId(distilleryId);
+    public Page<AlcoholResponseDTO> getAllAlcoholsByDistilleryId(Long distilleryId){
+        Pageable pageable = PageRequest.of(0, 10);
+        return alcoholRepository.findAllByDistilleryId(pageable, distilleryId).map(this::mapToAlcoholResponseDTO);
     }
 
     // ---------------------------------------------------------------------
@@ -64,6 +66,22 @@ public class AlcoholService {
     // ---------------------------------------------------------------------
     public void deleteAlcoholById(Long id){
         alcoholRepository.deleteById(id);
+    }
+
+    private AlcoholResponseDTO mapToAlcoholResponseDTO(Alcohol alcohol){
+        AlcoholResponseDTO responseDTO = new AlcoholResponseDTO();
+        responseDTO.setId(alcohol.getId());
+        responseDTO.setName(alcohol.getName());
+        responseDTO.setCategory_id(alcohol.getCategory().getId());
+        responseDTO.setDistillery_id(alcohol.getDistillery().getId());
+        responseDTO.setStrength(alcohol.getStrength());
+        responseDTO.setStated_age(alcohol.getStated_age());
+        responseDTO.setSize(alcohol.getSize());
+        responseDTO.setDescription(alcohol.getDescription());
+        responseDTO.setDatetime(alcohol.getDatetime());
+        responseDTO.setImg_url(alcohol.getImg_url());
+        responseDTO.setItemType(alcohol.getItemType());
+        return responseDTO;
     }
 
 }

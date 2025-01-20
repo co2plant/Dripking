@@ -1,5 +1,6 @@
 package kr.co.inntavern.dripking.controller;
 
+import kr.co.inntavern.dripking.dto.Response.DistilleryResponseDTO;
 import kr.co.inntavern.dripking.model.Distillery;
 import kr.co.inntavern.dripking.service.DistilleryService;
 import org.springframework.data.domain.Page;
@@ -15,22 +16,28 @@ public class DistilleryController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Distillery>> getAllDistilleries(@RequestParam(required=false,value="page", defaultValue="0") int page,
+    public ResponseEntity<Page<DistilleryResponseDTO>> getAllDistilleries(@RequestParam(required=false,value="page", defaultValue="0") int page,
                                                                @RequestParam(required=false,value="size", defaultValue="10") int size,
                                                                @RequestParam(required=false, value="sort", defaultValue="DESC") String sort){
-        Page<Distillery> paging = distilleryService.getAllDistilleries(page);
+        Page<DistilleryResponseDTO> paging = distilleryService.getAllDistilleries(page);
+        return ResponseEntity.ok(paging);
+    }
+
+    @GetMapping("/destination") //endpoint변경해야함.
+    public ResponseEntity<Page<DistilleryResponseDTO>> getAllDistilleriesByDestinationId(@RequestParam(required=true, value="destination") Long destinationId){
+        Page<DistilleryResponseDTO> paging = distilleryService.getAllDistilleriesByDestinationId(destinationId);
         return ResponseEntity.ok(paging);
     }
 
     @GetMapping("/{distilleryId}")
-    public Distillery getDistilleryById(@PathVariable Long distilleryId) {
+    public DistilleryResponseDTO getDistilleryById(@PathVariable Long distilleryId) {
         return distilleryService.getDistilleryById(distilleryId);
     }
 
     @GetMapping("/search/{searchKeyword}")
-    public ResponseEntity<Page<Distillery>> searchDistilleriesByName(@RequestParam(value="page", defaultValue="0") int page,
+    public ResponseEntity<Page<DistilleryResponseDTO>> searchDistilleriesByName(@RequestParam(value="page", defaultValue="0") int page,
                                                                      @PathVariable String searchKeyword){
-        Page<Distillery> paging = distilleryService.getAllDistilleriesByName(page, searchKeyword);
+        Page<DistilleryResponseDTO> paging = distilleryService.getAllDistilleriesByName(page, searchKeyword);
         return ResponseEntity.ok(paging);
     }
 
