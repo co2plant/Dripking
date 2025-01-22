@@ -21,9 +21,17 @@ public class AlcoholController {
     @GetMapping
     public ResponseEntity<Page<AlcoholResponseDTO>> getAllAlcohols(@RequestParam(required=false,value="page", defaultValue="0") int page,
                                                         @RequestParam(required=false,value="size", defaultValue="10") int size,
-                                                        @RequestParam(required=false, value="sort", defaultValue="DESC") String sort){
-        Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcohols(page);
-        return ResponseEntity.ok(paging);
+                                                        @RequestParam(required=false, value="sort", defaultValue="DESC") String sort,
+                                                        @RequestParam(required=false, value="category_id", defaultValue="0") Long categoryId){
+        if(categoryId != 0){
+            Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcoholsByCategoryId(page, size, categoryId);
+            return ResponseEntity.ok(paging);
+        }
+        else{
+            Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcohols(page);
+            return ResponseEntity.ok(paging);
+        }
+
     }
 
     @GetMapping("/distillery") //endpoint변경해야함.

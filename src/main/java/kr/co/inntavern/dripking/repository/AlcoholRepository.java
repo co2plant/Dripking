@@ -19,6 +19,9 @@ public interface AlcoholRepository extends JpaRepository<Alcohol, Long> {
     @Query("SELECT a FROM Alcohol a WHERE a.distillery.id = :distillery_id")
     Page<Alcohol> findAllByDistilleryId(Pageable pageable, @Param("distillery_id")Long distillery_id);
 
+    @Query("SELECT a FROM Alcohol a WHERE a.category.id = :category_id")
+    Page<Alcohol> findAllByCategoryId(Pageable pageable, @Param("category_id")Long category_id);
+
     Alcohol save(Alcohol alcohol);
 
     Optional<Alcohol> findById(Long id);

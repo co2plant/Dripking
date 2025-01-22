@@ -34,6 +34,11 @@ public class AlcoholService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 술이 존재하지 않습니다."));
     }
 
+    public Page<AlcoholResponseDTO> getAllAlcoholsByCategoryId(int page, int size, Long categoryId){
+        Pageable pageable = PageRequest.of(page, size);
+        return alcoholRepository.findAllByCategoryId(pageable, categoryId).map(this::mapToAlcoholResponseDTO);
+    }
+
     // ---------------------------------------------------------------------
     // Select Methods: 이름이 포함된(대소문자 무시) 컬럼을 검색하여 페이지 형태로 반환하는 메서드
     // ---------------------------------------------------------------------

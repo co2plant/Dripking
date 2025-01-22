@@ -11,14 +11,16 @@ public class DataLoader {
     @Bean
     public CommandLineRunner loadData(DistilleryRepository distilleryRepository, AlcoholRepository alcoholRepository, DestinationRepository destinationRepository, CategoryRepository categoryRepository, TagRepository tagRepository, UserRepository userRepository, ReviewRepository reviewRepository) {
         return args -> {
-
-            for (int i = 1; i <= 100; i++) {
+            Long[] ids = {1L, 2L, 3L ,4L, 5L, 6L, 7L, 8L, 9L, 10L};
+            for(int i = 1; i<=10; i++){
+                String[] names = {"위스키", "럼", "보드카", "진", "데킬라", "브랜디", "리큐르", "맥주","사케", "전통주"};
                 Category categories = Category.builder()
-                        .name("Whisky " + i )
+                        .name(names[i-1])
                         .description("맥아 효소로 녹말을 포함하고 있는 곡물 재료를 당화시키고 발효[5] 및 증류하여 오크통에 숙성시킨 증류주. 간단히 말해서 목통숙성곡물증류주(木桶熟成穀物蒸溜酒)라고 할 수 있다. " + i)
                         .build();
                 categoryRepository.save(categories);
-
+            }
+            for (int i = 1; i <= 100; i++) {
                 Destination destinations = Destination.builder()
                         .name("Destination " + i)
                         .description("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book." + i)
@@ -49,7 +51,7 @@ public class DataLoader {
                         .size(700 + i)
                         .description("Alcohol Description " + i)
                         .distillery(distilleryRepository.findById((long) i).get())
-                        .category(categoryRepository.findById((long) i).get())
+                        .category(categoryRepository.findById((long) ids[i%10]).get())
                         .img_url("https://upload.wikimedia.org/wikipedia/commons/e/e5/Jim_Beam_White_Label.jpg")
                         .itemType(ItemType.ALCOHOL)
                         .build();
