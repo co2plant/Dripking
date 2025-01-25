@@ -20,4 +20,6 @@ public class DestinationResponseDTO {
     private String img_url;
 
     private ItemType itemType;
+
+    private Long country_id;
 }

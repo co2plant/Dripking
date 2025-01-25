@@ -1,5 +1,6 @@
 package kr.co.inntavern.dripking.controller;
 
+import kr.co.inntavern.dripking.dto.Response.DestinationResponseDTO;
 import kr.co.inntavern.dripking.model.Destination;
 import kr.co.inntavern.dripking.service.DestinationService;
 import org.springframework.data.domain.Page;
@@ -18,21 +19,30 @@ public class DestinationController
     }
 
     @GetMapping
-    public ResponseEntity<Page<Destination>> getAllDestinations(@RequestParam(required=false,value="page", defaultValue="0") int page,
-                                                                @RequestParam(required=false,value="size", defaultValue="10") int size,
-                                                                @RequestParam(required=false, value="sort", defaultValue="DESC") String sort){
-        Page<Destination> paging = destinationService.getAllDestinations(page);
-        return ResponseEntity.ok(paging);
+    public ResponseEntity<Page<DestinationResponseDTO>> getAllDestinations(@RequestParam(required=false,value="page", defaultValue="0") int page,
+                                                                           @RequestParam(required=false,value="size", defaultValue="10") int size,
+                                                                           @RequestParam(required=false, value="sort", defaultValue="DESC") String sort,
+                                                                           @RequestParam(required=false, value="country_id", defaultValue="0") Long countryId
+    ){
+        if(countryId != 0){
+            Page<DestinationResponseDTO> paging = destinationService.getAllDestinationsByCountryId(page, countryId);
+            return ResponseEntity.ok(paging);
+        }
+        else{
+            Page<DestinationResponseDTO> paging = destinationService.getAllDestinations(page);
+            return ResponseEntity.ok(paging);
+        }
+
     }
 
     @GetMapping("/{DestinationId}")
-    public Destination getDestinationById(@PathVariable Long DestinationId) {
+    public DestinationResponseDTO getDestinationById(@PathVariable Long DestinationId) {
         return destinationService.getDestinationById(DestinationId);
     }
 
     @GetMapping("/search/{searchKeyword}")
-    public ResponseEntity<Page<Destination>> searchDestinationsByName(@RequestParam(required=false, value="page", defaultValue="0") int page, @PathVariable String searchKeyword){
-        Page<Destination> paging = destinationService.getAllDestinationsByName(page, searchKeyword);
+    public ResponseEntity<Page<DestinationResponseDTO>> searchDestinationsByName(@RequestParam(required=false, value="page", defaultValue="0") int page, @PathVariable String searchKeyword){
+        Page<DestinationResponseDTO> paging = destinationService.getAllDestinationsByName(page, searchKeyword);
         return ResponseEntity.ok(paging);
     }
 

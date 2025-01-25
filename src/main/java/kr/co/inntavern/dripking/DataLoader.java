@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DataLoader {
     @Bean
-    public CommandLineRunner loadData(DistilleryRepository distilleryRepository, AlcoholRepository alcoholRepository, DestinationRepository destinationRepository, CategoryRepository categoryRepository, TagRepository tagRepository, UserRepository userRepository, ReviewRepository reviewRepository) {
+    public CommandLineRunner loadData(DistilleryRepository distilleryRepository, AlcoholRepository alcoholRepository, DestinationRepository destinationRepository, CategoryRepository categoryRepository, TagRepository tagRepository, UserRepository userRepository, ReviewRepository reviewRepository, CountryRepository countryRepository) {
         return args -> {
             Long[] ids = {1L, 2L, 3L ,4L, 5L, 6L, 7L, 8L, 9L, 10L};
             for(int i = 1; i<=10; i++){
@@ -20,12 +20,23 @@ public class DataLoader {
                         .build();
                 categoryRepository.save(categories);
             }
-            for (int i = 1; i <= 100; i++) {
+
+            for(int i = 1; i <= 10; i++){
+                String[] names = {"대한민국", "미국", "영국", "일본", "프랑스", "러시아", "멕시코", "스페인", "일본", "독일"};
+                Country country = Country.builder()
+                        .name(names[i-1])
+                        .description("국가 설명 " + i)
+                        .build();
+                countryRepository.save(country);
+            }
+
+            for (int i = 1; i <= 1000; i++) {
                 Destination destinations = Destination.builder()
                         .name("Destination " + i)
                         .description("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book." + i)
                         .img_url("https://upload.wikimedia.org/wikipedia/commons/e/ea/Taipei_Skyline_2022.06.29.jpg")
                         .itemType(ItemType.DESTINATION)
+                        .country(countryRepository.findById((long) ids[i%10]).get())
                         .build();
                 destinationRepository.save(destinations);
 

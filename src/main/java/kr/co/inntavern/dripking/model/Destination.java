@@ -32,6 +32,10 @@ public class Destination extends Item{
     @Column(nullable = false)
     private String img_url;
 
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    private Country country;
+
     @Enumerated(EnumType.STRING)
     private ItemType itemType;
 }
