@@ -36,8 +36,10 @@ public class DataLoader {
                         .description("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book." + i)
                         .img_url("https://upload.wikimedia.org/wikipedia/commons/e/ea/Taipei_Skyline_2022.06.29.jpg")
                         .itemType(ItemType.DESTINATION)
-                        .country(countryRepository.findById((long) ids[i%10]).get())
+                        .country(countryRepository.findById(ids[i%10]).get())
                         .build();
+
+
                 destinationRepository.save(destinations);
 
                 Distillery distilleries = Distillery.builder()
@@ -62,7 +64,7 @@ public class DataLoader {
                         .size(700 + i)
                         .description("Alcohol Description " + i)
                         .distillery(distilleryRepository.findById((long) i).get())
-                        .category(categoryRepository.findById((long) ids[i%10]).get())
+                        .category(categoryRepository.findById(ids[i%10]).get())
                         .img_url("https://upload.wikimedia.org/wikipedia/commons/e/e5/Jim_Beam_White_Label.jpg")
                         .itemType(ItemType.ALCOHOL)
                         .build();

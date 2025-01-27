@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @RequiredArgsConstructor
@@ -29,7 +28,7 @@ public class Plan {
     @Column
     private Long location_id;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "trip_id")
-    private List<Trip> trip;
+    private Trip trip;
 }

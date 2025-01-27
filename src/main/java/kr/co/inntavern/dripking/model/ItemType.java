@@ -3,5 +3,7 @@ package kr.co.inntavern.dripking.model;
 public enum ItemType {
     ALCOHOL,
     DISTILLERY,
-    DESTINATION
+    DESTINATION,
+    TRIP,
+    PLAN
 }

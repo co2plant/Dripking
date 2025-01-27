@@ -3,8 +3,6 @@ package kr.co.inntavern.dripking.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Setter
 @Getter
 @Entity
