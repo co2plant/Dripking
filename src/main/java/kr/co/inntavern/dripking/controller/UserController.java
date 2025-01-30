@@ -4,9 +4,11 @@ import jakarta.validation.Valid;
 import kr.co.inntavern.dripking.dto.Response.JwtResponse;
 import kr.co.inntavern.dripking.dto.Request.SignInRequest;
 import kr.co.inntavern.dripking.dto.Request.SignUpRequest;
+import kr.co.inntavern.dripking.security.AuthTokenFilter;
 import kr.co.inntavern.dripking.security.JwtUtils;
 import kr.co.inntavern.dripking.security.CustomUserDetails;
 import kr.co.inntavern.dripking.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,17 +30,24 @@ public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
+    private final AuthTokenFilter authTokenFilter;
 
-    public UserController(UserService userService, AuthenticationManager authenticationManager, JwtUtils jwtUtils){
+    @Autowired
+    public UserController(UserService userService, AuthenticationManager authenticationManager, JwtUtils jwtUtils, AuthTokenFilter authTokenFilter){
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
+        this.authTokenFilter = authTokenFilter;
     }
 
     @GetMapping("/status")
-    public ResponseEntity<Boolean> checkLoginStatus(Authentication authentication){
-        boolean isLogin = authentication != null && authentication.isAuthenticated();
-        return ResponseEntity.ok(isLogin);
+    public ResponseEntity<String> checkLoginStatus(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null && authentication.isAuthenticated()){
+            return ResponseEntity.ok("User is authenticated");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
+        }
     }
 
     @PostMapping("/signup")

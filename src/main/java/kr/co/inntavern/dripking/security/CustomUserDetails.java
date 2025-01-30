@@ -30,8 +30,8 @@ public class CustomUserDetails implements UserDetails {
 
         return new CustomUserDetails(
                 user.getId(),
-                user.getEmail(),
                 user.getNickname(),
+                user.getEmail(),
                 user.getPassword(),
                 authorities
         );
