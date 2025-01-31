@@ -1,6 +1,7 @@
 package kr.co.inntavern.dripking.controller;
 
 import kr.co.inntavern.dripking.dto.Request.TripRequestDTO;
+import kr.co.inntavern.dripking.dto.Response.TripResponseDTO;
 import kr.co.inntavern.dripking.service.TripService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +17,8 @@ public class TripController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createTrip(@RequestBody TripRequestDTO tripRequestDTO){
-        tripService.createTrip(tripRequestDTO);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<TripResponseDTO> createTrip(@RequestBody TripRequestDTO tripRequestDTO){
+        return ResponseEntity.ok(tripService.createTrip(tripRequestDTO));
     }
 
     @PutMapping

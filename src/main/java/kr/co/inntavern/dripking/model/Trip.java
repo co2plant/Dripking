@@ -29,4 +29,7 @@ public class Trip extends Item {
     private Date start_date;
 
     private Date end_date;
+
+    @Enumerated(EnumType.STRING)
+    private ItemType itemType;
 }

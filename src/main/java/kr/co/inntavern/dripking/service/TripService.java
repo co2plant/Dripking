@@ -1,6 +1,7 @@
 package kr.co.inntavern.dripking.service;
 
 import kr.co.inntavern.dripking.dto.Request.TripRequestDTO;
+import kr.co.inntavern.dripking.dto.Response.TripResponseDTO;
 import kr.co.inntavern.dripking.model.Trip;
 import kr.co.inntavern.dripking.model.User;
 import kr.co.inntavern.dripking.repository.TripRepository;
@@ -22,18 +23,19 @@ public class TripService {
     // ---------------------------------------------------------------------
     // Create Methods: 엔티티를 생성하는 메서드
     // ---------------------------------------------------------------------
-    public void createTrip(TripRequestDTO tripRequestDTO){
+    public TripResponseDTO createTrip(TripRequestDTO tripRequestDTO){
         User user = userRepository.findById(tripRequestDTO.getUser_id())
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 유저가 존재하지 않습니다."));
+
         Trip trip  = new Trip();
         trip.setUser(user); //user 에 관한 내용은 login 기능이 구현되면 추가할 예정
-
         trip.setUser(userRepository.findById(tripRequestDTO.getUser_id()).orElse(null));
         trip.setName(tripRequestDTO.getName());
         trip.setDescription(tripRequestDTO.getDescription());
         trip.setStart_date(tripRequestDTO.getStart_date());
         trip.setEnd_date(tripRequestDTO.getEnd_date());
-        tripRepository.save(trip);
+        
+        return mapToTripResponseDTO(tripRepository.save(trip));
     }
 
     // ---------------------------------------------------------------------
@@ -58,5 +60,16 @@ public class TripService {
     // ---------------------------------------------------------------------
     public void deleteTripById(Long id){
         tripRepository.deleteById(id);
+    }
+
+    private TripResponseDTO mapToTripResponseDTO(Trip trip){
+        TripResponseDTO responseDTO = new TripResponseDTO();
+        responseDTO.setId(trip.getId());
+        responseDTO.setUser_id(trip.getUser().getId());
+        responseDTO.setName(trip.getName());
+        responseDTO.setDescription(trip.getDescription());
+        responseDTO.setStart_date(trip.getStart_date());
+        responseDTO.setEnd_date(trip.getEnd_date());
+        return responseDTO;
     }
 }
