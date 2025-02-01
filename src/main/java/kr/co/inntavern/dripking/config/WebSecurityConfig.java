@@ -3,6 +3,7 @@ package kr.co.inntavern.dripking.config;
 import kr.co.inntavern.dripking.security.AuthEntryPointJwt;
 import kr.co.inntavern.dripking.security.AuthTokenFilter;
 import kr.co.inntavern.dripking.security.CustomUserDetailsService;
+import kr.co.inntavern.dripking.security.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -26,10 +27,11 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
     private final AuthEntryPointJwt unauthorizedHandler;
+    private final JwtUtils jwtUtils;
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter();
+        return new AuthTokenFilter(jwtUtils, customUserDetailsService);
     }
 
     @Bean
