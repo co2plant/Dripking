@@ -34,5 +34,5 @@ public class SignUpRequest {
     private boolean agreeToTerms;
 
     @JsonProperty("userRole")
-    private UserRole userRole;
+    private UserRole userRole=UserRole.USER;
 }

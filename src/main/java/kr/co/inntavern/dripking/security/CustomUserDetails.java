@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
 @Getter
+@AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
     private Long id;
     private String nickname;
@@ -42,6 +42,9 @@ public class CustomUserDetails implements UserDetails {
         return authorities;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
     @Override
     public String getPassword() {
         return password;

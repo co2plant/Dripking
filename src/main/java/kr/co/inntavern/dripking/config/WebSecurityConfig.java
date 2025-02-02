@@ -47,15 +47,25 @@ public class WebSecurityConfig {
         http
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
-                .securityMatcher("/**")
+                .securityMatcher("/api/**")
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(sessionManagementConfigurer
                         -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/**").permitAll()
-                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers(
+                                "/api/countries",
+                                "/api/countries/**",
+                                "/api/destinations/**",
+                                "/api/destinations",
+                                "/api/alcohols/**",
+                                "/api/alcohols/",
+                                "/api/distilleries/**",
+                                "/api/distilleries",
+                                "/api/user/signin",
+                                "/api/user/signup",
+                                "/api/reviews/**").permitAll()
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .anyRequest().authenticated()
                 ).headers(headers -> headers
