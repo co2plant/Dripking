@@ -75,6 +75,7 @@ public class UserController {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Bearer " + jwt);
+        httpHeaders.add("Access-Control-Expose-Headers", "Authorization");
 
         List<String> roles = customUserDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -84,6 +85,6 @@ public class UserController {
                 customUserDetails.getNickname(),
                 customUserDetails.getEmail(),
                 roles),
-                httpHeaders, HttpStatus.OK);
+                httpHeaders, HttpStatus.CREATED);
     }
 }
