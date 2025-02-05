@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import kr.co.inntavern.dripking.dto.Response.JwtResponse;
 import kr.co.inntavern.dripking.dto.Request.SignInRequest;
 import kr.co.inntavern.dripking.dto.Request.SignUpRequest;
-import kr.co.inntavern.dripking.security.AuthTokenFilter;
 import kr.co.inntavern.dripking.security.JwtUtils;
 import kr.co.inntavern.dripking.security.CustomUserDetails;
 import kr.co.inntavern.dripking.service.UserService;
@@ -30,24 +29,17 @@ public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
-    private final AuthTokenFilter authTokenFilter;
 
     @Autowired
-    public UserController(UserService userService, AuthenticationManager authenticationManager, JwtUtils jwtUtils, AuthTokenFilter authTokenFilter){
+    public UserController(UserService userService, AuthenticationManager authenticationManager, JwtUtils jwtUtils){
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
-        this.authTokenFilter = authTokenFilter;
     }
 
     @GetMapping("/status")
-    public ResponseEntity<String> checkLoginStatus(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null && authentication.isAuthenticated()){
-            return ResponseEntity.ok("User is authenticated");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
-        }
+    public ResponseEntity<Boolean> checkLoginStatus(){
+        return ResponseEntity.ok(true);
     }
 
     @PostMapping("/signup")
