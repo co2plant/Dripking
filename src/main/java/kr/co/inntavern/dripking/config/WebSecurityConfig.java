@@ -55,6 +55,8 @@ public class WebSecurityConfig {
                         .requestMatchers(
                                 "/api/countries",
                                 "/api/countries/**",
+                                "/api/categories",
+                                "/api/categories/**",
                                 "/api/destinations/**",
                                 "/api/destinations",
                                 "/api/alcohols/**",
@@ -64,6 +66,13 @@ public class WebSecurityConfig {
                                 "/api/user/signin",
                                 "/api/user/signup",
                                 "/api/reviews/**").permitAll()
+                        .requestMatchers(
+                                "/api/plans",
+                                "/api/plans/**",
+                                "/api/trips",
+                                "/api/trips/**",
+                                "/api/user/status").authenticated(
+                        )
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .anyRequest().authenticated()
                 ).headers(headers -> headers
