@@ -6,6 +6,9 @@ import kr.co.inntavern.dripking.model.Trip;
 import kr.co.inntavern.dripking.model.User;
 import kr.co.inntavern.dripking.repository.TripRepository;
 import kr.co.inntavern.dripking.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,6 +21,18 @@ public class TripService {
     public TripService(TripRepository tripRepository, UserRepository userRepository) {
         this.tripRepository = tripRepository;
         this.userRepository = userRepository;
+    }
+
+    public TripResponseDTO getTripById(Long id){
+        Trip trip = tripRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 여행이 존재하지 않습니다."));
+        return mapToTripResponseDTO(trip);
+    }
+
+    public Page<TripResponseDTO> getAllTripByUserId(int page, int size, Long user_id){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Trip> trips = tripRepository.findAllByUserId(user_id, pageable);
+        return trips.map(this::mapToTripResponseDTO);
     }
 
     // ---------------------------------------------------------------------

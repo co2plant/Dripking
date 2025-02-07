@@ -13,6 +13,8 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
     Trip save(Trip trip);
 
     @Query("SELECT t FROM Trip t WHERE t.user.id = :user_id")
-    Page<Trip> findAllById(@Param("user_id")Long user_id, Pageable pageable);
+    Page<Trip> findAllByUserId(@Param("user_id")Long user_id, Pageable pageable);
+
+    Trip findTripById(Long id);
 
 }

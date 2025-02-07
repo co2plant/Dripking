@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -34,6 +35,10 @@ public class UserService {
 
     public boolean checkNicknameDuplicate(String nickname){
         return userRepository.existsByNickname(nickname);
+    }
+
+    public Optional<User> getUserByEmail(String email){
+        return userRepository.findByEmail(email);
     }
 
     @Transactional
