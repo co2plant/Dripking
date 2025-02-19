@@ -17,6 +17,10 @@ public class DistilleryResponseDTO {
 
     private String img_url;
 
+    private float latitude;//위도
+
+    private float longitude;//경도
+
     private Long destination_id;
 
     private ItemType itemType;

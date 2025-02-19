@@ -9,7 +9,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DataLoader {
     @Bean
-    public CommandLineRunner loadData(DistilleryRepository distilleryRepository, AlcoholRepository alcoholRepository, DestinationRepository destinationRepository, CategoryRepository categoryRepository, TagRepository tagRepository, UserRepository userRepository, ReviewRepository reviewRepository, CountryRepository countryRepository) {
+    public CommandLineRunner loadData(DistilleryRepository distilleryRepository,
+                                      AlcoholRepository alcoholRepository,
+                                      DestinationRepository destinationRepository,
+                                      CategoryRepository categoryRepository,
+                                      TagRepository tagRepository,
+                                      UserRepository userRepository,
+                                      ReviewRepository reviewRepository,
+                                      CountryRepository countryRepository) {
         return args -> {
             Long[] ids = {1L, 2L, 3L ,4L, 5L, 6L, 7L, 8L, 9L, 10L};
             for(int i = 1; i<=10; i++){
@@ -30,15 +37,52 @@ public class DataLoader {
                 countryRepository.save(country);
             }
 
+            Destination destination = Destination.builder()
+                    .name("오야마자키")
+                    .description("오야마자키정은 교토부 오토쿠니군의 정이다. 오사카부 미시마군 시마모토정과 접한다. 교토부에서 가장 면적의 작은 정이다. 옛 야마시로국의 오토쿠니군에 속했다")
+                    .img_url("https://upload.wikimedia.org/wikipedia/commons/8/80/Oyamazaki_stn.jpg")
+                    .itemType(ItemType.DESTINATION)
+                    .latitude(34.9023747484815f)
+                    .longitude(135.68551060039104f)
+                    .country(countryRepository.findById(4L).get())
+                    .build();
+
+            destinationRepository.save(destination);
+
+            Distillery distillery = Distillery.builder()
+                    .name("Yamazaki Distillery")
+                    .address("5 Chome-2-1 Yamazaki, Shimamoto, Mishima District, Osaka 618-0001 일본")
+                    .description("Distillery Description ")
+                    .img_url("https://upload.wikimedia.org/wikipedia/commons/f/f0/Yamazaki_Distillery_%E5%B1%B1%E5%B4%8E%E8%92%B8%E7%95%99%E6%89%8005.jpg")
+                    .itemType(ItemType.DISTILLERY)
+                    .destination(destinationRepository.findById(1L).get())
+                    .latitude(34.89279866199688f)
+                    .longitude(135.67445757168372f)
+                    .build();
+            distilleryRepository.save(distillery);
+
+            Distillery distilleryAsahi = Distillery.builder()
+                    .name("Asahi Beer Ōyamazaki Villa Museum of Art")
+                    .address("일본 〒618-0071 Kyoto, Otokuni District, Oyamazaki, Zenihara−５−3")
+                    .description("Distillery Description ")
+                    .img_url("https://upload.wikimedia.org/wikipedia/commons/f/f0/Yamazaki_Distillery_%E5%B1%B1%E5%B4%8E%E8%92%B8%E7%95%99%E6%89%8005.jpg")
+                    .itemType(ItemType.DISTILLERY)
+                    .destination(destinationRepository.findById(1L).get())
+                    .latitude(34.89564237533231f)
+                    .longitude(135.6797393092974f)
+                    .build();
+            distilleryRepository.save(distilleryAsahi);
+
             for (int i = 1; i <= 1000; i++) {
                 Destination destinations = Destination.builder()
                         .name("Destination " + i)
                         .description("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book." + i)
                         .img_url("https://upload.wikimedia.org/wikipedia/commons/e/ea/Taipei_Skyline_2022.06.29.jpg")
                         .itemType(ItemType.DESTINATION)
+                        .latitude(37.5665f)
+                        .longitude(126.9780f)
                         .country(countryRepository.findById(ids[i%10]).get())
                         .build();
-
 
                 destinationRepository.save(destinations);
 
@@ -49,6 +93,8 @@ public class DataLoader {
                         .img_url("https://upload.wikimedia.org/wikipedia/commons/f/f0/Yamazaki_Distillery_%E5%B1%B1%E5%B4%8E%E8%92%B8%E7%95%99%E6%89%8005.jpg")
                         .itemType(ItemType.DISTILLERY)
                         .destination(destinationRepository.findById((long) i).get())
+                        .latitude(37.5665f)
+                        .longitude(126.9780f)
                         .build();
                 distilleryRepository.save(distilleries);
 

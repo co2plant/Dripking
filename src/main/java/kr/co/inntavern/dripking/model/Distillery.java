@@ -26,6 +26,12 @@ public class Distillery extends Item{
     @Column(columnDefinition = "TEXT", length = 1000)
     private String description;
 
+    @Column
+    private float latitude;//위도
+
+    @Column
+    private float longitude;//경도
+
     @Column(nullable = false)
     private String img_url;
 
