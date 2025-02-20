@@ -36,6 +36,11 @@ public class DistilleryService {
         return distilleryRepository.findAllByDestinationId(pageable, destinationId).map(this::mapToDistilleryResponseDTO);
     }
 
+    public Page<DistilleryResponseDTO> getAllDistilleriesByLatitudeAndLongitude(Double minLatitude, Double maxLatitude, Double minLongitude, Double maxLongitude){
+        Pageable pageable = PageRequest.of(0, 10);
+        return distilleryRepository.findAllByLatitudeAndLongitude(pageable, minLatitude, maxLatitude, minLongitude, maxLongitude).map(this::mapToDistilleryResponseDTO);
+    }
+
     // ---------------------------------------------------------------------
     // Select Methods: 이름이 포함된(대소문자 무시) 컬럼을 검색하여 페이지 형태로 반환하는 메서드
     // ---------------------------------------------------------------------

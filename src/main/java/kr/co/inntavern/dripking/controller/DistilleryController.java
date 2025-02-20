@@ -34,6 +34,15 @@ public class DistilleryController {
         return distilleryService.getDistilleryById(distilleryId);
     }
 
+    @GetMapping("/latlng")
+    public ResponseEntity<Page<DistilleryResponseDTO>>getAllDistilleriesByLatitudeAndLongitude(@RequestParam(required=true, value="minLatitude") Double minLatitude,
+                                                                         @RequestParam(required=true, value="maxLatitude") Double maxLatitude,
+                                                                         @RequestParam(required=true, value="minLongitude") Double minLongitude,
+                                                                         @RequestParam(required=true, value="maxLongitude") Double maxLongitude){
+        Page<DistilleryResponseDTO> paging = distilleryService.getAllDistilleriesByLatitudeAndLongitude(minLatitude, maxLatitude, minLongitude, maxLongitude);
+        return ResponseEntity.ok(paging);
+    }
+
     @GetMapping("/search/{searchKeyword}")
     public ResponseEntity<Page<DistilleryResponseDTO>> searchDistilleriesByName(@RequestParam(value="page", defaultValue="0") int page,
                                                                      @PathVariable String searchKeyword){
