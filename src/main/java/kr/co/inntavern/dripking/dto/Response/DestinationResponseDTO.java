@@ -13,9 +13,9 @@ public class DestinationResponseDTO {
 
     private String description;
 
-    private float latitude;//위도
+    private Double latitude;//위도
 
-    private float longitude;//경도
+    private Double longitude;//경도
 
     private String img_url;
 

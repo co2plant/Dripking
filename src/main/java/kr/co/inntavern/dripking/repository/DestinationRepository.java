@@ -22,6 +22,10 @@ public interface DestinationRepository extends JpaRepository<Destination, Long> 
     @NonNull
     @Query("SELECT d FROM Destination d WHERE d.country.id = :countryId")
     Page<Destination> findAllByCountryId(Pageable pageable, Long countryId);
+
+    @NonNull
+    @Query("SELECT d FROM Destination d WHERE d.latitude BETWEEN :minLatitude AND :maxLatitude AND d.longitude BETWEEN :minLongitude AND :maxLongitude")
+    Page<Destination> findAllByLatitudeAndLongitude(Pageable pageable, Double minLatitude, Double maxLatitude, Double minLongitude, Double maxLongitude);
     @NonNull
     Page<Destination> findAllByNameContainingIgnoreCase(Pageable pageable, String name);
 }

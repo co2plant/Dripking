@@ -22,10 +22,10 @@ public class Destination extends Item{
     private String description;
 
     @Column
-    private float latitude;//위도
+    private Double latitude;//위도
 
     @Column
-    private float longitude;//경도
+    private Double longitude;//경도
 
     @Column(nullable = false)
     private String img_url;

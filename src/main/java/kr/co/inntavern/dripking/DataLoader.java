@@ -42,8 +42,8 @@ public class DataLoader {
                     .description("오야마자키정은 교토부 오토쿠니군의 정이다. 오사카부 미시마군 시마모토정과 접한다. 교토부에서 가장 면적의 작은 정이다. 옛 야마시로국의 오토쿠니군에 속했다")
                     .img_url("https://upload.wikimedia.org/wikipedia/commons/8/80/Oyamazaki_stn.jpg")
                     .itemType(ItemType.DESTINATION)
-                    .latitude(34.9023747484815f)
-                    .longitude(135.68551060039104f)
+                    .latitude(34.9023747484815d)
+                    .longitude(135.68551060039104d)
                     .country(countryRepository.findById(4L).get())
                     .build();
 
@@ -56,8 +56,8 @@ public class DataLoader {
                     .img_url("https://upload.wikimedia.org/wikipedia/commons/f/f0/Yamazaki_Distillery_%E5%B1%B1%E5%B4%8E%E8%92%B8%E7%95%99%E6%89%8005.jpg")
                     .itemType(ItemType.DISTILLERY)
                     .destination(destinationRepository.findById(1L).get())
-                    .latitude(34.89279866199688f)
-                    .longitude(135.67445757168372f)
+                    .latitude(34.89279866199688d)
+                    .longitude(135.6744575716837d)
                     .build();
             distilleryRepository.save(distillery);
 
@@ -68,8 +68,8 @@ public class DataLoader {
                     .img_url("https://upload.wikimedia.org/wikipedia/commons/f/f0/Yamazaki_Distillery_%E5%B1%B1%E5%B4%8E%E8%92%B8%E7%95%99%E6%89%8005.jpg")
                     .itemType(ItemType.DISTILLERY)
                     .destination(destinationRepository.findById(1L).get())
-                    .latitude(34.89564237533231f)
-                    .longitude(135.6797393092974f)
+                    .latitude(34.89564237533231d)
+                    .longitude(135.6797393092974d)
                     .build();
             distilleryRepository.save(distilleryAsahi);
 
@@ -79,8 +79,8 @@ public class DataLoader {
                         .description("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book." + i)
                         .img_url("https://upload.wikimedia.org/wikipedia/commons/e/ea/Taipei_Skyline_2022.06.29.jpg")
                         .itemType(ItemType.DESTINATION)
-                        .latitude(37.5665f)
-                        .longitude(126.9780f)
+                        .latitude(37.5665d)
+                        .longitude(126.9780d)
                         .country(countryRepository.findById(ids[i%10]).get())
                         .build();
 
@@ -93,8 +93,8 @@ public class DataLoader {
                         .img_url("https://upload.wikimedia.org/wikipedia/commons/f/f0/Yamazaki_Distillery_%E5%B1%B1%E5%B4%8E%E8%92%B8%E7%95%99%E6%89%8005.jpg")
                         .itemType(ItemType.DISTILLERY)
                         .destination(destinationRepository.findById((long) i).get())
-                        .latitude(37.5665f)
-                        .longitude(126.9780f)
+                        .latitude(37.5665d)
+                        .longitude(126.9780d)
                         .build();
                 distilleryRepository.save(distilleries);
 
