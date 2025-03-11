@@ -10,9 +10,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PlanRepository extends JpaRepository<Plan, Long> {
-
     Plan save(Plan plan);
 
     @Query("SELECT p FROM Plan p WHERE p.trip.id = :trip_id")
     Page<Plan> findAllById(@Param("trip_id")Long trip_id, Pageable pageable);
+
+    void deleteById(Long Long);
+
+    @Query("DELETE FROM Plan p WHERE p.trip.id = :trip_id")
+    void deleteAllByTripId(@Param("trip_id")Long trip_id);
 }

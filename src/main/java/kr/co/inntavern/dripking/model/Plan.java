@@ -1,12 +1,16 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
 @Entity
 @RequiredArgsConstructor
+@Getter
+@Setter
 public class Plan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,10 +27,13 @@ public class Plan {
     private Date plan_date;
 
     @Column
-    private Date plan_time;
+    private Date start_time;
 
     @Column
-    private Long location_id;
+    private Date end_time;
+
+    @Column
+    private Long place_id;
 
     @ManyToOne
     @JoinColumn(name = "trip_id")
