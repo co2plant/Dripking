@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import kr.co.inntavern.dripking.dto.Response.JwtResponse;
 import kr.co.inntavern.dripking.dto.Request.SignInRequest;
 import kr.co.inntavern.dripking.dto.Request.SignUpRequest;
-import kr.co.inntavern.dripking.model.User;
 import kr.co.inntavern.dripking.security.JwtUtils;
 import kr.co.inntavern.dripking.security.CustomUserDetails;
 import kr.co.inntavern.dripking.service.UserService;
@@ -41,14 +40,14 @@ public class UserController {
     @GetMapping("/status")
     public ResponseEntity<?> checkAuthStatus(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User userDetails = (User) authentication.getPrincipal();
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
         Map<String, Object> response = new HashMap<>();
         Map<String, Object> data = new HashMap<>();
 
-        data.put("email", userDetails.getEmail());
-        data.put("nickname", userDetails.getNickname());
-        data.put("roles", userDetails.getRoles());
+        data.put("email", customUserDetails.getEmail());
+        data.put("nickname", customUserDetails.getNickname());
+        data.put("roles", customUserDetails.getAuthorities());
 
         response.put("success", true);
         response.put("message", "User is authenticated");
@@ -56,8 +55,6 @@ public class UserController {
 
         return ResponseEntity.ok(response);
     }
-
-    @GetMapping("/")
 
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequest signUpRequest){
