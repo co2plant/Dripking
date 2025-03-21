@@ -42,6 +42,13 @@ public class UserService {
     }
 
     @Transactional
+    public void changePassword(String email, String newPassword){
+        User user = userRepository.findByEmail(email).orElseThrow();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    @Transactional
     public void userSignUp(SignUpRequest signUpRequest) {
         Set<Authority> roles = new HashSet<>();
         Authority authority = Authority.builder().name(signUpRequest.getUserRole()).build();
