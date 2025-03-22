@@ -79,19 +79,14 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        Map<String, String> errorMap = new HashMap<>();
-
-        if(!passwordEncoder.matches(changePasswordRequestDTO.getCurrentPassword(), customUserDetails.getPassword())){
-            errorMap.put("passwordCheck", "Password does not match"+customUserDetails.getPassword()+" (((( "+passwordEncoder.encode(changePasswordRequestDTO.getCurrentPassword()));
+        try{
+            userService.changePassword(customUserDetails.getEmail(), changePasswordRequestDTO.getNewPassword());
+        }catch(Exception e){
+            Map<String, String> errorMap = new HashMap<>();
+            errorMap.put("error", e.getMessage());
             return ResponseEntity.badRequest().body(errorMap);
         }
 
-        if(changePasswordRequestDTO.getNewPassword().length() < 16 || !(changePasswordRequestDTO.getNewPassword().matches(".*[!@#$%^&*].*"))){
-            errorMap.put("passwordCheck", "Password must be at least 8 characters long and contain special characters");
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
-        userService.changePassword(customUserDetails.getEmail(), changePasswordRequestDTO.getNewPassword());
         return ResponseEntity.ok().build();
     }
 

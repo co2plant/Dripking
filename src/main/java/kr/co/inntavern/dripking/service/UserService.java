@@ -44,8 +44,24 @@ public class UserService {
     @Transactional
     public void changePassword(String email, String newPassword){
         User user = userRepository.findByEmail(email).orElseThrow();
+
+        if(passwordEncoder.matches(newPassword, user.getPassword())){
+            throw new RuntimeException("New password must be different from the current password");
+        }
+
+        validateNewPassword(newPassword);
+
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+    }
+
+    private void validateNewPassword(String newPassword){
+        if(newPassword.length() < 16) {
+            throw new RuntimeException("Password must be at least 16 characters long");
+        }
+        if(newPassword.matches(".*[!@#$%^&*].*")){
+            throw new RuntimeException("Password must contain at least one special character");
+        }
     }
 
     @Transactional
