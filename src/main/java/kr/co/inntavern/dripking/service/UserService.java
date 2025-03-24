@@ -41,6 +41,10 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public Long getNumberOfUsersByIsEmailVerified(boolean isEmailVerified){
+        return userRepository.countByIsEmailVerified(isEmailVerified);
+    }
+
     @Transactional
     public void changePassword(String email, String newPassword){
         User user = userRepository.findByEmail(email).orElseThrow();
