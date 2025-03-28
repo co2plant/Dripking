@@ -48,7 +48,7 @@ public class ReviewController {
 
             reviewService.createReview(customUserDetails.getId(), reviewRequestDTO);
 
-            return ResponseEntity.ok().build();
+            return ResponseEntity.status(HttpStatus.OK).build();
         }else{
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -57,7 +57,7 @@ public class ReviewController {
     @PutMapping
     public ResponseEntity<?> updateReview(@RequestParam Long review_id, @RequestBody ReviewRequestDTO reviewRequestDTO){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null & authentication.getPrincipal() instanceof CustomUserDetails) {
+        if(authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
             CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
             reviewService.updateReview(customUserDetails.getId(), review_id, reviewRequestDTO);
