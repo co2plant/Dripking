@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,4 +38,6 @@ public class User {
     private String phoneNumber;
 
     private String address;
+
+    private Date createdAt;
 }

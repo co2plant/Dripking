@@ -44,20 +44,29 @@ public class UserController {
     @GetMapping("/status")
     public ResponseEntity<?> checkAuthStatus(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        if(authentication != null && authentication.getPrincipal() instanceof CustomUserDetails){
+            //패턴 변수로 변경 가능
+            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        Map<String, Object> response = new HashMap<>();
-        Map<String, Object> data = new HashMap<>();
+            Map<String, Object> response = new HashMap<>();
+            Map<String, Object> data = new HashMap<>();
 
-        data.put("email", customUserDetails.getEmail());
-        data.put("nickname", customUserDetails.getNickname());
-        data.put("roles", customUserDetails.getAuthorities());
+            data.put("email", customUserDetails.getEmail());
+            data.put("nickname", customUserDetails.getNickname());
+            data.put("roles", customUserDetails.getAuthorities());
 
-        response.put("success", true);
-        response.put("message", "User is authenticated");
-        response.put("data", data);
+            response.put("success", true);
+            response.put("message", "User is authenticated");
+            response.put("data", data);
 
-        return ResponseEntity.ok(response);
+            return ResponseEntity.ok(response);
+        }else{
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "User is not authenticated");
+
+            return ResponseEntity.ok(response);
+        }
     }
 
     @PostMapping("/signup")
