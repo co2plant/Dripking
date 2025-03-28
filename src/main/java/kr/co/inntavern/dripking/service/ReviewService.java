@@ -32,6 +32,7 @@ public class ReviewService {
         Pageable pageable = (sort.equals("ASC") ?
                 PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, criteria))
                 : PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, criteria)));
+
         return reviewRepository.findAll(pageable).map(this::mapToReviewResponseDTO);
     }
 
@@ -39,6 +40,7 @@ public class ReviewService {
         Pageable pageable = (sort.equals("ASC") ?
                 PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, criteria))
                 : PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, criteria)));
+
         return reviewRepository.findAllByUserId(user_id, pageable).map(this::mapToReviewResponseDTO);
     }
 
@@ -47,6 +49,7 @@ public class ReviewService {
                 PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, criteria))
                 : PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, criteria)));
         ReviewType reviewTypeEnum = ReviewType.valueOf(reviewType.toUpperCase());
+
         return reviewRepository.findAllByTargetId(target_id, reviewTypeEnum, pageable).map(this::mapToReviewResponseDTO);
     }
 
@@ -62,15 +65,19 @@ public class ReviewService {
     // Create Methods: 엔티티를 생성하는 메서드
     // ---------------------------------------------------------------------
     public void createReview(ReviewRequestDTO reviewRequestDTO){
+        Review review = new Review();
+
         User user = userRepository.findById(reviewRequestDTO.getUser_id())
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 유저가 존재하지 않습니다."));
-        Review review = new Review();
-        review.setUser(user); //user 에 관한 내용은 login 기능이 구현되면 추가할 예정
 
+
+
+        review.setUser(user); //user 에 관한 내용은 login 기능이 구현되면 추가할 예정
         review.setRating(reviewRequestDTO.getRating());
         review.setReviewType(reviewRequestDTO.getReviewType());
         review.setTarget_id(reviewRequestDTO.getTarget_id());
         review.setContents(reviewRequestDTO.getContents());
+
         reviewRepository.save(review);
     }
 
@@ -86,6 +93,7 @@ public class ReviewService {
         review.get().setReviewType(reviewRequestDTO.getReviewType());
         review.get().setRating(reviewRequestDTO.getRating());
         review.get().setContents(reviewRequestDTO.getContents());
+
         reviewRepository.save(review.orElse(null));
     }
 
@@ -98,6 +106,7 @@ public class ReviewService {
 
     private ReviewResponseDTO mapToReviewResponseDTO(Review review){
         ReviewResponseDTO responseDTO = new ReviewResponseDTO();
+
         responseDTO.setId(review.getId());
         responseDTO.setNickname(review.getUser().getNickname());
         responseDTO.setReviewType(review.getReviewType());
@@ -106,6 +115,7 @@ public class ReviewService {
         responseDTO.setContents(review.getContents());
         responseDTO.setCreatedTime(review.getCreatedAt());
         responseDTO.setModifiedTime(review.getModifiedAt());
+
         return responseDTO;
     }
 }
