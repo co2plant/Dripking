@@ -61,11 +61,12 @@ public class ReviewController {
             CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
             reviewService.updateReview(customUserDetails.getId(), review_id, reviewRequestDTO);
+
+
+            return ResponseEntity.status(HttpStatus.OK).build();
         }else{
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
-        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping
