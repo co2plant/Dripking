@@ -41,17 +41,11 @@ public class JwtUtils {
                 .parseClaimsJws(token).getBody().getSubject();
     }
 
-    public boolean validateJwtToken(String authToken){
-        try{
-            Jwts.parserBuilder().setSigningKey(key).build().parse(authToken);
+    public boolean validateJwtToken(String authToken) {
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(authToken);
             return true;
-        }catch (MalformedJwtException e){
-            return false;
-        }catch (ExpiredJwtException e){
-            return false;
-        }catch(UnsupportedJwtException e){
-            return false;
-        }catch(IllegalArgumentException e){
+        } catch (MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException e) {
             return false;
         }
     }
