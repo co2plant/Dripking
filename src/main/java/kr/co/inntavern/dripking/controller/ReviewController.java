@@ -2,10 +2,13 @@ package kr.co.inntavern.dripking.controller;
 
 import kr.co.inntavern.dripking.dto.Request.ReviewRequestDTO;
 import kr.co.inntavern.dripking.dto.Response.ReviewResponseDTO;
+import kr.co.inntavern.dripking.security.CustomUserDetails;
 import kr.co.inntavern.dripking.service.ReviewService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -38,20 +41,34 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createReview(@RequestBody ReviewRequestDTO reviewRequestDTO){
-        reviewService.createReview(reviewRequestDTO);
+    public ResponseEntity<?> createReview(@RequestBody ReviewRequestDTO reviewRequestDTO){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null && authentication.getPrincipal() instanceof CustomUserDetails){
+            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+            reviewService.createReview(customUserDetails.getId(), reviewRequestDTO);
+
+            return ResponseEntity.ok().build();
+        }else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateReview(@RequestParam Long id, @RequestBody ReviewRequestDTO reviewRequestDTO){
-        reviewService.updateReview(id, reviewRequestDTO);
+    public ResponseEntity<?> updateReview(@RequestParam Long review_id, @RequestBody ReviewRequestDTO reviewRequestDTO){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null & authentication.getPrincipal() instanceof CustomUserDetails) {
+            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+            reviewService.updateReview(customUserDetails.getId(), review_id, reviewRequestDTO);
+        }else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping()
+    @DeleteMapping
     public ResponseEntity<Void> deleteReview(@RequestParam Long id){
         reviewService.deleteReview(id);
 

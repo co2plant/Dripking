@@ -64,15 +64,13 @@ public class ReviewService {
     // ---------------------------------------------------------------------
     // Create Methods: 엔티티를 생성하는 메서드
     // ---------------------------------------------------------------------
-    public void createReview(ReviewRequestDTO reviewRequestDTO){
+    public void createReview(Long user_id, ReviewRequestDTO reviewRequestDTO){
         Review review = new Review();
 
-        User user = userRepository.findById(reviewRequestDTO.getUser_id())
+        User user = userRepository.findById(user_id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 유저가 존재하지 않습니다."));
 
-
-
-        review.setUser(user); //user 에 관한 내용은 login 기능이 구현되면 추가할 예정
+        review.setUser(user);
         review.setRating(reviewRequestDTO.getRating());
         review.setReviewType(reviewRequestDTO.getReviewType());
         review.setTarget_id(reviewRequestDTO.getTarget_id());
@@ -84,17 +82,22 @@ public class ReviewService {
     // ---------------------------------------------------------------------
     // Update Methods: 엔티티를 수정하는 메서드
     // ---------------------------------------------------------------------
-    public void updateReview(Long id, ReviewRequestDTO reviewRequestDTO){
-        Optional<Review> review = reviewRepository.findById(id);
-        if(review.isEmpty()){
-            throw new IllegalArgumentException("해당 ID의 리뷰가 존재하지 않습니다.");
+    public void updateReview(Long user_id, Long review_id, ReviewRequestDTO reviewRequestDTO){
+        User user = userRepository.findById(user_id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 유저가 존재하지 않습니다."));
+
+        Review review = reviewRepository.findById(review_id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 리뷰가 존재하지 않습니다."));
+
+        if(!review.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("해당 리뷰를 수정할 권한이 없습니다.");
         }
 
-        review.get().setReviewType(reviewRequestDTO.getReviewType());
-        review.get().setRating(reviewRequestDTO.getRating());
-        review.get().setContents(reviewRequestDTO.getContents());
+        review.setReviewType(reviewRequestDTO.getReviewType());
+        review.setRating(reviewRequestDTO.getRating());
+        review.setContents(reviewRequestDTO.getContents());
 
-        reviewRepository.save(review.orElse(null));
+        reviewRepository.save(review);
     }
 
     // ---------------------------------------------------------------------
