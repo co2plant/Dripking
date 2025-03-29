@@ -32,7 +32,7 @@ public class ReviewController {
             Page<ReviewResponseDTO> paging = reviewService.getAllReviewsByUserID(page, size, criteria, sort, user_id);
             return ResponseEntity.ok(paging);
         }
-        if(user_id==null && target_id!=null && reviewType!=null){
+        if(target_id!=null && reviewType!=null){
             Page<ReviewResponseDTO> paging = reviewService.getAllReviewsByTargetID(page, size, criteria, sort, reviewType, target_id);
             return ResponseEntity.ok(paging);
         }
@@ -43,9 +43,7 @@ public class ReviewController {
     @PostMapping
     public ResponseEntity<?> createReview(@RequestBody ReviewRequestDTO reviewRequestDTO){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null && authentication.getPrincipal() instanceof CustomUserDetails){
-            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-
+        if(authentication != null && authentication.getPrincipal() instanceof CustomUserDetails customUserDetails){
             reviewService.createReview(customUserDetails.getId(), reviewRequestDTO);
 
             return ResponseEntity.status(HttpStatus.OK).build();
@@ -57,11 +55,8 @@ public class ReviewController {
     @PutMapping
     public ResponseEntity<?> updateReview(@RequestParam Long review_id, @RequestBody ReviewRequestDTO reviewRequestDTO){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
-            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-
+        if(authentication != null && authentication.getPrincipal() instanceof CustomUserDetails customUserDetails) {
             reviewService.updateReview(customUserDetails.getId(), review_id, reviewRequestDTO);
-
 
             return ResponseEntity.status(HttpStatus.OK).build();
         }else{
@@ -70,9 +65,14 @@ public class ReviewController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteReview(@RequestParam Long id){
-        reviewService.deleteReview(id);
+    public ResponseEntity<Void> deleteReview(@RequestParam Long review_id){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null && authentication.getPrincipal() instanceof CustomUserDetails customUserDetails){
+            reviewService.deleteReview(customUserDetails.getId(), review_id);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 }
