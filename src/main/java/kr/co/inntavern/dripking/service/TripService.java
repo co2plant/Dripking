@@ -35,9 +35,6 @@ public class TripService {
         return trips.map(this::mapToTripResponseDTO);
     }
 
-    // ---------------------------------------------------------------------
-    // Create Methods: 엔티티를 생성하는 메서드
-    // ---------------------------------------------------------------------
     public TripResponseDTO createTrip(TripRequestDTO tripRequestDTO){
         User user = userRepository.findById(tripRequestDTO.getUser_id())
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 유저가 존재하지 않습니다."));
@@ -53,9 +50,6 @@ public class TripService {
         return mapToTripResponseDTO(tripRepository.save(trip));
     }
 
-    // ---------------------------------------------------------------------
-    // Update Methods: 엔티티를 수정하는 메서드
-    // ---------------------------------------------------------------------
     public void updateTrip(Long id, TripRequestDTO tripRequestDTO){
         Optional<Trip> trip = tripRepository.findById(id);
         if(trip.isEmpty()){
@@ -70,9 +64,6 @@ public class TripService {
         tripRepository.save(trip.orElse(null));
     }
 
-    // ---------------------------------------------------------------------
-    // Delete Methods: 엔티티를 삭제하는 메서드
-    // ---------------------------------------------------------------------
     public void deleteTripById(Long id){
         tripRepository.deleteById(id);
     }

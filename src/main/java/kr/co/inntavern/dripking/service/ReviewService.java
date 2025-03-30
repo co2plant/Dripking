@@ -23,9 +23,6 @@ public class ReviewService {
         this.userRepository = userRepository;
     }
 
-    // ---------------------------------------------------------------------
-    // Select Methods: 모든 엔티티를 페이지 형태로 반환하는 메서드
-    // ---------------------------------------------------------------------
     public Page<ReviewResponseDTO> getAllReviews(int page, int size, String criteria, String sort){
         Pageable pageable = (sort.equals("ASC") ?
                 PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, criteria))
@@ -51,35 +48,21 @@ public class ReviewService {
         return reviewRepository.findAllByTargetId(target_id, reviewTypeEnum, pageable).map(this::mapToReviewResponseDTO);
     }
 
-    // ---------------------------------------------------------------------
-    // Select Methods: 특정 Id를 가진 엔티티를 반환하는 메서드
-    // ---------------------------------------------------------------------
-    public Review getReviewById(Long Id){
-        return reviewRepository.findById(Id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 리뷰가 존재하지 않습니다."));
-    }
-
-    // ---------------------------------------------------------------------
-    // Create Methods: 엔티티를 생성하는 메서드
-    // ---------------------------------------------------------------------
     public void createReview(Long user_id, ReviewRequestDTO reviewRequestDTO){
-        Review review = new Review();
-
         User user = userRepository.findById(user_id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 유저가 존재하지 않습니다."));
 
-        review.setUser(user);
-        review.setRating(reviewRequestDTO.getRating());
-        review.setReviewType(reviewRequestDTO.getReviewType());
-        review.setTarget_id(reviewRequestDTO.getTarget_id());
-        review.setContents(reviewRequestDTO.getContents());
+        Review review = Review.builder()
+                .user(user)
+                .rating(reviewRequestDTO.getRating())
+                .reviewType(reviewRequestDTO.getReviewType())
+                .target_id(reviewRequestDTO.getTarget_id())
+                .contents(reviewRequestDTO.getContents())
+                .build();
 
         reviewRepository.save(review);
     }
 
-    // ---------------------------------------------------------------------
-    // Update Methods: 엔티티를 수정하는 메서드
-    // ---------------------------------------------------------------------
     public void updateReview(Long user_id, Long review_id, ReviewRequestDTO reviewRequestDTO){
         User user = userRepository.findById(user_id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 유저가 존재하지 않습니다."));
