@@ -7,8 +7,7 @@ import kr.co.inntavern.dripking.service.ReviewService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -41,9 +40,8 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createReview(@RequestBody ReviewRequestDTO reviewRequestDTO){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null && authentication.getPrincipal() instanceof CustomUserDetails customUserDetails){
+    public ResponseEntity<?> createReview(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ReviewRequestDTO reviewRequestDTO){
+        if(customUserDetails != null){
             reviewService.createReview(customUserDetails.getId(), reviewRequestDTO);
 
             return ResponseEntity.status(HttpStatus.OK).build();
@@ -53,9 +51,8 @@ public class ReviewController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateReview(@RequestParam Long review_id, @RequestBody ReviewRequestDTO reviewRequestDTO){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null && authentication.getPrincipal() instanceof CustomUserDetails customUserDetails) {
+    public ResponseEntity<?> updateReview(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam Long review_id, @RequestBody ReviewRequestDTO reviewRequestDTO){
+        if(customUserDetails != null){
             reviewService.updateReview(customUserDetails.getId(), review_id, reviewRequestDTO);
 
             return ResponseEntity.status(HttpStatus.OK).build();
@@ -65,9 +62,8 @@ public class ReviewController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteReview(@RequestParam Long review_id){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null && authentication.getPrincipal() instanceof CustomUserDetails customUserDetails){
+    public ResponseEntity<Void> deleteReview(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam Long review_id){
+        if(customUserDetails != null){
             reviewService.deleteReview(customUserDetails.getId(), review_id);
 
             return ResponseEntity.status(HttpStatus.OK).build();
