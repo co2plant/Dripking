@@ -7,8 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/alcohols")
 public class AlcoholController {
@@ -35,7 +33,7 @@ public class AlcoholController {
     }
 
     @GetMapping("/distillery") //endpoint변경해야함.
-    public ResponseEntity<Page<AlcoholResponseDTO>> getAllAlcoholsByDistilleryId(@RequestParam(required=true, value="distillery") Long distilleryId){
+    public ResponseEntity<Page<AlcoholResponseDTO>> getAllAlcoholsByDistilleryId(@RequestParam(value="distillery") Long distilleryId){
         Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcoholsByDistilleryId(distilleryId);
         return ResponseEntity.ok(paging);
     }
@@ -53,20 +51,20 @@ public class AlcoholController {
 
     @PostMapping
     public ResponseEntity<Alcohol> createAlcohol(@RequestBody Alcohol alcohol){
-        Alcohol createdAlcohol = alcoholService.createAlcohol(alcohol);
-        return ResponseEntity.ok(createdAlcohol);
+        alcoholService.createAlcohol(alcohol);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Alcohol> updateAlcohol(@PathVariable Long id, @RequestBody Alcohol alcohol){
-        Alcohol updatedAlcohol = alcoholService.updateAlcohol(alcohol.getId(), alcohol);
-        return ResponseEntity.ok(updatedAlcohol);
+    @PutMapping("/{alcohol_id}")
+    public ResponseEntity<Alcohol> updateAlcohol(@PathVariable Long alcohol_id, @RequestBody Alcohol alcohol){
+        alcoholService.updateAlcohol(alcohol_id, alcohol);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAlcohol(@PathVariable Long id)
+    @DeleteMapping("/{alcohol_id}")
+    public ResponseEntity<Void> deleteAlcohol(@PathVariable Long alcohol_id)
     {
-        alcoholService.deleteAlcoholById(id);
+        alcoholService.deleteAlcoholById(alcohol_id);
         return ResponseEntity.ok().build();
     }
 

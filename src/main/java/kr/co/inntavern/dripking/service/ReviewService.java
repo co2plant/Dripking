@@ -81,12 +81,9 @@ public class ReviewService {
         reviewRepository.save(review);
     }
 
-    // ---------------------------------------------------------------------
-    // Delete Methods: 엔티티를 삭제하는 메서드
-    // ---------------------------------------------------------------------
     public void deleteReview(Long user_id, Long review_id){
         Review review = reviewRepository.findById(review_id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 리뷰가 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("이미 삭제되거나 없는 리뷰입니다."));
 
         if(!review.getUser().getId().equals(user_id)){
             throw new IllegalArgumentException("해당 리뷰를 삭제할 권한이 없습니다.");

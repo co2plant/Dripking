@@ -23,22 +23,22 @@ public class DistilleryController {
         return ResponseEntity.ok(paging);
     }
 
-    @GetMapping("/destination") //endpoint변경해야함.
-    public ResponseEntity<Page<DistilleryResponseDTO>> getAllDistilleriesByDestinationId(@RequestParam(required=true, value="destination") Long destinationId){
+    @GetMapping("/destination") //endpoint 변경해야함.
+    public ResponseEntity<Page<DistilleryResponseDTO>> getAllDistilleriesByDestinationId(@RequestParam(value="destination") Long destinationId){
         Page<DistilleryResponseDTO> paging = distilleryService.getAllDistilleriesByDestinationId(destinationId);
         return ResponseEntity.ok(paging);
     }
 
-    @GetMapping("/{distilleryId}")
-    public DistilleryResponseDTO getDistilleryById(@PathVariable Long distilleryId) {
-        return distilleryService.getDistilleryById(distilleryId);
+    @GetMapping("/{distillery_id}")
+    public DistilleryResponseDTO getDistilleryById(@PathVariable Long distillery_id) {
+        return distilleryService.getDistilleryById(distillery_id);
     }
 
     @GetMapping("/latlng")
-    public ResponseEntity<Page<DistilleryResponseDTO>>getAllDistilleriesByLatitudeAndLongitude(@RequestParam(required=true, value="minLatitude") Double minLatitude,
-                                                                         @RequestParam(required=true, value="maxLatitude") Double maxLatitude,
-                                                                         @RequestParam(required=true, value="minLongitude") Double minLongitude,
-                                                                         @RequestParam(required=true, value="maxLongitude") Double maxLongitude){
+    public ResponseEntity<Page<DistilleryResponseDTO>>getAllDistilleriesByLatitudeAndLongitude(@RequestParam(value="minLatitude") Double minLatitude,
+                                                                         @RequestParam(value="maxLatitude") Double maxLatitude,
+                                                                         @RequestParam(value="minLongitude") Double minLongitude,
+                                                                         @RequestParam(value="maxLongitude") Double maxLongitude){
         Page<DistilleryResponseDTO> paging = distilleryService.getAllDistilleriesByLatitudeAndLongitude(minLatitude, maxLatitude, minLongitude, maxLongitude);
         return ResponseEntity.ok(paging);
     }
@@ -52,20 +52,20 @@ public class DistilleryController {
 
     @PostMapping
     public ResponseEntity<Distillery> createDistillery(@RequestBody Distillery distillery){
-        Distillery createdDistillery = distilleryService.createDistillery(distillery);
-        return ResponseEntity.ok(createdDistillery);
+        distilleryService.createDistillery(distillery);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Distillery> updateDistillery(@PathVariable Long id, @RequestBody Distillery distillery){
-        Distillery updatedDistillery = distilleryService.updateDistillery(distillery.getId(), distillery);
-        return ResponseEntity.ok(updatedDistillery);
+    @PutMapping("/{distillery_id}")
+    public ResponseEntity<Distillery> updateDistillery(@PathVariable Long distillery_id, @RequestBody Distillery distillery){
+        distilleryService.updateDistillery(distillery_id, distillery);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDistillery(@PathVariable Long id)
+    @DeleteMapping("/{distillery_id}")
+    public ResponseEntity<Void> deleteDistillery(@PathVariable Long distillery_id)
     {
-        distilleryService.deleteDistilleryById(id);
+        distilleryService.deleteDistilleryById(distillery_id);
         return ResponseEntity.ok().build();
     }
 

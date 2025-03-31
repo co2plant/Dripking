@@ -35,15 +35,20 @@ public class DestinationService {
         return destinationRepository.findAllByCountryId(pageable, countryId).map(this::mapToDestinationResponseDTO);
     }
 
-    public Destination createDestination(Destination Destination){
-        return destinationRepository.save(Destination);
+    public void createDestination(Destination Destination){
+        destinationRepository.save(Destination);
     }
 
-    public Destination updateDestination(Long id, Destination Destination){
-        return destinationRepository.save(Destination);
+    public void updateDestination(Long destination_id, Destination Destination){
+        Destination exsitingDestination = destinationRepository.findById(destination_id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 장소가 존재하지 않습니다."));
+
+        destinationRepository.save(Destination);
     }
 
     public void deleteDestinationById(Long id){
+        Destination destination = destinationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("이미 삭제되거나 없는 장소입니다."));
         destinationRepository.deleteById(id);
     }
 

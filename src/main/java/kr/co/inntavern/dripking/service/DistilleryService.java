@@ -40,16 +40,22 @@ public class DistilleryService {
         return distilleryRepository.findAllByNameContainingIgnoreCase(pageable, name).map(this::mapToDistilleryResponseDTO);
     }
 
-    public Distillery createDistillery(Distillery Distillery){
-        return distilleryRepository.save(Distillery);
+    public void createDistillery(Distillery Distillery){
+        distilleryRepository.save(Distillery);
     }
 
-    public Distillery updateDistillery(Long id, Distillery Distillery){
-        return distilleryRepository.save(Distillery);
+    public void updateDistillery(Long distillery_id, Distillery Distillery){
+        Distillery existingDistillery = distilleryRepository.findById(distillery_id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 증류소가 존재하지 않습니다."));
+
+        distilleryRepository.save(Distillery);
     }
 
-    public void deleteDistilleryById(Long id){
-        distilleryRepository.deleteById(id);
+    public void deleteDistilleryById(Long distillery_id){
+        Distillery distillery = distilleryRepository.findById(distillery_id)
+                .orElseThrow(() -> new IllegalArgumentException("이미 삭제되거나 없는 증류소입니다."));
+
+        distilleryRepository.deleteById(distillery_id);
     }
 
     private DistilleryResponseDTO mapToDistilleryResponseDTO(Distillery distillery){

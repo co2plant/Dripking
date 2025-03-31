@@ -41,15 +41,21 @@ public class AlcoholService {
         return alcoholRepository.findAllByDistilleryId(pageable, distilleryId).map(this::mapToAlcoholResponseDTO);
     }
 
-    public Alcohol createAlcohol(Alcohol alcohol){
-        return alcoholRepository.save(alcohol);
+    public void createAlcohol(Alcohol alcohol){
+        alcoholRepository.save(alcohol);
     }
 
-    public Alcohol updateAlcohol(Long id, Alcohol alcohol){
-        return alcoholRepository.save(alcohol);
+    public void updateAlcohol(Long alcohol_id, Alcohol alcohol){
+        Alcohol existingAlcohol = alcoholRepository.findById(alcohol_id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 술이 존재하지 않습니다."));
+
+        alcoholRepository.save(alcohol);
     }
 
     public void deleteAlcoholById(Long id){
+        Alcohol alcohol = alcoholRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("이미 삭제되거나 없는 술입니다."));
+
         alcoholRepository.deleteById(id);
     }
 

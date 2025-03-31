@@ -35,9 +35,9 @@ public class DestinationController
 
     }
 
-    @GetMapping("/{DestinationId}")
-    public DestinationResponseDTO getDestinationById(@PathVariable Long DestinationId) {
-        return destinationService.getDestinationById(DestinationId);
+    @GetMapping("/{destination_id}")
+    public DestinationResponseDTO getDestinationById(@PathVariable Long destination_id) {
+        return destinationService.getDestinationById(destination_id);
     }
 
     @GetMapping("/search/{searchKeyword}")
@@ -48,20 +48,20 @@ public class DestinationController
 
     @PostMapping
     public ResponseEntity<Destination> createDestination(@RequestBody Destination Destination){
-        Destination createdDestination = destinationService.createDestination(Destination);
-        return ResponseEntity.ok(createdDestination);
+        destinationService.createDestination(Destination);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Destination> updateDestination(@PathVariable Long id, @RequestBody Destination Destination){
-        Destination updatedDestination = destinationService.updateDestination(Destination.getId(), Destination);
-        return ResponseEntity.ok(updatedDestination);
+    @PutMapping("/{destination_id}")
+    public ResponseEntity<Destination> updateDestination(@PathVariable Long destination_id, @RequestBody Destination Destination){
+        destinationService.updateDestination(destination_id, Destination);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDestination(@PathVariable Long id)
+    @DeleteMapping("/{destination_id}")
+    public ResponseEntity<Void> deleteDestination(@PathVariable Long destination_id)
     {
-        destinationService.deleteDestinationById(id);
+        destinationService.deleteDestinationById(destination_id);
         return ResponseEntity.ok().build();
     }
 }
