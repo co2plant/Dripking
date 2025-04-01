@@ -35,6 +35,7 @@ dependencies {
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.security:spring-security-test:6.4.2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
