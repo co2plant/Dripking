@@ -1,0 +1,87 @@
+name: Java CI with Gradle
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true &&
+      contains(github.event.pull_request.labels.*.name, 'backend') &&
+      contains(github.event.pull_request.labels.*.name, "operation'
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v4
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'corretto'
+
+    # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
+    # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+
+    - name: Grant Permission
+      run: chmod +x ./gradlew
+      working-directory: ./dripking
+
+    - name: Build with Gradle Wrapper
+      run: ./gradlew build -x test
+      working-directory: ./dripking
+      env: 
+        AES_ALGORITHM: ${{ secrets.AES_ALGORITHM }}
+        AES_SECRET_KEY: ${{ secrets.AES_SECRET_KEY }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_URL: ${{ secrets.DB_URL }}
+        DB_USERNAME: ${{ secrets.DB_USERNAME }}
+        DDL_TYPE: ${{ secrets.DDL_TYPE }}
+        ES_HOST: ${{ secrets.ES_HOST }}
+        ES_PORT: ${{ secrets.ES_PORT }}
+        ES_URL: ${{ secrets.ES_URL }}
+        FIXED_DELAY: ${{ secrets.FIXED_DELAY }}
+        FRONT_REDIRECT_URL: ${{ secrets.FRONT_REDIRECT_URL }}
+        IMP_API_KEY: ${{ secrets.IMP_API_KEY }}
+        IMP_SECRET_KEY: ${{ secrets.IMP_SECRET_KEY }}
+        JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+        KAKAO_REDIRECT_URL: ${{ secrets.KAKAO_REDIRECT_URL }}
+        KAKAO_REST_API: ${{ secrets.KAKAO_REST_API }}
+        MAX_ACTIVE: ${{ secrets.MAX_ACTIVE }}
+        PORT: ${{ secrets.PORT }}
+        QUEUE_NECESSARY: ${{ secrets.QUEUE_NECESSARY }}
+        REDIS_HOST: ${{ secrets.REDIS_HOST }}
+        REDIS_PORT: ${{ secrets.REDIS_PORT }}
+        SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+        WAITING_QUEUE_SCHEDULER: ${{ secrets.WAITING_QUEUE_SCHEDULER }}
+
+    - name: Copy build files to Oracle Cloud Shared Compute
+      uses: appleboy/scp-actions@master
+      with:
+        host: ${{ secrets.BACKEND_HOST }}
+        username: ubuntu
+        key: ${{ secrets.BACKEND_SSH_KEY }}
+        source: "/home/ubuntu/dripking/backend/build/libs/dripking-0.0.1-SNAPSHOT.jar"
+        target: "/home/ubuntu/action/"
+
+    - name: Run application on EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{secrets.BACKEND_HOST }}
+        username: ubuntu
+        key: ${{ secrets.BACKEND_SSH_KEY }}
+        script: |
+          if lsof -i:8080 -t > /dev/null; then
+            kill -9 $(lsof -i:8080 -t)
+          fi
+
+          nohup bash -c "source /home/ubuntu/.bashrc && java -jar /home/ubuntu/dripking/backend/build/libs/dripking-0.0.1-SNAPSHOT.jar "> /home/ubuntu/action/cgb.log 2>&1 &
+        
