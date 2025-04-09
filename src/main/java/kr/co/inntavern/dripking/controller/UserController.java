@@ -2,7 +2,7 @@ package kr.co.inntavern.dripking.controller;
 
 import jakarta.validation.Valid;
 import kr.co.inntavern.dripking.dto.Request.ChangePasswordRequestDTO;
-import kr.co.inntavern.dripking.dto.Response.JwtResponse;
+import kr.co.inntavern.dripking.dto.Response.JwtTokenResponseDTO;
 import kr.co.inntavern.dripking.dto.Request.SignInRequest;
 import kr.co.inntavern.dripking.dto.Request.SignUpRequest;
 import kr.co.inntavern.dripking.security.JwtUtils;
@@ -105,22 +105,18 @@ public class UserController {
                 new UsernamePasswordAuthenticationToken(signInRequest.getEmail(), signInRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.issueJwtToken(authentication);
+        JwtTokenResponseDTO jwtTokenResponseDTO = jwtUtils.issueJwtToken(authentication);
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Authorization", "Bearer " + jwt);
+        httpHeaders.add("Authorization", "Bearer " + jwtTokenResponseDTO.getAccessToken());
         httpHeaders.add("Access-Control-Expose-Headers", "Authorization");
 
         List<String> roles = customUserDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        return new ResponseEntity<>(new JwtResponse(jwt,
-                customUserDetails.getNickname(),
-                customUserDetails.getEmail(),
-                roles),
-                httpHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<>(httpHeaders, HttpStatus.CREATED);
     }
 }
