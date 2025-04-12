@@ -3,7 +3,7 @@ package kr.co.inntavern.dripking.service;
 import kr.co.inntavern.dripking.dto.Request.ReviewRequestDTO;
 import kr.co.inntavern.dripking.dto.Response.ReviewResponseDTO;
 import kr.co.inntavern.dripking.model.Review;
-import kr.co.inntavern.dripking.model.ReviewType;
+import kr.co.inntavern.dripking.model.enumType.ReviewType;
 import kr.co.inntavern.dripking.model.User;
 import kr.co.inntavern.dripking.repository.ReviewRepository;
 import kr.co.inntavern.dripking.repository.UserRepository;

@@ -1,6 +1,6 @@
 package kr.co.inntavern.dripking.dto.Response;
 
-import kr.co.inntavern.dripking.model.ItemType;
+import kr.co.inntavern.dripking.model.enumType.ItemType;
 import lombok.Getter;
 import lombok.Setter;
 

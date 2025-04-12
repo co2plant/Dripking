@@ -1,6 +1,7 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
+import kr.co.inntavern.dripking.model.enumType.ReviewType;
 import lombok.*;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.data.annotation.CreatedDate;

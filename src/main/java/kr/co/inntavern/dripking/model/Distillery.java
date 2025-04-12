@@ -1,6 +1,7 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
+import kr.co.inntavern.dripking.model.enumType.ItemType;
 import lombok.*;
 
 @Setter

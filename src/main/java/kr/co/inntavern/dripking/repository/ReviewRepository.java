@@ -1,7 +1,7 @@
 package kr.co.inntavern.dripking.repository;
 
 import kr.co.inntavern.dripking.model.Review;
-import kr.co.inntavern.dripking.model.ReviewType;
+import kr.co.inntavern.dripking.model.enumType.ReviewType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
