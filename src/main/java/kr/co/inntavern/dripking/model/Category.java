@@ -1,6 +1,7 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
+import kr.co.inntavern.dripking.model.enumType.CategoryType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,5 +23,9 @@ public class Category {
 
     @Column(columnDefinition = "TEXT", length = 1000)
     private String description;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private CategoryType categoryType;
 
 }
