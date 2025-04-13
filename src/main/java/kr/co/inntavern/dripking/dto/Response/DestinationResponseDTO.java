@@ -22,4 +22,6 @@ public class DestinationResponseDTO {
     private ItemType itemType;
 
     private Long country_id;
+
+    private Long city_id;
 }
