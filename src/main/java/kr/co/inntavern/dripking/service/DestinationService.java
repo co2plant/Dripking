@@ -60,7 +60,7 @@ public class DestinationService {
         responseDTO.setImg_url(destination.getImg_url());
         responseDTO.setLatitude(destination.getLatitude());
         responseDTO.setLongitude(destination.getLongitude());
-        responseDTO.setCountry_id(destination.getCountry().getId());
+        responseDTO.setCountry_id(destination.getCity().getId());
         responseDTO.setItemType(destination.getItemType());
         return responseDTO;
     }
