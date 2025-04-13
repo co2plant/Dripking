@@ -19,6 +19,9 @@ public interface CityRepository extends JpaRepository<City, Long> {
     Optional<City> findById(Long id);
 
     @NonNull
+    Optional<City> findByNameContainingIgnoreCase(String name);
+
+    @NonNull
     Page<City> findAll(Pageable pageable);
 
     @NonNull

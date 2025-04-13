@@ -20,6 +20,16 @@ public class CityService {
         return cityRepository.findAll(pageable);
     }
 
+    public City getCityById(Long id) {
+        return cityRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 도시가 존재하지 않습니다."));
+    }
+
+    public City getCityByName(String name) {
+        return cityRepository.findByNameContainingIgnoreCase(name)
+                .orElseThrow(() -> new IllegalArgumentException("해당 이름의 도시가 존재하지 않습니다."));
+    }
+
     public void createCity(City city) {
         cityRepository.save(city);
     }
