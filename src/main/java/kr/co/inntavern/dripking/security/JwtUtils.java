@@ -3,7 +3,7 @@ package kr.co.inntavern.dripking.security;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
-import kr.co.inntavern.dripking.dto.Response.JwtTokenResponseDTO;
+import kr.co.inntavern.dripking.dto.response.JwtTokenResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

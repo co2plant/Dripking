@@ -1,7 +1,7 @@
 package kr.co.inntavern.dripking.controller;
 
-import kr.co.inntavern.dripking.dto.Request.ReviewRequestDTO;
-import kr.co.inntavern.dripking.dto.Response.ReviewResponseDTO;
+import kr.co.inntavern.dripking.dto.request.ReviewRequestDTO;
+import kr.co.inntavern.dripking.dto.response.ReviewResponseDTO;
 import kr.co.inntavern.dripking.security.CustomUserDetails;
 import kr.co.inntavern.dripking.service.ReviewService;
 import org.springframework.data.domain.Page;

@@ -1,6 +1,6 @@
 package kr.co.inntavern.dripking.controller;
 
-import kr.co.inntavern.dripking.dto.Request.PlanRequestDTO;
+import kr.co.inntavern.dripking.dto.request.PlanRequestDTO;
 import kr.co.inntavern.dripking.service.PlanService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

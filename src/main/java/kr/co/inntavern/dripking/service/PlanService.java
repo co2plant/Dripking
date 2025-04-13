@@ -1,6 +1,6 @@
 package kr.co.inntavern.dripking.service;
 
-import kr.co.inntavern.dripking.dto.Request.PlanRequestDTO;
+import kr.co.inntavern.dripking.dto.request.PlanRequestDTO;
 import kr.co.inntavern.dripking.model.Plan;
 import kr.co.inntavern.dripking.model.Trip;
 import kr.co.inntavern.dripking.repository.PlanRepository;

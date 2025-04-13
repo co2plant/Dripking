@@ -1,4 +1,4 @@
-package kr.co.inntavern.dripking.dto.Response;
+package kr.co.inntavern.dripking.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;

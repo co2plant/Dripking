@@ -1,4 +1,4 @@
-package kr.co.inntavern.dripking.dto.Response;
+package kr.co.inntavern.dripking.dto.response;
 
 import kr.co.inntavern.dripking.model.enumType.ItemType;
 import lombok.Getter;
