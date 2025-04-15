@@ -35,6 +35,10 @@ public class Destination extends Item{
     @JoinColumn(name = "city_id")
     private City city;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     @Enumerated(EnumType.STRING)
     private ItemType itemType;
 }
