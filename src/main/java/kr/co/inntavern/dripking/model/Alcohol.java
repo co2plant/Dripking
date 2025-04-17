@@ -1,7 +1,6 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
-import kr.co.inntavern.dripking.model.enumType.ItemType;
 import lombok.*;
 
 import java.sql.Time;
@@ -12,14 +11,7 @@ import java.sql.Time;
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class Alcohol extends Item{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "alcohol_id", unique = true, nullable=false)
-    private Long id;
-
-    @Column
-    private String name;
+public class Alcohol extends Item {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -38,24 +30,7 @@ public class Alcohol extends Item{
     @Column
     private float size;
 
-//    @Column
-//    private int numberOfBottles;
-
-//    @Column
-//    private int caskNumber;
-
-//    @Column float rating;
-
-    @Column(columnDefinition = "TEXT", length = 1000)
-    private String description;
-
     @Column
     private Time datetime;
-
-    @Column(nullable = false)
-    private String img_url;
-
-    @Enumerated(EnumType.STRING)
-    private ItemType itemType;
 
 }
