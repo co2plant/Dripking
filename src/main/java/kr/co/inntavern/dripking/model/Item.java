@@ -3,17 +3,19 @@ package kr.co.inntavern.dripking.model;
 import jakarta.persistence.*;
 import kr.co.inntavern.dripking.model.enumType.ItemType;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Setter
 @Getter
 @MappedSuperclass
-@RequiredArgsConstructor
+@SuperBuilder
+@NoArgsConstructor
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable=false)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
     @Column(nullable = false)

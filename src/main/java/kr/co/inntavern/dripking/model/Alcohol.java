@@ -2,15 +2,15 @@ package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.sql.Time;
 
 @Entity
 @Setter
 @Getter
-@Builder
-@AllArgsConstructor
-@RequiredArgsConstructor
+@SuperBuilder
+@NoArgsConstructor
 public class Alcohol extends Item {
 
     @ManyToOne

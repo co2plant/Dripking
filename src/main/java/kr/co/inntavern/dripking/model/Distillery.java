@@ -1,15 +1,14 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
-import kr.co.inntavern.dripking.model.enumType.ItemType;
 import lombok.*;
+import lombok.experimental.SuperBuilder; // @Builder 대신 사용
 
 @Setter
 @Getter
-@Builder
 @Entity
-@AllArgsConstructor
-@RequiredArgsConstructor
+@SuperBuilder
+@NoArgsConstructor
 public class Distillery extends Item {
 
     @Column(nullable = false)
