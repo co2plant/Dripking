@@ -17,4 +17,6 @@ public class TripRequestDTO{
     private Date start_date;
 
     private Date end_date;
+
+    private String country_name;
 }

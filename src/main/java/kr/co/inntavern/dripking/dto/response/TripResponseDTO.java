@@ -22,4 +22,6 @@ public class TripResponseDTO {
     private Date end_date;
 
     private ItemType itemType;
+
+    private String country_name;
 }
