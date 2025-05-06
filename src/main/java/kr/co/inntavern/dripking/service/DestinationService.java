@@ -1,6 +1,6 @@
 package kr.co.inntavern.dripking.service;
 
-import kr.co.inntavern.dripking.dto.Response.DestinationResponseDTO;
+import kr.co.inntavern.dripking.dto.response.DestinationResponseDTO;
 import kr.co.inntavern.dripking.model.Destination;
 import kr.co.inntavern.dripking.repository.DestinationRepository;
 import org.springframework.data.domain.Page;
@@ -60,7 +60,7 @@ public class DestinationService {
         responseDTO.setImg_url(destination.getImg_url());
         responseDTO.setLatitude(destination.getLatitude());
         responseDTO.setLongitude(destination.getLongitude());
-        responseDTO.setCountry_id(destination.getCountry().getId());
+        responseDTO.setCountry_id(destination.getCity().getId());
         responseDTO.setItemType(destination.getItemType());
         return responseDTO;
     }

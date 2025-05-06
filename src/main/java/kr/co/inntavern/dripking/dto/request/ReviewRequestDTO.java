@@ -1,6 +1,6 @@
-package kr.co.inntavern.dripking.dto.Request;
+package kr.co.inntavern.dripking.dto.request;
 
-import kr.co.inntavern.dripking.model.ReviewType;
+import kr.co.inntavern.dripking.model.enumType.ReviewType;
 import lombok.Getter;
 import lombok.Setter;
 

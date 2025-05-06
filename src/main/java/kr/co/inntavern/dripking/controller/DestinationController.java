@@ -1,6 +1,6 @@
 package kr.co.inntavern.dripking.controller;
 
-import kr.co.inntavern.dripking.dto.Response.DestinationResponseDTO;
+import kr.co.inntavern.dripking.dto.response.DestinationResponseDTO;
 import kr.co.inntavern.dripking.model.Destination;
 import kr.co.inntavern.dripking.service.DestinationService;
 import org.springframework.data.domain.Page;

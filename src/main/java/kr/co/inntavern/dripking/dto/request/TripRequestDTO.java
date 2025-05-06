@@ -1,6 +1,5 @@
-package kr.co.inntavern.dripking.dto.Response;
+package kr.co.inntavern.dripking.dto.request;
 
-import kr.co.inntavern.dripking.model.ItemType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,9 +7,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class TripResponseDTO {
-    private Long id;
-
+public class TripRequestDTO{
     private Long user_id;
 
     private String name;
@@ -21,5 +18,5 @@ public class TripResponseDTO {
 
     private Date end_date;
 
-    private ItemType itemType;
+    private String country_name;
 }

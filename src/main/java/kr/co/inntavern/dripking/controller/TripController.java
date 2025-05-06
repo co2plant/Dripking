@@ -1,7 +1,7 @@
 package kr.co.inntavern.dripking.controller;
 
-import kr.co.inntavern.dripking.dto.Request.TripRequestDTO;
-import kr.co.inntavern.dripking.dto.Response.TripResponseDTO;
+import kr.co.inntavern.dripking.dto.request.TripRequestDTO;
+import kr.co.inntavern.dripking.dto.response.TripResponseDTO;
 import kr.co.inntavern.dripking.security.JwtUtils;
 import kr.co.inntavern.dripking.service.TripService;
 import kr.co.inntavern.dripking.service.UserService;

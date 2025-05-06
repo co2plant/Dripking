@@ -1,8 +1,8 @@
 package kr.co.inntavern.dripking.service;
 
 import jakarta.transaction.Transactional;
-import kr.co.inntavern.dripking.dto.Request.SignInRequest;
-import kr.co.inntavern.dripking.dto.Request.SignUpRequest;
+import kr.co.inntavern.dripking.dto.request.SignInRequest;
+import kr.co.inntavern.dripking.dto.request.SignUpRequest;
 import kr.co.inntavern.dripking.model.Authority;
 import kr.co.inntavern.dripking.model.User;
 import kr.co.inntavern.dripking.repository.AuthorityRepository;

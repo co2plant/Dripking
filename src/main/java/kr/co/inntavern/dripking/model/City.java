@@ -1,21 +1,18 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
-import kr.co.inntavern.dripking.model.enumType.CategoryType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class Category {
+public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id", unique = true, nullable=false)
+    @Column(name = "city_id", unique = true, nullable=false)
     private Long id;
 
     @Column
@@ -24,8 +21,7 @@ public class Category {
     @Column(columnDefinition = "TEXT", length = 1000)
     private String description;
 
-    @Column
-    @Enumerated(EnumType.STRING)
-    private CategoryType categoryType;
-
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    private Country country;
 }

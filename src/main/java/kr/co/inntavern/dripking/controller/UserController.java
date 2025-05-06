@@ -1,10 +1,10 @@
 package kr.co.inntavern.dripking.controller;
 
 import jakarta.validation.Valid;
-import kr.co.inntavern.dripking.dto.Request.ChangePasswordRequestDTO;
-import kr.co.inntavern.dripking.dto.Response.JwtTokenResponseDTO;
-import kr.co.inntavern.dripking.dto.Request.SignInRequest;
-import kr.co.inntavern.dripking.dto.Request.SignUpRequest;
+import kr.co.inntavern.dripking.dto.request.ChangePasswordRequestDTO;
+import kr.co.inntavern.dripking.dto.response.JwtTokenResponseDTO;
+import kr.co.inntavern.dripking.dto.request.SignInRequest;
+import kr.co.inntavern.dripking.dto.request.SignUpRequest;
 import kr.co.inntavern.dripking.security.JwtUtils;
 import kr.co.inntavern.dripking.security.CustomUserDetails;
 import kr.co.inntavern.dripking.service.UserService;

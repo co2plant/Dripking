@@ -1,9 +1,11 @@
 package kr.co.inntavern.dripking.service;
 
-import kr.co.inntavern.dripking.dto.Request.TripRequestDTO;
-import kr.co.inntavern.dripking.dto.Response.TripResponseDTO;
+import kr.co.inntavern.dripking.dto.request.TripRequestDTO;
+import kr.co.inntavern.dripking.dto.response.TripResponseDTO;
+import kr.co.inntavern.dripking.model.Country;
 import kr.co.inntavern.dripking.model.Trip;
 import kr.co.inntavern.dripking.model.User;
+import kr.co.inntavern.dripking.repository.CountryRepository;
 import kr.co.inntavern.dripking.repository.TripRepository;
 import kr.co.inntavern.dripking.repository.UserRepository;
 import org.springframework.data.domain.Page;
@@ -17,10 +19,12 @@ import java.util.Optional;
 public class TripService {
     private final TripRepository tripRepository;
     private final UserRepository userRepository;
+    private final CountryRepository countryRepository;
 
-    public TripService(TripRepository tripRepository, UserRepository userRepository) {
+    public TripService(TripRepository tripRepository, UserRepository userRepository, CountryRepository countryRepository) {
         this.tripRepository = tripRepository;
         this.userRepository = userRepository;
+        this.countryRepository = countryRepository;
     }
 
     public TripResponseDTO getTripById(Long id){
@@ -38,6 +42,7 @@ public class TripService {
     public TripResponseDTO createTrip(TripRequestDTO tripRequestDTO){
         User user = userRepository.findById(tripRequestDTO.getUser_id())
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 유저가 존재하지 않습니다."));
+        Country country = countryRepository.findByName(tripRequestDTO.getCountry_name());
 
         Trip trip  = new Trip();
         trip.setUser(user); //user 에 관한 내용은 login 기능이 구현되면 추가할 예정
@@ -46,6 +51,7 @@ public class TripService {
         trip.setDescription(tripRequestDTO.getDescription());
         trip.setStart_date(tripRequestDTO.getStart_date());
         trip.setEnd_date(tripRequestDTO.getEnd_date());
+        trip.setCountry(country);
         
         return mapToTripResponseDTO(tripRepository.save(trip));
     }
