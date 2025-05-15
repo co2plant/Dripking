@@ -73,6 +73,8 @@ public class WebSecurityConfig {
                                 "/api/distilleries"
                         ).permitAll()
                         .requestMatchers(
+                                "/practice-ui.html",
+                                "/swagger-ui/**",
                                 "/api/user/signin", // 로그인
                                 "/api/user/signup" // 회원가입
                         ).permitAll()
