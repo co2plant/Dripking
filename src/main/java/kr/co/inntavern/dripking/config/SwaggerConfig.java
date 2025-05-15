@@ -9,7 +9,7 @@ import io.swagger.v3.oas.models.info.Info;
 
 @Configuration
 public class SwaggerConfig {
-    private static final String API_NAME = "DripKing API";
+    private static final String API_NAME = "Dripking API";
     private static final String API_VERSION = "1.0.0";
     private static final String API_DESCRIPTION = "DripKing API Documentation";
 

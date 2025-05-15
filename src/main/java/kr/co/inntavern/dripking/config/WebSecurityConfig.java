@@ -73,10 +73,12 @@ public class WebSecurityConfig {
                                 "/api/distilleries"
                         ).permitAll()
                         .requestMatchers(
-                                "/practice-ui.html",
-                                "/swagger-ui/**",
                                 "/api/user/signin", // 로그인
-                                "/api/user/signup" // 회원가입
+                                "/api/user/signup",
+                                "/swagger-ui",//swagger-ui
+                                "/swagger-ui/**",
+                                "/api/v3/api-docs/**",
+                                "/api/v3/api-docs" // 회원가입
                         ).permitAll()
                         .requestMatchers(PathRequest.toH2Console()).permitAll() // H2 콘솔
 

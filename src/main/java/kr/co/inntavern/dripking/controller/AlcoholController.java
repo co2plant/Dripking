@@ -1,5 +1,10 @@
 package kr.co.inntavern.dripking.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.inntavern.dripking.dto.response.AlcoholResponseDTO;
 import kr.co.inntavern.dripking.model.Alcohol;
 import kr.co.inntavern.dripking.service.AlcoholService;
@@ -7,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Alcohol", description = "주류 API")
 @RestController
 @RequestMapping("/api/alcohols")
 public class AlcoholController {
@@ -17,6 +23,8 @@ public class AlcoholController {
     }
 
     @GetMapping
+    @Operation(summary = "모든 주류 조회", description = "모든 주류를 조회합니다.")
+    @ApiResponse(responseCode="200", description = "성공", content = @Content(schema = @Schema(implementation = AlcoholResponseDTO.class)))
     public ResponseEntity<Page<AlcoholResponseDTO>> getAllAlcohols(@RequestParam(required=false,value="page", defaultValue="0") int page,
                                                         @RequestParam(required=false,value="size", defaultValue="10") int size,
                                                         @RequestParam(required=false, value="sort", defaultValue="DESC") String sort,
