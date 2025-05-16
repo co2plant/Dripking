@@ -41,17 +41,23 @@ public class AlcoholController {
     }
 
     @GetMapping("/distillery") //endpoint변경해야함.
+    @Operation(summary = "양조장 관련 모든 주류 조회", description = "해당 양조장의 모든 주류를 조회합니다.")
+    @ApiResponse(responseCode="200", description = "성공", content = @Content(schema = @Schema(implementation = AlcoholResponseDTO.class)))
     public ResponseEntity<Page<AlcoholResponseDTO>> getAllAlcoholsByDistilleryId(@RequestParam(value="distillery") Long distilleryId){
         Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcoholsByDistilleryId(distilleryId);
         return ResponseEntity.ok(paging);
     }
 
     @GetMapping("/{alcoholId}")
+    @Operation(summary = "특정 ID 주류 조회", description = "특정 ID의 주류를 조회합니다.")
+    @ApiResponse(responseCode="200", description = "성공", content = @Content(schema = @Schema(implementation = Alcohol.class)))
     public Alcohol getAlcoholById(@PathVariable Long alcoholId) {
         return alcoholService.getAlcoholById(alcoholId);
     }
 
     @GetMapping("/search/{searchKeyword}")
+    @Operation(summary = "특정 이름을 가지는 모든 주류 조회", description = "특정 이름을 가지는 모든 주류를 조회합니다.")
+    @ApiResponse(responseCode="200", description = "성공", content = @Content(schema = @Schema(implementation = AlcoholResponseDTO.class)))
     public ResponseEntity<Page<AlcoholResponseDTO>> searchAlcoholsByName(@RequestParam(value="page", defaultValue="0") int page, @PathVariable String searchKeyword){
         Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcoholsByName(page, searchKeyword);
         return ResponseEntity.ok(paging);
