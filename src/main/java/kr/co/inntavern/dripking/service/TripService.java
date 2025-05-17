@@ -1,6 +1,7 @@
 package kr.co.inntavern.dripking.service;
 
 import kr.co.inntavern.dripking.dto.request.TripRequestDTO;
+import kr.co.inntavern.dripking.dto.response.TripContainCountryResponseDTO;
 import kr.co.inntavern.dripking.dto.response.TripResponseDTO;
 import kr.co.inntavern.dripking.model.Country;
 import kr.co.inntavern.dripking.model.Trip;
@@ -39,6 +40,25 @@ public class TripService {
         return trips.map(this::mapToTripResponseDTO);
     }
 
+    public Page<TripContainCountryResponseDTO> getAllTripCountyByUserId(int page, int size, Long user_id){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Trip> trips = tripRepository.findAllByUserId(user_id, pageable);
+        return trips.map(trip -> {
+            TripContainCountryResponseDTO responseDTO = new TripContainCountryResponseDTO();
+            responseDTO.setId(trip.getId());
+            responseDTO.setUser_id(trip.getUser().getId());
+            responseDTO.setName(trip.getName());
+            responseDTO.setDescription(trip.getDescription());
+            responseDTO.setStart_date(trip.getStart_date());
+            responseDTO.setEnd_date(trip.getEnd_date());
+            responseDTO.setItemType(trip.getItemType());
+            responseDTO.setCountry_name(trip.getCountry().getName());
+            responseDTO.setCountry_lat(trip.getCountry().getLat());
+            responseDTO.setCountry_lng(trip.getCountry().getLng());
+            return responseDTO;
+        });
+    }
+ 
     public TripResponseDTO createTrip(TripRequestDTO tripRequestDTO){
         User user = userRepository.findById(tripRequestDTO.getUser_id())
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 유저가 존재하지 않습니다."));
