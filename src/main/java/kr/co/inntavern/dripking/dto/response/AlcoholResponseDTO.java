@@ -1,7 +1,6 @@
 package kr.co.inntavern.dripking.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import kr.co.inntavern.dripking.model.enumType.ItemType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,16 +16,16 @@ public class AlcoholResponseDTO {
     private String name;
 
     @Schema(description = "카테고리 ID", example = "1")
-    private Long category_id;
+    private Long categoryId;
 
     @Schema(description = "양조장 ID", example = "2")
-    private Long distillery_id;
+    private Long distilleryId;
 
     @Schema(description = "도수(%)", example = "4.5")
     private float strength;
 
     @Schema(description = "숙성 연도", example = "12년")
-    private String stated_age;
+    private String statedAge;
 
     @Schema(description = "용량(ml)", example = "500")
     private float size;
@@ -38,8 +37,5 @@ public class AlcoholResponseDTO {
     private Time datetime;
 
     @Schema(description = "이미지 URL", example = "https://example.com/images/beer.jpg")
-    private String img_url;
-
-    @Schema(description = "아이템 타입", example = "BEER")
-    private ItemType itemType;
+    private String imgUrl;
 }

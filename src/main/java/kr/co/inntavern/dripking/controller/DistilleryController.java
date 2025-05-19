@@ -29,9 +29,9 @@ public class DistilleryController {
         return ResponseEntity.ok(paging);
     }
 
-    @GetMapping("/{distillery_id}")
-    public DistilleryResponseDTO getDistilleryById(@PathVariable Long distillery_id) {
-        return distilleryService.getDistilleryById(distillery_id);
+    @GetMapping("/{distilleryId}")
+    public DistilleryResponseDTO getDistilleryById(@PathVariable Long distilleryId) {
+        return distilleryService.getDistilleryById(distilleryId);
     }
 
     @GetMapping("/latlng")
@@ -56,16 +56,16 @@ public class DistilleryController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{distillery_id}")
-    public ResponseEntity<Distillery> updateDistillery(@PathVariable Long distillery_id, @RequestBody Distillery distillery){
-        distilleryService.updateDistillery(distillery_id, distillery);
+    @PutMapping("/{distilleryId}")
+    public ResponseEntity<Distillery> updateDistillery(@PathVariable Long distilleryId, @RequestBody Distillery distillery){
+        distilleryService.updateDistillery(distilleryId, distillery);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{distillery_id}")
-    public ResponseEntity<Void> deleteDistillery(@PathVariable Long distillery_id)
+    @DeleteMapping("/{distilleryId}")
+    public ResponseEntity<Void> deleteDistillery(@PathVariable Long distilleryId)
     {
-        distilleryService.deleteDistilleryById(distillery_id);
+        distilleryService.deleteDistilleryById(distilleryId);
         return ResponseEntity.ok().build();
     }
 

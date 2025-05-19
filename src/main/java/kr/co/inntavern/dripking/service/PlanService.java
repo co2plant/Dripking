@@ -6,6 +6,7 @@ import kr.co.inntavern.dripking.model.Trip;
 import kr.co.inntavern.dripking.repository.PlanRepository;
 import kr.co.inntavern.dripking.repository.TripRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PlanService {
@@ -17,44 +18,45 @@ public class PlanService {
         this.tripRepository = tripRepository;
     }
 
+    @Transactional
     public void createPlan(PlanRequestDTO planRequestDTO){
         Trip trip = tripRepository.findById(planRequestDTO.getTrip_id())
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 여행이 존재하지 않습니다."));
         Plan plan = Plan.builder()
                 .trip(trip)
-                .place_id(planRequestDTO.getPlace_id())
+                .placeId(planRequestDTO.getPlaceId())
                 .name(planRequestDTO.getName())
                 .description(planRequestDTO.getDescription())
-                .plan_date(planRequestDTO.getPlan_date())
-                .start_time(planRequestDTO.getStart_time())
-                .end_time(planRequestDTO.getEnd_time())
+                .planDate(planRequestDTO.getPlanDate())
+                .startTime(planRequestDTO.getStartTime())
+                .endTime(planRequestDTO.getEndTime())
                 .build();
 
         planRepository.save(plan);
     }
 
-    public void updatePlan(Long plan_id, PlanRequestDTO planRequestDTO){
-        Plan plan = planRepository.findById(plan_id)
+    public void updatePlan(Long planId, PlanRequestDTO planRequestDTO){
+        Plan plan = planRepository.findById(planId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 일정이 존재하지 않습니다."));
-        plan.setPlace_id(planRequestDTO.getPlace_id());
+        plan.setPlaceId(planRequestDTO.getPlaceId());
         plan.setName(planRequestDTO.getName());
         plan.setDescription(planRequestDTO.getDescription());
-        plan.setPlan_date(planRequestDTO.getPlan_date());
-        plan.setStart_time(planRequestDTO.getStart_time());
-        plan.setEnd_time(planRequestDTO.getEnd_time());
+        plan.setPlanDate(planRequestDTO.getPlanDate());
+        plan.setStartTime(planRequestDTO.getStartTime());
+        plan.setEndTime(planRequestDTO.getEndTime());
 
         planRepository.save(plan);
     }
 
-    public void deletePlanById(Long plan_id){
-        Plan plan = planRepository.findById(plan_id)
+    public void deletePlanById(Long planId){
+        Plan plan = planRepository.findById(planId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 일정이 존재하지 않습니다."));
         planRepository.delete(plan);
     }
 
-    public void deletePlanByTripId(Long trip_id){
-        Trip trip = tripRepository.findById(trip_id)
+    public void deletePlanByTripId(Long tripId){
+        Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 여행이 존재하지 않습니다."));
-        planRepository.deleteAllByTripId(trip_id);
+        planRepository.deleteAllByTripId(tripId);
     }
 }

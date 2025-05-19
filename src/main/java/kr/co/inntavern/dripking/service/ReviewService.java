@@ -31,43 +31,43 @@ public class ReviewService {
         return reviewRepository.findAll(pageable).map(this::mapToReviewResponseDTO);
     }
 
-    public Page<ReviewResponseDTO> getAllReviewsByUserID(int page, int size, String criteria, String sort, Long user_id){
+    public Page<ReviewResponseDTO> getAllReviewsByUserID(int page, int size, String criteria, String sort, Long userId){
         Pageable pageable = (sort.equals("ASC") ?
                 PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, criteria))
                 : PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, criteria)));
 
-        return reviewRepository.findAllByUserId(user_id, pageable).map(this::mapToReviewResponseDTO);
+        return reviewRepository.findAllByUserId(userId, pageable).map(this::mapToReviewResponseDTO);
     }
 
-    public Page<ReviewResponseDTO> getAllReviewsByTargetID(int page, int size, String criteria, String sort, String reviewType, Long target_id){
+    public Page<ReviewResponseDTO> getAllReviewsByTargetID(int page, int size, String criteria, String sort, String reviewType, Long targetId){
         Pageable pageable = (sort.equals("ASC") ?
                 PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, criteria))
                 : PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, criteria)));
         ReviewType reviewTypeEnum = ReviewType.valueOf(reviewType.toUpperCase());
 
-        return reviewRepository.findAllByTargetId(target_id, reviewTypeEnum, pageable).map(this::mapToReviewResponseDTO);
+        return reviewRepository.findAllByTargetId(targetId, reviewTypeEnum, pageable).map(this::mapToReviewResponseDTO);
     }
 
-    public void createReview(Long user_id, ReviewRequestDTO reviewRequestDTO){
-        User user = userRepository.findById(user_id)
+    public void createReview(Long userId, ReviewRequestDTO reviewRequestDTO){
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 유저가 존재하지 않습니다."));
 
         Review review = Review.builder()
                 .user(user)
                 .rating(reviewRequestDTO.getRating())
                 .reviewType(reviewRequestDTO.getReviewType())
-                .target_id(reviewRequestDTO.getTarget_id())
+                .targetId(reviewRequestDTO.getTargetId())
                 .contents(reviewRequestDTO.getContents())
                 .build();
 
         reviewRepository.save(review);
     }
 
-    public void updateReview(Long user_id, Long review_id, ReviewRequestDTO reviewRequestDTO){
-        User user = userRepository.findById(user_id)
+    public void updateReview(Long userId, Long reviewId, ReviewRequestDTO reviewRequestDTO){
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 유저가 존재하지 않습니다."));
 
-        Review review = reviewRepository.findById(review_id)
+        Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 리뷰가 존재하지 않습니다."));
 
         if(!review.getUser().getId().equals(user.getId())) {
@@ -81,15 +81,15 @@ public class ReviewService {
         reviewRepository.save(review);
     }
 
-    public void deleteReview(Long user_id, Long review_id){
-        Review review = reviewRepository.findById(review_id)
+    public void deleteReview(Long userId, Long reviewId){
+        Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("이미 삭제되거나 없는 리뷰입니다."));
 
-        if(!review.getUser().getId().equals(user_id)){
+        if(!review.getUser().getId().equals(userId)){
             throw new IllegalArgumentException("해당 리뷰를 삭제할 권한이 없습니다.");
         }
 
-        reviewRepository.deleteById(review_id);
+        reviewRepository.deleteById(reviewId);
     }
 
     private ReviewResponseDTO mapToReviewResponseDTO(Review review){
@@ -98,7 +98,7 @@ public class ReviewService {
         responseDTO.setId(review.getId());
         responseDTO.setNickname(review.getUser().getNickname());
         responseDTO.setReviewType(review.getReviewType());
-        responseDTO.setTarget_id(review.getTarget_id());
+        responseDTO.setTargetId(review.getTargetId());
         responseDTO.setRating(review.getRating());
         responseDTO.setContents(review.getContents());
         responseDTO.setCreatedTime(review.getCreatedAt());

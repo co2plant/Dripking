@@ -12,7 +12,7 @@ import lombok.*;
 public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "city_id", unique = true, nullable=false)
+    @Column(name = "cityId", unique = true, nullable=false)
     private Long id;
 
     @Column
@@ -21,7 +21,6 @@ public class City {
     @Column(columnDefinition = "TEXT", length = 1000)
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "country_id")
-    private Country country;
+    @Column(name = "countryId")
+    private Long countryId;
 }

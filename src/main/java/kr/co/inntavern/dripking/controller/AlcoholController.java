@@ -28,7 +28,7 @@ public class AlcoholController {
     public ResponseEntity<Page<AlcoholResponseDTO>> getAllAlcohols(@RequestParam(required=false,value="page", defaultValue="0") int page,
                                                         @RequestParam(required=false,value="size", defaultValue="10") int size,
                                                         @RequestParam(required=false, value="sort", defaultValue="DESC") String sort,
-                                                        @RequestParam(required=false, value="category_id", defaultValue="0") Long categoryId){
+                                                        @RequestParam(required=false, value="categoryId", defaultValue="0") Long categoryId){
         if(categoryId != 0){
             Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcoholsByCategoryId(page, size, categoryId);
             return ResponseEntity.ok(paging);
@@ -69,16 +69,16 @@ public class AlcoholController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{alcohol_id}")
-    public ResponseEntity<Alcohol> updateAlcohol(@PathVariable Long alcohol_id, @RequestBody Alcohol alcohol){
-        alcoholService.updateAlcohol(alcohol_id, alcohol);
+    @PutMapping("/{alcoholId}")
+    public ResponseEntity<Alcohol> updateAlcohol(@PathVariable Long alcoholId, @RequestBody Alcohol alcohol){
+        alcoholService.updateAlcohol(alcoholId, alcohol);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{alcohol_id}")
-    public ResponseEntity<Void> deleteAlcohol(@PathVariable Long alcohol_id)
+    @DeleteMapping("/{alcoholId}")
+    public ResponseEntity<Void> deleteAlcohol(@PathVariable Long alcoholId)
     {
-        alcoholService.deleteAlcoholById(alcohol_id);
+        alcoholService.deleteAlcoholById(alcoholId);
         return ResponseEntity.ok().build();
     }
 

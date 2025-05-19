@@ -8,15 +8,15 @@ import java.util.Date;
 @Getter
 @Setter
 public class TripRequestDTO{
-    private Long user_id;
+    private Long userId;
 
     private String name;
 
     private String description;
 
-    private Date start_date;
+    private Date startDate;
 
-    private Date end_date;
+    private Date endDate;
 
-    private String country_name;
+    private String countryName;
 }

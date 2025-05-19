@@ -33,9 +33,9 @@ public class TripController {
         String token = headers.get("Authorization").toString().substring(7);
         String username = jwtUtils.getUserNameFromJwtToken(token);
 
-        Long user_id = userService.getUserByEmail(username).get().getId();
+        Long userId = userService.getUserByEmail(username).get().getId();
 
-        return ResponseEntity.ok(tripService.getAllTripByUserId(page, size, user_id));
+        return ResponseEntity.ok(tripService.getAllTripByUserId(page, size, userId));
     }
 
     //테스트를 위해서 작성한 것으로 앞으로 들어갈 TripResponseDTO를 country lat, count lng를 포함한 TripContainCountryResponseDTO로 변경할 예정
@@ -48,9 +48,9 @@ public class TripController {
         String token = headers.get("Authorization").toString().substring(7);
         String username = jwtUtils.getUserNameFromJwtToken(token);
 
-        Long user_id = userService.getUserByEmail(username).get().getId();
+        Long userId = userService.getUserByEmail(username).get().getId();
 
-        return ResponseEntity.ok(tripService.getAllTripByUserId(page, size, user_id));
+        return ResponseEntity.ok(tripService.getAllTripByUserId(page, size, userId));
     }
 
     @PostMapping

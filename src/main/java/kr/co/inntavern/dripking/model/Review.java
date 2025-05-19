@@ -30,7 +30,7 @@ public class Review {
     @Enumerated(EnumType.STRING)
     private ReviewType reviewType;
 
-    private Long target_id;
+    private Long targetId;
 
     @Range(min = 0, max = 5)
     private Byte rating;
