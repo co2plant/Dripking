@@ -27,9 +27,6 @@ public class Item {
     @Column
     private float rating;
 
-    @Enumerated(EnumType.STRING)
-    private ItemType itemType;
-
     @Column
     private String img_url;
 }
