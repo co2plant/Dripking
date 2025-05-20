@@ -1,7 +1,6 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
-import kr.co.inntavern.dripking.model.enumType.CategoryType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id", unique = true, nullable=false)
+    @Column(name = "categoryId", unique = true, nullable=false)
     private Long id;
 
     @Column
@@ -23,9 +22,4 @@ public class Category {
 
     @Column(columnDefinition = "TEXT", length = 1000)
     private String description;
-
-    @Column
-    @Enumerated(EnumType.STRING)
-    private CategoryType categoryType;
-
 }
