@@ -22,7 +22,7 @@ public class DestinationController
     public ResponseEntity<Page<DestinationResponseDTO>> getAllDestinations(@RequestParam(required=false,value="page", defaultValue="0") int page,
                                                                            @RequestParam(required=false,value="size", defaultValue="10") int size,
                                                                            @RequestParam(required=false, value="sort", defaultValue="DESC") String sort,
-                                                                           @RequestParam(required=false, value="country_id", defaultValue="0") Long countryId
+                                                                           @RequestParam(required=false, value="countryId", defaultValue="0") Long countryId
     ){
         if(countryId != 0){
             Page<DestinationResponseDTO> paging = destinationService.getAllDestinationsByCountryId(page, countryId);

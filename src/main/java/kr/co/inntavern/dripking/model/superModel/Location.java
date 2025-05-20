@@ -1,7 +1,6 @@
 package kr.co.inntavern.dripking.model.superModel;
 
 import jakarta.persistence.*;
-import kr.co.inntavern.dripking.model.enumType.ItemType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,15 +26,12 @@ public class Location{
     @Column
     private float rating;
 
-    @Enumerated(EnumType.STRING)
-    private ItemType itemType;
-
     @Column
-    private String img_url;
+    private String imgUrl;
     
     @Column
-    private Double lat;
+    private Double latitude;
 
     @Column
-    private Double lng;
+    private Double longitude;
 }

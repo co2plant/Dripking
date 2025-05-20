@@ -57,11 +57,10 @@ public class DestinationService {
         responseDTO.setId(destination.getId());
         responseDTO.setName(destination.getName());
         responseDTO.setDescription(destination.getDescription());
-        responseDTO.setImg_url(destination.getImg_url());
+        responseDTO.setImg_url(destination.getImgUrl());
         responseDTO.setLatitude(destination.getLatitude());
         responseDTO.setLongitude(destination.getLongitude());
         responseDTO.setCountry_id(destination.getCity().getId());
-        responseDTO.setItemType(destination.getItemType());
         return responseDTO;
     }
 }

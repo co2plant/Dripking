@@ -14,7 +14,7 @@ import java.util.Date;
 public class Plan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "plan_id", unique = true, nullable=false)
+    @Column(name = "planId", unique = true, nullable=false)
     private Long id;
 
     @Column
@@ -24,18 +24,18 @@ public class Plan {
     private String description;
 
     @Column
-    private Date plan_date;
+    private Date planDate;
 
     @Column
-    private Date start_time;
+    private Date startTime;
 
     @Column
-    private Date end_time;
+    private Date endTime;
 
     @Column
-    private Long place_id;
+    private Long placeId;
 
     @ManyToOne
-    @JoinColumn(name = "trip_id")
+    @JoinColumn(name = "tripId")
     private Trip trip;
 }

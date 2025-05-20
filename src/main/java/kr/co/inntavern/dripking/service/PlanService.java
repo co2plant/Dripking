@@ -20,7 +20,7 @@ public class PlanService {
 
     @Transactional
     public void createPlan(PlanRequestDTO planRequestDTO){
-        Trip trip = tripRepository.findById(planRequestDTO.getTrip_id())
+        Trip trip = tripRepository.findById(planRequestDTO.getTripId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 여행이 존재하지 않습니다."));
         Plan plan = Plan.builder()
                 .trip(trip)

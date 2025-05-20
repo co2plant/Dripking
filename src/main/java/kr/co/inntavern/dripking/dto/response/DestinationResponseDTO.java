@@ -1,6 +1,5 @@
 package kr.co.inntavern.dripking.dto.response;
 
-import kr.co.inntavern.dripking.model.enumType.ItemType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,8 +17,6 @@ public class DestinationResponseDTO {
     private Double longitude;//경도
 
     private String img_url;
-
-    private ItemType itemType;
 
     private Long country_id;
 

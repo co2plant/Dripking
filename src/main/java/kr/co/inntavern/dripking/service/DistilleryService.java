@@ -66,9 +66,8 @@ public class DistilleryService {
         responseDTO.setDescription(distillery.getDescription());
         responseDTO.setLatitude(distillery.getLatitude());
         responseDTO.setLongitude(distillery.getLongitude());
-        responseDTO.setImg_url(distillery.getImg_url());
-        responseDTO.setDestination_id(distillery.getDestination().getId());
-        responseDTO.setItemType(distillery.getItemType());
+        responseDTO.setImgUrl(distillery.getImgUrl());
+        responseDTO.setDestinationId(distillery.getDestination().getId());
         return responseDTO;
     }
 

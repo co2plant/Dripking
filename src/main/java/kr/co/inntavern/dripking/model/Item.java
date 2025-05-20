@@ -1,7 +1,6 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
-import kr.co.inntavern.dripking.model.enumType.ItemType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,5 +27,5 @@ public class Item {
     private float rating;
 
     @Column
-    private String img_url;
+    private String imgUrl;
 }

@@ -63,15 +63,14 @@ public class AlcoholService {
         AlcoholResponseDTO responseDTO = new AlcoholResponseDTO();
         responseDTO.setId(alcohol.getId());
         responseDTO.setName(alcohol.getName());
-        responseDTO.setCategory_id(alcohol.getCategory().getId());
-        responseDTO.setDistillery_id(alcohol.getDistillery().getId());
+        responseDTO.setCategoryId(alcohol.getCategory().getId());
+        responseDTO.setDistilleryId(alcohol.getDistillery().getId());
         responseDTO.setStrength(alcohol.getStrength());
-        responseDTO.setStated_age(alcohol.getStated_age());
+        responseDTO.setStatedAge(alcohol.getStated_age());
         responseDTO.setSize(alcohol.getSize());
         responseDTO.setDescription(alcohol.getDescription());
         responseDTO.setDatetime(alcohol.getDatetime());
-        responseDTO.setImg_url(alcohol.getImg_url());
-        responseDTO.setItemType(alcohol.getItemType());
+        responseDTO.setImgUrl(alcohol.getImgUrl());
         return responseDTO;
     }
 

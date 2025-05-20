@@ -7,9 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ReviewRequestDTO {
-    private Long user_id;
+    private Long userId;
     private ReviewType reviewType;
-    private Long target_id;
+    private Long targetId;
     private Byte rating;
     private String contents;
 }
