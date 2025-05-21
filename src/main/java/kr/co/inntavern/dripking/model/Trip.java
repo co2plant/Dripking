@@ -15,14 +15,14 @@ import java.util.Date;
 @NoArgsConstructor
 public class Trip extends Item {
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     private User user;
 
-    private Date start_date;
+    private Date startDate;
 
-    private Date end_date;
+    private Date endDate;
 
     @ManyToOne
-    @JoinColumn(name="country_id")
+    @JoinColumn(name="countryId")
     private Country country;
 }

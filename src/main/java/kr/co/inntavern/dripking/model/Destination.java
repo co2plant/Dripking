@@ -18,10 +18,10 @@ public class Destination extends Item {
     private Double longitude;// 경도
 
     @ManyToOne
-    @JoinColumn(name = "city_id")
+    @JoinColumn(name = "cityId")
     private City city;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "categoryId")
     private Category category;
 }

@@ -12,7 +12,7 @@ public class ReviewResponseDTO {
     private Long id;
     private String nickname;
     private ReviewType reviewType;
-    private Long target_id;
+    private Long targetId;
     private Byte rating;
     private String contents;
     private LocalDateTime createdTime;
