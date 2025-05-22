@@ -25,6 +25,7 @@ public interface CityRepository extends JpaRepository<City, Long> {
     Page<City> findAll(Pageable pageable);
 
     @NonNull
-    Page<City> findAllByCountry(Long countryId, Pageable pageable);
+    Page<City> findAllByCountryId(Pageable pageable, Long countryId);
+
     void deleteById(Long id);
 }

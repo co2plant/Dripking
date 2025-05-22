@@ -21,6 +21,7 @@ public class City {
     @Column(columnDefinition = "TEXT", length = 1000)
     private String description;
 
-    @Column(name = "countryId")
-    private Long countryId;
+    @ManyToOne
+    @JoinColumn(name = "countryId")
+    private Country country;
 }
