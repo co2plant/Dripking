@@ -21,6 +21,6 @@ public class Distillery extends Item {
     private Double longitude; // 경도
 
     @ManyToOne
-    @JoinColumn(name = "destination_id")
+    @JoinColumn(name = "destinationId")
     private Destination destination;
 }

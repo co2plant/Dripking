@@ -14,11 +14,11 @@ import java.sql.Time;
 public class Alcohol extends Item {
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "categoryId")
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "distillery_id")
+    @JoinColumn(name = "distilleryId")
     private Distillery distillery;
 
     @Column

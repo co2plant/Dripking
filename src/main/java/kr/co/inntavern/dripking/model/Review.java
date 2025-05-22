@@ -1,7 +1,7 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
-import kr.co.inntavern.dripking.model.enumType.ReviewType;
+import kr.co.inntavern.dripking.model.enumType.ItemType;
 import lombok.*;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.data.annotation.CreatedDate;
@@ -20,15 +20,15 @@ import java.time.LocalDateTime;
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "review_id", unique = true, nullable=false)
+    @Column(name = "reviewId", unique = true, nullable=false)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     private User user;
 
     @Enumerated(EnumType.STRING)
-    private ReviewType reviewType;
+    private ItemType itemType;
 
     private Long targetId;
 

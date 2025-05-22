@@ -12,7 +12,7 @@ import lombok.*;
 public class Country {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "country_id", unique = true, nullable=false)
+    @Column(name = "countryId", unique = true, nullable=false)
     private Long id;
 
     @Column
