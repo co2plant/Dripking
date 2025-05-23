@@ -3,7 +3,7 @@ package kr.co.inntavern.dripking.service;
 import kr.co.inntavern.dripking.dto.request.ReviewRequestDTO;
 import kr.co.inntavern.dripking.dto.response.ReviewResponseDTO;
 import kr.co.inntavern.dripking.model.Review;
-import kr.co.inntavern.dripking.model.enumType.ReviewType;
+import kr.co.inntavern.dripking.model.enumType.ItemType;
 import kr.co.inntavern.dripking.model.User;
 import kr.co.inntavern.dripking.repository.ReviewRepository;
 import kr.co.inntavern.dripking.repository.UserRepository;
@@ -39,13 +39,13 @@ public class ReviewService {
         return reviewRepository.findAllByUserId(userId, pageable).map(this::mapToReviewResponseDTO);
     }
 
-    public Page<ReviewResponseDTO> getAllReviewsByTargetID(int page, int size, String criteria, String sort, String reviewType, Long targetId){
+    public Page<ReviewResponseDTO> getAllReviewsByTargetID(int page, int size, String criteria, String sort, String itemType, Long targetId){
         Pageable pageable = (sort.equals("ASC") ?
                 PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, criteria))
                 : PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, criteria)));
-        ReviewType reviewTypeEnum = ReviewType.valueOf(reviewType.toUpperCase());
+        ItemType itemTypeEnum = ItemType.valueOf(itemType.toUpperCase());
 
-        return reviewRepository.findAllByTargetId(targetId, reviewTypeEnum, pageable).map(this::mapToReviewResponseDTO);
+        return reviewRepository.findAllByTargetId(targetId, itemTypeEnum, pageable).map(this::mapToReviewResponseDTO);
     }
 
     public void createReview(Long userId, ReviewRequestDTO reviewRequestDTO){
@@ -55,7 +55,7 @@ public class ReviewService {
         Review review = Review.builder()
                 .user(user)
                 .rating(reviewRequestDTO.getRating())
-                .reviewType(reviewRequestDTO.getReviewType())
+                .itemType(reviewRequestDTO.getItemType())
                 .targetId(reviewRequestDTO.getTargetId())
                 .contents(reviewRequestDTO.getContents())
                 .build();
@@ -74,7 +74,7 @@ public class ReviewService {
             throw new IllegalArgumentException("해당 리뷰를 수정할 권한이 없습니다.");
         }
 
-        review.setReviewType(reviewRequestDTO.getReviewType());
+        review.setItemType(reviewRequestDTO.getItemType());
         review.setRating(reviewRequestDTO.getRating());
         review.setContents(reviewRequestDTO.getContents());
 
@@ -97,7 +97,7 @@ public class ReviewService {
 
         responseDTO.setId(review.getId());
         responseDTO.setNickname(review.getUser().getNickname());
-        responseDTO.setReviewType(review.getReviewType());
+        responseDTO.setItemType(review.getItemType());
         responseDTO.setTargetId(review.getTargetId());
         responseDTO.setRating(review.getRating());
         responseDTO.setContents(review.getContents());

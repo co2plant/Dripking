@@ -1,7 +1,7 @@
 package kr.co.inntavern.dripking.repository;
 
 import kr.co.inntavern.dripking.model.Review;
-import kr.co.inntavern.dripking.model.enumType.ReviewType;
+import kr.co.inntavern.dripking.model.enumType.ItemType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,6 +25,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("SELECT r FROM Review r WHERE r.user.id = :userId")
     Page<Review> findAllByUserId(@Param("userId")Long userId, Pageable pageable);
 
-    @Query("SELECT r FROM Review r WHERE r.targetId = :targetId AND r.reviewType = :reviewType")
-    Page<Review> findAllByTargetId(@Param("targetId")Long targetId, @Param("reviewType")ReviewType reviewType, Pageable pageable);
+    @Query("SELECT r FROM Review r WHERE r.targetId = :targetId AND r.itemType = :itemType")
+    Page<Review> findAllByTargetId(@Param("targetId")Long targetId, @Param("itemType") ItemType itemType, Pageable pageable);
 }
