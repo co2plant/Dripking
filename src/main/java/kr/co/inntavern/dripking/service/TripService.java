@@ -12,6 +12,7 @@ import kr.co.inntavern.dripking.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -34,10 +35,20 @@ public class TripService {
         return mapToTripResponseDTO(trip);
     }
 
-    public Page<TripResponseDTO> getAllTripByUserId(int page, int size, Long userId){
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<TripResponseDTO> getAllTripByUserId(int page, int size, Long userId, String sortBy){
+        Sort.Direction sort = sortBy.equalsIgnoreCase("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        Pageable pageable = PageRequest.of(page, size, sort);
         Page<Trip> trips = tripRepository.findAllByUserId(userId, pageable);
         return trips.map(this::mapToTripResponseDTO);
+    }
+
+    public Page<TripContainCountryResponseDTO> getAllTripContainCountryByUserId(int page, int size, Long userId, String sortBy){
+        Sort.Direction sort = sortBy.equalsIgnoreCase("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Trip> trips = tripRepository.findAllByUserId(userId, pageable);
+        return trips.map(this::mapToTripContainCountryResponseDTO);
     }
 
     public Page<TripContainCountryResponseDTO> getAllTripCountyByUserId(int page, int size, Long userId){
@@ -52,8 +63,6 @@ public class TripService {
             responseDTO.setStartDate(trip.getStartDate());
             responseDTO.setEndDate(trip.getEndDate());
             responseDTO.setCountryName(trip.getCountry().getName());
-            responseDTO.setCountryLat(trip.getCountry().getLatitude());
-            responseDTO.setCountryLng(trip.getCountry().getLongitude());
             return responseDTO;
         });
     }
@@ -101,6 +110,18 @@ public class TripService {
         responseDTO.setDescription(trip.getDescription());
         responseDTO.setStartDate(trip.getStartDate());
         responseDTO.setEndDate(trip.getEndDate());
+        return responseDTO;
+    }
+
+    private TripContainCountryResponseDTO mapToTripContainCountryResponseDTO(Trip trip){
+        TripContainCountryResponseDTO responseDTO = new TripContainCountryResponseDTO();
+        responseDTO.setId(trip.getId());
+        responseDTO.setUserId(trip.getUser().getId());
+        responseDTO.setName(trip.getName());
+        responseDTO.setDescription(trip.getDescription());
+        responseDTO.setStartDate(trip.getStartDate());
+        responseDTO.setEndDate(trip.getEndDate());
+        responseDTO.setCountryName(trip.getCountry().getName());
         return responseDTO;
     }
 }
