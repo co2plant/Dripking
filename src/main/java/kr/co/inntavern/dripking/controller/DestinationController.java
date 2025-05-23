@@ -35,9 +35,9 @@ public class DestinationController
 
     }
 
-    @GetMapping("/{destination_id}")
-    public DestinationResponseDTO getDestinationById(@PathVariable Long destination_id) {
-        return destinationService.getDestinationById(destination_id);
+    @GetMapping("/{destinationId}")
+    public DestinationResponseDTO getDestinationById(@PathVariable Long destinationId) {
+        return destinationService.getDestinationById(destinationId);
     }
 
     @GetMapping("/search/{searchKeyword}")
@@ -52,16 +52,16 @@ public class DestinationController
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{destination_id}")
-    public ResponseEntity<Destination> updateDestination(@PathVariable Long destination_id, @RequestBody Destination Destination){
-        destinationService.updateDestination(destination_id, Destination);
+    @PutMapping("/{destinationId}")
+    public ResponseEntity<Destination> updateDestination(@PathVariable Long destinationId, @RequestBody Destination Destination){
+        destinationService.updateDestination(destinationId, Destination);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{destination_id}")
-    public ResponseEntity<Void> deleteDestination(@PathVariable Long destination_id)
+    @DeleteMapping("/{destinationId}")
+    public ResponseEntity<Void> deleteDestination(@PathVariable Long destinationId)
     {
-        destinationService.deleteDestinationById(destination_id);
+        destinationService.deleteDestinationById(destinationId);
         return ResponseEntity.ok().build();
     }
 }
