@@ -63,7 +63,7 @@ public class UserService {
         if(newPassword.length() < 16) {
             throw new RuntimeException("Password must be at least 16 characters long");
         }
-        if(newPassword.matches(".*[!@#$%^&*].*")){
+        if(!newPassword.matches(".*[!@#$%^&*].*")){
             throw new RuntimeException("Password must contain at least one special character");
         }
     }
