@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 public class ReviewResponseDTO {
     private Long id;
     private String nickname;
+    private Long userId;
     private ItemType itemType;
     private Long targetId;
     private Byte rating;

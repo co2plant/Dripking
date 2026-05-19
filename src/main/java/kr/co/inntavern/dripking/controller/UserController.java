@@ -51,9 +51,14 @@ public class UserController {
             Map<String, Object> response = new HashMap<>();
             Map<String, Object> data = new HashMap<>();
 
+            List<String> roles = customUserDetails.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList());
+
+            data.put("id", customUserDetails.getId());
             data.put("email", customUserDetails.getEmail());
             data.put("nickname", customUserDetails.getNickname());
-            data.put("roles", customUserDetails.getAuthorities());
+            data.put("roles", roles);
 
             response.put("success", true);
             response.put("message", "User is authenticated");

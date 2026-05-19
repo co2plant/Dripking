@@ -97,6 +97,7 @@ public class ReviewService {
 
         responseDTO.setId(review.getId());
         responseDTO.setNickname(review.getUser().getNickname());
+        responseDTO.setUserId(review.getUser().getId());
         responseDTO.setItemType(review.getItemType());
         responseDTO.setTargetId(review.getTargetId());
         responseDTO.setRating(review.getRating());
