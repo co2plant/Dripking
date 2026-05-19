@@ -60,8 +60,8 @@ public class AlcoholController {
 
     @GetMapping("/{alcoholId}")
     @Operation(summary = "특정 ID 주류 조회", description = "특정 ID의 주류를 조회합니다.")
-    @ApiResponse(responseCode="200", description = "성공", content = @Content(schema = @Schema(implementation = Alcohol.class)))
-    public Alcohol getAlcoholById(@PathVariable Long alcoholId) {
+    @ApiResponse(responseCode="200", description = "성공", content = @Content(schema = @Schema(implementation = AlcoholResponseDTO.class)))
+    public AlcoholResponseDTO getAlcoholById(@PathVariable Long alcoholId) {
         return alcoholService.getAlcoholById(alcoholId);
     }
 

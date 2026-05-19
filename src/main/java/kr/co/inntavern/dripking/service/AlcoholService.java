@@ -21,8 +21,9 @@ public class AlcoholService {
         return alcoholRepository.findAll(pageable).map(this::mapToAlcoholResponseDTO);
     }
 
-    public Alcohol getAlcoholById(Long Id){
+    public AlcoholResponseDTO getAlcoholById(Long Id){
         return alcoholRepository.findById(Id)
+                .map(this::mapToAlcoholResponseDTO)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 술이 존재하지 않습니다."));
     }
 
