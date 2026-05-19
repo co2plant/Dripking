@@ -16,9 +16,15 @@ public class DestinationResponseDTO {
 
     private Double longitude;//경도
 
-    private String img_url;
+    private String imgUrl;
 
-    private Long country_id;
+    private Long countryId;
 
-    private Long city_id;
+    private String countryName;
+
+    private Long cityId;
+
+    private String cityName;
+
+    private Long categoryId;
 }

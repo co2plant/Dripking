@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -21,8 +22,8 @@ public interface DestinationRepository extends JpaRepository<Destination, Long> 
     @NonNull
     Page<Destination> findAll(Pageable pageable);
     @NonNull
-    @Query("SELECT d FROM Destination d WHERE d.city.id = :cityId")
-    Page<Destination> findAllByCountryId(Pageable pageable, Long cityId);
+    @Query("SELECT d FROM Destination d WHERE d.city.country.id = :countryId")
+    Page<Destination> findAllByCountryId(Pageable pageable, @Param("countryId") Long countryId);
 
     @NonNull
     @Query("SELECT d FROM Destination d WHERE d.latitude BETWEEN :minLatitude AND :maxLatitude AND d.longitude BETWEEN :minLongitude AND :maxLongitude")
@@ -36,7 +37,7 @@ public interface DestinationRepository extends JpaRepository<Destination, Long> 
             "co.name, " +
             "ci.name, " +
             "ca.name, " +
-            "COALESCE((SELECT AVG(r.rating) FROM Review r WHERE r.target_id = d.id AND r.reviewType = d.itemType), 0.0)" +
+            "COALESCE((SELECT AVG(r.rating) FROM Review r WHERE r.targetId = d.id AND r.itemType = kr.co.inntavern.dripking.model.enumType.ItemType.DESTINATION), 0.0)" +
             ") " +
             "FROM Destination d " +
             "LEFT JOIN d.city ci " +

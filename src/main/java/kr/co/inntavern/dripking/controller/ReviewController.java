@@ -56,8 +56,31 @@ public class ReviewController {
     @PutMapping
     public ResponseEntity<?> updateReview(@AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam Long review_id, @RequestBody ReviewRequestDTO reviewRequestDTO) {
+        return updateAuthenticatedReview(customUserDetails, review_id, reviewRequestDTO);
+    }
+
+    @PutMapping("/{reviewId}")
+    public ResponseEntity<?> updateReviewByPath(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long reviewId, @RequestBody ReviewRequestDTO reviewRequestDTO) {
+        return updateAuthenticatedReview(customUserDetails, reviewId, reviewRequestDTO);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteReview(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestParam Long review_id) {
+        return deleteAuthenticatedReview(customUserDetails, review_id);
+    }
+
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<Void> deleteReviewByPath(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long reviewId) {
+        return deleteAuthenticatedReview(customUserDetails, reviewId);
+    }
+
+    private ResponseEntity<?> updateAuthenticatedReview(CustomUserDetails customUserDetails, Long reviewId,
+            ReviewRequestDTO reviewRequestDTO) {
         if (customUserDetails != null) {
-            reviewService.updateReview(customUserDetails.getId(), review_id, reviewRequestDTO);
+            reviewService.updateReview(customUserDetails.getId(), reviewId, reviewRequestDTO);
 
             return ResponseEntity.status(HttpStatus.OK).build();
         } else {
@@ -65,11 +88,9 @@ public class ReviewController {
         }
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteReview(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestParam Long review_id) {
+    private ResponseEntity<Void> deleteAuthenticatedReview(CustomUserDetails customUserDetails, Long reviewId) {
         if (customUserDetails != null) {
-            reviewService.deleteReview(customUserDetails.getId(), review_id);
+            reviewService.deleteReview(customUserDetails.getId(), reviewId);
 
             return ResponseEntity.status(HttpStatus.OK).build();
         } else {

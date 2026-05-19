@@ -28,13 +28,20 @@ public class AlcoholController {
     public ResponseEntity<Page<AlcoholResponseDTO>> getAllAlcohols(@RequestParam(required=false,value="page", defaultValue="0") int page,
                                                         @RequestParam(required=false,value="size", defaultValue="10") int size,
                                                         @RequestParam(required=false, value="sort", defaultValue="DESC") String sort,
-                                                        @RequestParam(required=false, value="categoryId", defaultValue="0") Long categoryId){
-        if(categoryId != 0){
-            Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcoholsByCategoryId(page, size, categoryId);
+                                                        @RequestParam(required=false, value="categoryId", defaultValue="0") Long categoryId,
+                                                        @RequestParam(required=false, value="category_id") Long legacyCategoryId,
+                                                        @RequestParam(required=false, value="distilleryId") Long distilleryId){
+        Long selectedCategoryId = categoryId != 0 ? categoryId : legacyCategoryId;
+        if(distilleryId != null){
+            Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcoholsByDistilleryId(page, size, distilleryId);
+            return ResponseEntity.ok(paging);
+        }
+        else if(selectedCategoryId != null && selectedCategoryId != 0){
+            Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcoholsByCategoryId(page, size, selectedCategoryId);
             return ResponseEntity.ok(paging);
         }
         else{
-            Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcohols(page);
+            Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcohols(page, size);
             return ResponseEntity.ok(paging);
         }
 
@@ -43,8 +50,11 @@ public class AlcoholController {
     @GetMapping("/distillery") //endpoint변경해야함.
     @Operation(summary = "양조장 관련 모든 주류 조회", description = "해당 양조장의 모든 주류를 조회합니다.")
     @ApiResponse(responseCode="200", description = "성공", content = @Content(schema = @Schema(implementation = AlcoholResponseDTO.class)))
-    public ResponseEntity<Page<AlcoholResponseDTO>> getAllAlcoholsByDistilleryId(@RequestParam(value="distillery") Long distilleryId){
-        Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcoholsByDistilleryId(distilleryId);
+    public ResponseEntity<Page<AlcoholResponseDTO>> getAllAlcoholsByDistilleryId(
+            @RequestParam(value="distillery") Long distilleryId,
+            @RequestParam(required=false,value="page", defaultValue="0") int page,
+            @RequestParam(required=false,value="size", defaultValue="10") int size){
+        Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcoholsByDistilleryId(page, size, distilleryId);
         return ResponseEntity.ok(paging);
     }
 
@@ -85,4 +95,3 @@ public class AlcoholController {
 
 
 }
-

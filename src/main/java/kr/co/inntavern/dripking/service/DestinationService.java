@@ -15,8 +15,8 @@ public class DestinationService {
         this.destinationRepository = destinationRepository;
     }
 
-    public Page<DestinationResponseDTO> getAllDestinations(int page){
-        Pageable pageable = PageRequest.of(page, 10);
+    public Page<DestinationResponseDTO> getAllDestinations(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
         return destinationRepository.findAll(pageable).map(this::mapToDestinationResponseDTO);
     }
 
@@ -30,8 +30,8 @@ public class DestinationService {
         return destinationRepository.findAllByNameContainingIgnoreCase(pageable, name).map(this::mapToDestinationResponseDTO);
     }
 
-    public Page<DestinationResponseDTO> getAllDestinationsByCountryId(int page, Long countryId){
-        Pageable pageable = PageRequest.of(page, 10);
+    public Page<DestinationResponseDTO> getAllDestinationsByCountryId(int page, int size, Long countryId){
+        Pageable pageable = PageRequest.of(page, size);
         return destinationRepository.findAllByCountryId(pageable, countryId).map(this::mapToDestinationResponseDTO);
     }
 
@@ -57,10 +57,20 @@ public class DestinationService {
         responseDTO.setId(destination.getId());
         responseDTO.setName(destination.getName());
         responseDTO.setDescription(destination.getDescription());
-        responseDTO.setImg_url(destination.getImgUrl());
+        responseDTO.setImgUrl(destination.getImgUrl());
         responseDTO.setLatitude(destination.getLatitude());
         responseDTO.setLongitude(destination.getLongitude());
-        responseDTO.setCountry_id(destination.getCity().getId());
+        if (destination.getCity() != null) {
+            responseDTO.setCityId(destination.getCity().getId());
+            responseDTO.setCityName(destination.getCity().getName());
+            if (destination.getCity().getCountry() != null) {
+                responseDTO.setCountryId(destination.getCity().getCountry().getId());
+                responseDTO.setCountryName(destination.getCity().getCountry().getName());
+            }
+        }
+        if (destination.getCategory() != null) {
+            responseDTO.setCategoryId(destination.getCategory().getId());
+        }
         return responseDTO;
     }
 }

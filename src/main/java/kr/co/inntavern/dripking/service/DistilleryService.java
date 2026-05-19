@@ -15,8 +15,8 @@ public class DistilleryService {
     public DistilleryService(DistilleryRepository distilleryRepository){
         this.distilleryRepository = distilleryRepository;
     }
-    public Page<DistilleryResponseDTO> getAllDistilleries(int page){
-        Pageable pageable = PageRequest.of(page, 10);
+    public Page<DistilleryResponseDTO> getAllDistilleries(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
         return distilleryRepository.findAll(pageable).map(this::mapToDistilleryResponseDTO);
     }
 
@@ -25,8 +25,8 @@ public class DistilleryService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 술이 존재하지 않습니다."));
     }
 
-    public Page<DistilleryResponseDTO> getAllDistilleriesByDestinationId(Long destinationId){
-        Pageable pageable = PageRequest.of(0, 10);
+    public Page<DistilleryResponseDTO> getAllDistilleriesByDestinationId(int page, int size, Long destinationId){
+        Pageable pageable = PageRequest.of(page, size);
         return distilleryRepository.findAllByDestinationId(pageable, destinationId).map(this::mapToDistilleryResponseDTO);
     }
 

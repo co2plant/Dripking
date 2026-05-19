@@ -7,8 +7,10 @@ import kr.co.inntavern.dripking.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
+@Profile("dev")
 public class DataLoader {
     @Bean
     public CommandLineRunner loadData(DistilleryRepository distilleryRepository,
@@ -43,7 +45,7 @@ public class DataLoader {
             City city = City.builder()
                     .name("오사카")
                     .description("일본 오사카부의 현청 소재지이자, 일본 제2의 도시")
-                    .countryId(4L)
+                    .country(countryRepository.findById(4L).get())
                     .build();
             cityRepository.save(city);
 
@@ -129,7 +131,7 @@ public class DataLoader {
 
                 Review reviews = Review.builder()
                         .rating((byte) 5)
-                        .reviewType(ReviewType.valueOf("ALCOHOL"))
+                        .itemType(ItemType.ALCOHOL)
                         .targetId((long) i)
                         .contents("리버시블이라활용도가좋네요.어느정도두께감이있어서따뜻할것같아요.플리스촉감도좋고,부드럽네요.착용해보니양쪽다무난하니다예쁘네요.블랙색상이라때도안타고좋아요.무난해서암때나착용가능해서좋아요.\n" +
                                 "\n" + i)

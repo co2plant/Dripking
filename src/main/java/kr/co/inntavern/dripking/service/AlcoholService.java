@@ -16,8 +16,8 @@ public class AlcoholService {
         this.alcoholRepository = alcoholRepository;
     }
 
-    public Page<AlcoholResponseDTO> getAllAlcohols(int page){
-        Pageable pageable = PageRequest.of(page, 10);
+    public Page<AlcoholResponseDTO> getAllAlcohols(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
         return alcoholRepository.findAll(pageable).map(this::mapToAlcoholResponseDTO);
     }
 
@@ -36,8 +36,8 @@ public class AlcoholService {
         return alcoholRepository.findAllByNameContainingIgnoreCase(pageable, name).map(this::mapToAlcoholResponseDTO);
     }
 
-    public Page<AlcoholResponseDTO> getAllAlcoholsByDistilleryId(Long distilleryId){
-        Pageable pageable = PageRequest.of(0, 10);
+    public Page<AlcoholResponseDTO> getAllAlcoholsByDistilleryId(int page, int size, Long distilleryId){
+        Pageable pageable = PageRequest.of(page, size);
         return alcoholRepository.findAllByDistilleryId(pageable, distilleryId).map(this::mapToAlcoholResponseDTO);
     }
 
