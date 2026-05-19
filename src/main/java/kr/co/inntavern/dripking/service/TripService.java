@@ -15,8 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class TripService {
     private final TripRepository tripRepository;
@@ -33,6 +31,10 @@ public class TripService {
         Trip trip = tripRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 여행이 존재하지 않습니다."));
         return mapToTripResponseDTO(trip);
+    }
+
+    public TripResponseDTO getTripById(Long id, Long userId){
+        return mapToTripResponseDTO(getOwnedTrip(id, userId));
     }
 
     public Page<TripResponseDTO> getAllTripByUserId(int page, int size, Long userId, String sortBy){
@@ -67,14 +69,13 @@ public class TripService {
         });
     }
  
-    public TripResponseDTO createTrip(TripRequestDTO tripRequestDTO){
-        User user = userRepository.findById(tripRequestDTO.getUserId())
+    public TripResponseDTO createTrip(TripRequestDTO tripRequestDTO, Long userId){
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 유저가 존재하지 않습니다."));
-        Country country = countryRepository.findByName(tripRequestDTO.getCountryName());
+        Country country = getCountryByName(tripRequestDTO.getCountryName());
 
         Trip trip  = new Trip();
-        trip.setUser(user); //user 에 관한 내용은 login 기능이 구현되면 추가할 예정
-        trip.setUser(userRepository.findById(tripRequestDTO.getUserId()).orElse(null));
+        trip.setUser(user);
         trip.setName(tripRequestDTO.getName());
         trip.setDescription(tripRequestDTO.getDescription());
         trip.setStartDate(tripRequestDTO.getStartDate());
@@ -84,22 +85,20 @@ public class TripService {
         return mapToTripResponseDTO(tripRepository.save(trip));
     }
 
-    public void updateTrip(Long id, TripRequestDTO tripRequestDTO){
-        Optional<Trip> trip = tripRepository.findById(id);
-        if(trip.isEmpty()){
-            throw new IllegalArgumentException("해당 ID의 리뷰가 존재하지 않습니다.");
-        }
+    public void updateTrip(Long id, TripRequestDTO tripRequestDTO, Long userId){
+        Trip trip = getOwnedTrip(id, userId);
 
-        trip.get().setUser(userRepository.findById(tripRequestDTO.getUserId()).orElse(null));
-        trip.get().setName(tripRequestDTO.getName());
-        trip.get().setDescription(tripRequestDTO.getDescription());
-        trip.get().setStartDate(tripRequestDTO.getStartDate());
-        trip.get().setEndDate(tripRequestDTO.getEndDate());
-        tripRepository.save(trip.orElse(null));
+        trip.setName(tripRequestDTO.getName());
+        trip.setDescription(tripRequestDTO.getDescription());
+        trip.setStartDate(tripRequestDTO.getStartDate());
+        trip.setEndDate(tripRequestDTO.getEndDate());
+        trip.setCountry(getCountryByName(tripRequestDTO.getCountryName()));
+        tripRepository.save(trip);
     }
 
-    public void deleteTripById(Long id){
-        tripRepository.deleteById(id);
+    public void deleteTripById(Long id, Long userId){
+        Trip trip = getOwnedTrip(id, userId);
+        tripRepository.delete(trip);
     }
 
     private TripResponseDTO mapToTripResponseDTO(Trip trip){
@@ -110,6 +109,9 @@ public class TripService {
         responseDTO.setDescription(trip.getDescription());
         responseDTO.setStartDate(trip.getStartDate());
         responseDTO.setEndDate(trip.getEndDate());
+        if(trip.getCountry() != null){
+            responseDTO.setCountryName(trip.getCountry().getName());
+        }
         return responseDTO;
     }
 
@@ -123,5 +125,25 @@ public class TripService {
         responseDTO.setEndDate(trip.getEndDate());
         responseDTO.setCountryName(trip.getCountry().getName());
         return responseDTO;
+    }
+
+    private Trip getOwnedTrip(Long tripId, Long userId){
+        Trip trip = tripRepository.findById(tripId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 여행이 존재하지 않습니다."));
+
+        if(trip.getUser() == null || !trip.getUser().getId().equals(userId)){
+            throw new IllegalArgumentException("해당 여행에 접근할 권한이 없습니다.");
+        }
+
+        return trip;
+    }
+
+    private Country getCountryByName(String countryName){
+        Country country = countryRepository.findByName(countryName);
+        if(country == null){
+            throw new IllegalArgumentException("해당 이름의 국가가 존재하지 않습니다.");
+        }
+
+        return country;
     }
 }
