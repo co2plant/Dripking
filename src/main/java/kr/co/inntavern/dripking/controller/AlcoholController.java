@@ -33,15 +33,15 @@ public class AlcoholController {
                                                         @RequestParam(required=false, value="distilleryId") Long distilleryId){
         Long selectedCategoryId = categoryId != 0 ? categoryId : legacyCategoryId;
         if(distilleryId != null){
-            Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcoholsByDistilleryId(page, size, distilleryId);
+            Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcoholsByDistilleryId(page, size, sort, distilleryId);
             return ResponseEntity.ok(paging);
         }
         else if(selectedCategoryId != null && selectedCategoryId != 0){
-            Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcoholsByCategoryId(page, size, selectedCategoryId);
+            Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcoholsByCategoryId(page, size, sort, selectedCategoryId);
             return ResponseEntity.ok(paging);
         }
         else{
-            Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcohols(page, size);
+            Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcohols(page, size, sort);
             return ResponseEntity.ok(paging);
         }
 
@@ -54,7 +54,7 @@ public class AlcoholController {
             @RequestParam(value="distillery") Long distilleryId,
             @RequestParam(required=false,value="page", defaultValue="0") int page,
             @RequestParam(required=false,value="size", defaultValue="10") int size){
-        Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcoholsByDistilleryId(page, size, distilleryId);
+        Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcoholsByDistilleryId(page, size, "DESC", distilleryId);
         return ResponseEntity.ok(paging);
     }
 

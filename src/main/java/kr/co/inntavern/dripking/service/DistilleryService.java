@@ -3,6 +3,7 @@ package kr.co.inntavern.dripking.service;
 import kr.co.inntavern.dripking.dto.response.DistilleryResponseDTO;
 import kr.co.inntavern.dripking.model.Distillery;
 import kr.co.inntavern.dripking.repository.DistilleryRepository;
+import kr.co.inntavern.dripking.util.PageableUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,8 +16,8 @@ public class DistilleryService {
     public DistilleryService(DistilleryRepository distilleryRepository){
         this.distilleryRepository = distilleryRepository;
     }
-    public Page<DistilleryResponseDTO> getAllDistilleries(int page, int size){
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<DistilleryResponseDTO> getAllDistilleries(int page, int size, String sort){
+        Pageable pageable = PageableUtils.pageRequest(page, size, sort);
         return distilleryRepository.findAll(pageable).map(this::mapToDistilleryResponseDTO);
     }
 
@@ -25,8 +26,8 @@ public class DistilleryService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 술이 존재하지 않습니다."));
     }
 
-    public Page<DistilleryResponseDTO> getAllDistilleriesByDestinationId(int page, int size, Long destinationId){
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<DistilleryResponseDTO> getAllDistilleriesByDestinationId(int page, int size, String sort, Long destinationId){
+        Pageable pageable = PageableUtils.pageRequest(page, size, sort);
         return distilleryRepository.findAllByDestinationId(pageable, destinationId).map(this::mapToDistilleryResponseDTO);
     }
 

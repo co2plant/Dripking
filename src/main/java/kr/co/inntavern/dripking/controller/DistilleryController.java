@@ -21,10 +21,10 @@ public class DistilleryController {
                                                                @RequestParam(required=false, value="sort", defaultValue="DESC") String sort,
                                                                @RequestParam(required=false, value="destinationId") Long destinationId){
         if (destinationId != null) {
-            Page<DistilleryResponseDTO> paging = distilleryService.getAllDistilleriesByDestinationId(page, size, destinationId);
+            Page<DistilleryResponseDTO> paging = distilleryService.getAllDistilleriesByDestinationId(page, size, sort, destinationId);
             return ResponseEntity.ok(paging);
         }
-        Page<DistilleryResponseDTO> paging = distilleryService.getAllDistilleries(page, size);
+        Page<DistilleryResponseDTO> paging = distilleryService.getAllDistilleries(page, size, sort);
         return ResponseEntity.ok(paging);
     }
 
@@ -33,7 +33,7 @@ public class DistilleryController {
             @RequestParam(value="destination") Long destinationId,
             @RequestParam(required=false,value="page", defaultValue="0") int page,
             @RequestParam(required=false,value="size", defaultValue="10") int size){
-        Page<DistilleryResponseDTO> paging = distilleryService.getAllDistilleriesByDestinationId(page, size, destinationId);
+        Page<DistilleryResponseDTO> paging = distilleryService.getAllDistilleriesByDestinationId(page, size, "DESC", destinationId);
         return ResponseEntity.ok(paging);
     }
 

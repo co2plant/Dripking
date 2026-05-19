@@ -3,6 +3,7 @@ package kr.co.inntavern.dripking.service;
 import kr.co.inntavern.dripking.dto.response.DestinationResponseDTO;
 import kr.co.inntavern.dripking.model.Destination;
 import kr.co.inntavern.dripking.repository.DestinationRepository;
+import kr.co.inntavern.dripking.util.PageableUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,8 +16,8 @@ public class DestinationService {
         this.destinationRepository = destinationRepository;
     }
 
-    public Page<DestinationResponseDTO> getAllDestinations(int page, int size){
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<DestinationResponseDTO> getAllDestinations(int page, int size, String sort){
+        Pageable pageable = PageableUtils.pageRequest(page, size, sort);
         return destinationRepository.findAll(pageable).map(this::mapToDestinationResponseDTO);
     }
 
@@ -30,8 +31,8 @@ public class DestinationService {
         return destinationRepository.findAllByNameContainingIgnoreCase(pageable, name).map(this::mapToDestinationResponseDTO);
     }
 
-    public Page<DestinationResponseDTO> getAllDestinationsByCountryId(int page, int size, Long countryId){
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<DestinationResponseDTO> getAllDestinationsByCountryId(int page, int size, String sort, Long countryId){
+        Pageable pageable = PageableUtils.pageRequest(page, size, sort);
         return destinationRepository.findAllByCountryId(pageable, countryId).map(this::mapToDestinationResponseDTO);
     }
 

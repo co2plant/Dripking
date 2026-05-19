@@ -27,11 +27,11 @@ public class DestinationController
     ){
         Long selectedCountryId = countryId != 0 ? countryId : legacyCountryId;
         if(selectedCountryId != null && selectedCountryId != 0){
-            Page<DestinationResponseDTO> paging = destinationService.getAllDestinationsByCountryId(page, size, selectedCountryId);
+            Page<DestinationResponseDTO> paging = destinationService.getAllDestinationsByCountryId(page, size, sort, selectedCountryId);
             return ResponseEntity.ok(paging);
         }
         else{
-            Page<DestinationResponseDTO> paging = destinationService.getAllDestinations(page, size);
+            Page<DestinationResponseDTO> paging = destinationService.getAllDestinations(page, size, sort);
             return ResponseEntity.ok(paging);
         }
 

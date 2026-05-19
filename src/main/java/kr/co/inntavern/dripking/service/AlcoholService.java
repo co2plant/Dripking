@@ -3,6 +3,7 @@ package kr.co.inntavern.dripking.service;
 import kr.co.inntavern.dripking.dto.response.AlcoholResponseDTO;
 import kr.co.inntavern.dripking.model.Alcohol;
 import kr.co.inntavern.dripking.repository.AlcoholRepository;
+import kr.co.inntavern.dripking.util.PageableUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,8 +17,8 @@ public class AlcoholService {
         this.alcoholRepository = alcoholRepository;
     }
 
-    public Page<AlcoholResponseDTO> getAllAlcohols(int page, int size){
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<AlcoholResponseDTO> getAllAlcohols(int page, int size, String sort){
+        Pageable pageable = PageableUtils.pageRequest(page, size, sort);
         return alcoholRepository.findAll(pageable).map(this::mapToAlcoholResponseDTO);
     }
 
@@ -27,8 +28,8 @@ public class AlcoholService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 술이 존재하지 않습니다."));
     }
 
-    public Page<AlcoholResponseDTO> getAllAlcoholsByCategoryId(int page, int size, Long categoryId){
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<AlcoholResponseDTO> getAllAlcoholsByCategoryId(int page, int size, String sort, Long categoryId){
+        Pageable pageable = PageableUtils.pageRequest(page, size, sort);
         return alcoholRepository.findAllByCategoryId(pageable, categoryId).map(this::mapToAlcoholResponseDTO);
     }
 
@@ -37,8 +38,8 @@ public class AlcoholService {
         return alcoholRepository.findAllByNameContainingIgnoreCase(pageable, name).map(this::mapToAlcoholResponseDTO);
     }
 
-    public Page<AlcoholResponseDTO> getAllAlcoholsByDistilleryId(int page, int size, Long distilleryId){
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<AlcoholResponseDTO> getAllAlcoholsByDistilleryId(int page, int size, String sort, Long distilleryId){
+        Pageable pageable = PageableUtils.pageRequest(page, size, sort);
         return alcoholRepository.findAllByDistilleryId(pageable, distilleryId).map(this::mapToAlcoholResponseDTO);
     }
 
