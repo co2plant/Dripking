@@ -49,14 +49,17 @@ public class DestinationController
     public ResponseEntity<Page<DestinationResponseDTO>> getAllDestinationsByLatitudeAndLongitude(@RequestParam(value="minLatitude") Double minLatitude,
                                                                                                  @RequestParam(value="maxLatitude") Double maxLatitude,
                                                                                                  @RequestParam(value="minLongitude") Double minLongitude,
-                                                                                                 @RequestParam(value="maxLongitude") Double maxLongitude){
+                                                                                                 @RequestParam(value="maxLongitude") Double maxLongitude,
+                                                                                                 @RequestParam(required=false,value="page", defaultValue="0") int page,
+                                                                                                 @RequestParam(required=false,value="size", defaultValue="10") int size,
+                                                                                                 @RequestParam(required=false, value="sort", defaultValue="DESC") String sort){
         try {
             CoordinateUtils.validateBounds(minLatitude, maxLatitude, minLongitude, maxLongitude);
         } catch (IllegalArgumentException exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage(), exception);
         }
 
-        Page<DestinationResponseDTO> paging = destinationService.getAllDestinationsByLatitudeAndLongitude(minLatitude, maxLatitude, minLongitude, maxLongitude);
+        Page<DestinationResponseDTO> paging = destinationService.getAllDestinationsByLatitudeAndLongitude(page, size, sort, minLatitude, maxLatitude, minLongitude, maxLongitude);
         return ResponseEntity.ok(paging);
     }
 

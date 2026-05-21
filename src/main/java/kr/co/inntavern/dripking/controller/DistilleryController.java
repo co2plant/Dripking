@@ -49,14 +49,17 @@ public class DistilleryController {
     public ResponseEntity<Page<DistilleryResponseDTO>>getAllDistilleriesByLatitudeAndLongitude(@RequestParam(value="minLatitude") Double minLatitude,
                                                                          @RequestParam(value="maxLatitude") Double maxLatitude,
                                                                          @RequestParam(value="minLongitude") Double minLongitude,
-                                                                         @RequestParam(value="maxLongitude") Double maxLongitude){
+                                                                         @RequestParam(value="maxLongitude") Double maxLongitude,
+                                                                         @RequestParam(required=false,value="page", defaultValue="0") int page,
+                                                                         @RequestParam(required=false,value="size", defaultValue="10") int size,
+                                                                         @RequestParam(required=false, value="sort", defaultValue="DESC") String sort){
         try {
             CoordinateUtils.validateBounds(minLatitude, maxLatitude, minLongitude, maxLongitude);
         } catch (IllegalArgumentException exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage(), exception);
         }
 
-        Page<DistilleryResponseDTO> paging = distilleryService.getAllDistilleriesByLatitudeAndLongitude(minLatitude, maxLatitude, minLongitude, maxLongitude);
+        Page<DistilleryResponseDTO> paging = distilleryService.getAllDistilleriesByLatitudeAndLongitude(page, size, sort, minLatitude, maxLatitude, minLongitude, maxLongitude);
         return ResponseEntity.ok(paging);
     }
 

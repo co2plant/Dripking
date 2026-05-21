@@ -31,8 +31,8 @@ public class DistilleryService {
         return distilleryRepository.findAllByDestinationId(pageable, destinationId).map(this::mapToDistilleryResponseDTO);
     }
 
-    public Page<DistilleryResponseDTO> getAllDistilleriesByLatitudeAndLongitude(Double minLatitude, Double maxLatitude, Double minLongitude, Double maxLongitude){
-        Pageable pageable = PageRequest.of(0, 10);
+    public Page<DistilleryResponseDTO> getAllDistilleriesByLatitudeAndLongitude(int page, int size, String sort, Double minLatitude, Double maxLatitude, Double minLongitude, Double maxLongitude){
+        Pageable pageable = PageableUtils.pageRequest(page, size, sort);
         return distilleryRepository.findAllByLatitudeAndLongitude(pageable, minLatitude, maxLatitude, minLongitude, maxLongitude).map(this::mapToDistilleryResponseDTO);
     }
 
