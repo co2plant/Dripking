@@ -3,8 +3,11 @@ package kr.co.inntavern.dripking.controller;
 import kr.co.inntavern.dripking.dto.response.DistilleryResponseDTO;
 import kr.co.inntavern.dripking.model.Distillery;
 import kr.co.inntavern.dripking.service.DistilleryService;
+import kr.co.inntavern.dripking.util.CoordinateUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -47,6 +50,12 @@ public class DistilleryController {
                                                                          @RequestParam(value="maxLatitude") Double maxLatitude,
                                                                          @RequestParam(value="minLongitude") Double minLongitude,
                                                                          @RequestParam(value="maxLongitude") Double maxLongitude){
+        try {
+            CoordinateUtils.validateBounds(minLatitude, maxLatitude, minLongitude, maxLongitude);
+        } catch (IllegalArgumentException exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage(), exception);
+        }
+
         Page<DistilleryResponseDTO> paging = distilleryService.getAllDistilleriesByLatitudeAndLongitude(minLatitude, maxLatitude, minLongitude, maxLongitude);
         return ResponseEntity.ok(paging);
     }
