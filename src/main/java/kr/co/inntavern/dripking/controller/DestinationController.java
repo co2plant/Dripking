@@ -3,8 +3,11 @@ package kr.co.inntavern.dripking.controller;
 import kr.co.inntavern.dripking.dto.response.DestinationResponseDTO;
 import kr.co.inntavern.dripking.model.Destination;
 import kr.co.inntavern.dripking.service.DestinationService;
+import kr.co.inntavern.dripking.util.CoordinateUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -40,6 +43,21 @@ public class DestinationController
     @GetMapping("/{destinationId}")
     public DestinationResponseDTO getDestinationById(@PathVariable Long destinationId) {
         return destinationService.getDestinationById(destinationId);
+    }
+
+    @GetMapping("/latlng")
+    public ResponseEntity<Page<DestinationResponseDTO>> getAllDestinationsByLatitudeAndLongitude(@RequestParam(value="minLatitude") Double minLatitude,
+                                                                                                 @RequestParam(value="maxLatitude") Double maxLatitude,
+                                                                                                 @RequestParam(value="minLongitude") Double minLongitude,
+                                                                                                 @RequestParam(value="maxLongitude") Double maxLongitude){
+        try {
+            CoordinateUtils.validateBounds(minLatitude, maxLatitude, minLongitude, maxLongitude);
+        } catch (IllegalArgumentException exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage(), exception);
+        }
+
+        Page<DestinationResponseDTO> paging = destinationService.getAllDestinationsByLatitudeAndLongitude(minLatitude, maxLatitude, minLongitude, maxLongitude);
+        return ResponseEntity.ok(paging);
     }
 
     @GetMapping("/search/{searchKeyword}")

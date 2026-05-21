@@ -36,6 +36,11 @@ public class DestinationService {
         return destinationRepository.findAllByCountryId(pageable, countryId).map(this::mapToDestinationResponseDTO);
     }
 
+    public Page<DestinationResponseDTO> getAllDestinationsByLatitudeAndLongitude(Double minLatitude, Double maxLatitude, Double minLongitude, Double maxLongitude){
+        Pageable pageable = PageRequest.of(0, 10);
+        return destinationRepository.findAllByLatitudeAndLongitude(pageable, minLatitude, maxLatitude, minLongitude, maxLongitude).map(this::mapToDestinationResponseDTO);
+    }
+
     public void createDestination(Destination Destination){
         destinationRepository.save(Destination);
     }
