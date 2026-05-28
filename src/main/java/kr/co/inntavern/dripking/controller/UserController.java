@@ -18,11 +18,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -75,16 +79,41 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequest signUpRequest){
-        if(!signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())){
-            Map<String, String> errorMap = new HashMap<>();
-            errorMap.put("passwordCheck", "Password does not match");
-            return ResponseEntity.badRequest().body(errorMap);
+    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequest signUpRequest, BindingResult bindingResult){
+        Map<String, String> fieldErrors = new LinkedHashMap<>();
+
+        for(FieldError fieldError : bindingResult.getFieldErrors()){
+            fieldErrors.putIfAbsent(fieldError.getField(), fieldError.getDefaultMessage());
+        }
+
+        if(!Objects.equals(signUpRequest.getPassword(), signUpRequest.getConfirmPassword())){
+            fieldErrors.put("confirmPassword", "비밀번호가 일치하지 않습니다.");
+        }
+
+        if(signUpRequest.getEmail() != null && userService.checkEmailDuplicate(signUpRequest.getEmail())){
+            fieldErrors.put("email", "이미 사용 중인 이메일입니다.");
+        }
+
+        if(signUpRequest.getNickname() != null && userService.checkNicknameDuplicate(signUpRequest.getNickname())){
+            fieldErrors.put("nickname", "이미 사용 중인 닉네임입니다.");
+        }
+
+        if(!fieldErrors.isEmpty()){
+            return ResponseEntity.badRequest().body(validationError(fieldErrors));
         }
 
         userService.userSignUp(signUpRequest);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    private Map<String, Object> validationError(Map<String, String> fieldErrors){
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("success", false);
+        response.put("code", "VALIDATION_ERROR");
+        response.put("message", "Validation failed");
+        response.put("fieldErrors", fieldErrors);
+        return response;
     }
 
     // 로그인하지 않은 상태일때도 변경할 수 있도록 - 현재 로그인 상태인 유저를 위한 기능과 분리 필요

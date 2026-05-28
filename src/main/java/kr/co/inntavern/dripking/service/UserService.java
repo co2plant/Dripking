@@ -8,6 +8,7 @@ import kr.co.inntavern.dripking.model.User;
 import kr.co.inntavern.dripking.repository.AuthorityRepository;
 import kr.co.inntavern.dripking.repository.UserRepository;
 import kr.co.inntavern.dripking.security.CustomUserDetailsService;
+import kr.co.inntavern.dripking.security.UserRole;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -71,8 +72,10 @@ public class UserService {
     @Transactional
     public void userSignUp(SignUpRequest signUpRequest) {
         Set<Authority> roles = new HashSet<>();
-        Authority authority = Authority.builder().name(signUpRequest.getUserRole()).build();
-        authorityRepository.save(authority);
+        Authority authority = authorityRepository.findAllByName(UserRole.USER)
+                .stream()
+                .findFirst()
+                .orElseGet(() -> authorityRepository.save(Authority.builder().name(UserRole.USER).build()));
         roles.add(authority);
 
         User user = new User();
