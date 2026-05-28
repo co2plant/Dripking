@@ -40,7 +40,7 @@ public class TripService {
     public Page<TripResponseDTO> getAllTripByUserId(int page, int size, Long userId, String sortBy){
         Sort.Direction sort = sortBy.equalsIgnoreCase("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC;
 
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort, "startDate").and(Sort.by(sort, "id")));
         Page<Trip> trips = tripRepository.findAllByUserId(userId, pageable);
         return trips.map(this::mapToTripResponseDTO);
     }
@@ -48,7 +48,7 @@ public class TripService {
     public Page<TripContainCountryResponseDTO> getAllTripContainCountryByUserId(int page, int size, Long userId, String sortBy){
         Sort.Direction sort = sortBy.equalsIgnoreCase("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC;
 
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort, "startDate").and(Sort.by(sort, "id")));
         Page<Trip> trips = tripRepository.findAllByUserId(userId, pageable);
         return trips.map(this::mapToTripContainCountryResponseDTO);
     }
@@ -72,7 +72,7 @@ public class TripService {
     public TripResponseDTO createTrip(TripRequestDTO tripRequestDTO, Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 유저가 존재하지 않습니다."));
-        Country country = getCountryByName(tripRequestDTO.getCountryName());
+        Country country = getCountry(tripRequestDTO);
 
         Trip trip  = new Trip();
         trip.setUser(user);
@@ -92,7 +92,7 @@ public class TripService {
         trip.setDescription(tripRequestDTO.getDescription());
         trip.setStartDate(tripRequestDTO.getStartDate());
         trip.setEndDate(tripRequestDTO.getEndDate());
-        trip.setCountry(getCountryByName(tripRequestDTO.getCountryName()));
+        trip.setCountry(getCountry(tripRequestDTO));
         tripRepository.save(trip);
     }
 
@@ -110,6 +110,7 @@ public class TripService {
         responseDTO.setStartDate(trip.getStartDate());
         responseDTO.setEndDate(trip.getEndDate());
         if(trip.getCountry() != null){
+            responseDTO.setCountryId(trip.getCountry().getId());
             responseDTO.setCountryName(trip.getCountry().getName());
         }
         return responseDTO;
@@ -145,5 +146,14 @@ public class TripService {
         }
 
         return country;
+    }
+
+    private Country getCountry(TripRequestDTO tripRequestDTO){
+        if(tripRequestDTO.getCountryId() != null){
+            return countryRepository.findById(tripRequestDTO.getCountryId())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 ID의 국가가 존재하지 않습니다."));
+        }
+
+        return getCountryByName(tripRequestDTO.getCountryName());
     }
 }
