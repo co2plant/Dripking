@@ -7,6 +7,7 @@ public enum ItemType {
     ALCOHOL,
     DISTILLERY,
     DESTINATION,
+    CUSTOM_PLACE,
     TRIP,
     PLAN
 }

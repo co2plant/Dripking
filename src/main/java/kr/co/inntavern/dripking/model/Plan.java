@@ -1,9 +1,11 @@
 package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
+import kr.co.inntavern.dripking.model.enumType.ItemType;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @AllArgsConstructor
@@ -24,16 +26,41 @@ public class Plan {
     private String description;
 
     @Column
-    private Date planDate;
+    private LocalDate planDate;
 
     @Column
-    private Date startTime;
+    private LocalTime startTime;
 
     @Column
-    private Date endTime;
+    private LocalTime endTime;
 
     @Column
-    private Long placeId;
+    @Enumerated(EnumType.STRING)
+    private ItemType itemType;
+
+    @Column
+    private Long targetId;
+
+    @Column
+    private String customPlaceName;
+
+    @Column
+    private String customPlaceAddress;
+
+    @Column
+    private String snapshotName;
+
+    @Column
+    private String snapshotAddress;
+
+    @Column
+    private Double snapshotLatitude;
+
+    @Column
+    private Double snapshotLongitude;
+
+    @Column
+    private Integer sortOrder;
 
     @ManyToOne
     @JoinColumn(name = "tripId")
