@@ -8,8 +8,6 @@ import java.util.Date;
 @Getter
 @Setter
 public class TripRequestDTO{
-    private Long userId;
-
     private String name;
 
     private String description;
@@ -17,6 +15,8 @@ public class TripRequestDTO{
     private Date startDate;
 
     private Date endDate;
+
+    private Long countryId;
 
     private String countryName;
 }

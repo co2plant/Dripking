@@ -20,5 +20,7 @@ public class TripResponseDTO {
 
     private Date endDate;
 
+    private Long countryId;
+
     private String countryName;
 }

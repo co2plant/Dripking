@@ -2,25 +2,44 @@ package kr.co.inntavern.dripking.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;
+import kr.co.inntavern.dripking.model.enumType.ItemType;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Getter
 @Setter
 public class PlanResponseDTO {
-    private Long user_id;
+    private Long id;
+
+    private Long tripId;
 
     private String name;
 
     private String description;
 
-    private Date plan_date;
+    private LocalDate planDate;
 
-    private Date start_time;
+    private LocalTime startTime;
 
-    private Date end_time;
+    private LocalTime endTime;
 
-    private Long place_id;
+    private ItemType itemType;
 
-    private Long trip_id;
+    private Long targetId;
+
+    private String customPlaceName;
+
+    private String customPlaceAddress;
+
+    private String snapshotName;
+
+    private String snapshotAddress;
+
+    private Double snapshotLatitude;
+
+    private Double snapshotLongitude;
+
+    private Integer sortOrder;
+
 }

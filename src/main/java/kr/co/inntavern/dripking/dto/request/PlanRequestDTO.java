@@ -2,8 +2,10 @@ package kr.co.inntavern.dripking.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;
+import kr.co.inntavern.dripking.model.enumType.ItemType;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -12,13 +14,27 @@ public class PlanRequestDTO {
 
     private Long placeId;
 
+    private ItemType itemType;
+
+    private Long targetId;
+
     private String name;
 
     private String description;
 
-    private Date planDate;
+    private LocalDate planDate;
 
-    private Date startTime;
+    private LocalTime startTime;
 
-    private Date endTime;
+    private LocalTime endTime;
+
+    private String customPlaceName;
+
+    private String customPlaceAddress;
+
+    private Integer sortOrder;
+
+    public Long getResolvedTargetId() {
+        return targetId != null ? targetId : placeId;
+    }
 }
