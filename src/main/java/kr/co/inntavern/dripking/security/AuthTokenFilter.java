@@ -30,6 +30,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             if(jwt != null && jwtUtils.validateJwtToken(jwt)){
                 String username = jwtUtils.getUserNameFromJwtToken(jwt);
                 UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+                if (!userDetails.isAccountNonLocked()) {
+                    filterChain.doFilter(httpServletRequest, httpServletResponse);
+                    return;
+                }
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,
@@ -41,7 +45,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             }
         }
         catch(Exception e){
-            throw new IllegalStateException("Cannot set user authentication: " + e);
+            SecurityContextHolder.clearContext();
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }

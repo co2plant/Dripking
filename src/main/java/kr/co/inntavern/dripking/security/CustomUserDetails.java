@@ -22,6 +22,7 @@ public class CustomUserDetails implements UserDetails {
     @JsonIgnore
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
+    private boolean accountNonLocked;
 
     public static CustomUserDetails build(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream()
@@ -33,7 +34,8 @@ public class CustomUserDetails implements UserDetails {
                 user.getNickname(),
                 user.getEmail(),
                 user.getPassword(),
-                authorities
+                authorities,
+                !user.isLocked()
         );
     }
 
@@ -62,7 +64,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return accountNonLocked;
     }
 
     @Override

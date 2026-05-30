@@ -39,18 +39,21 @@ public class JwtUtils {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-        final int EXPIRATION_TIME = 1000 * 60 * 60; // 1 hour
+        Date issuedAt = new Date();
+        long expirationTime = jwtProperties.getExpirationTime();
 
         String accessToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setSubject(authentication.getName())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date().getTime() + EXPIRATION_TIME)))
+                .claim("auth", authorities)
+                .setIssuedAt(issuedAt)
+                .setExpiration(new Date(issuedAt.getTime() + expirationTime))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
         String refreshToken = Jwts.builder()
-                .setExpiration(new Date((new Date().getTime() + (EXPIRATION_TIME * 24 * 7))))
+                .setIssuedAt(issuedAt)
+                .setExpiration(new Date(issuedAt.getTime() + (expirationTime * 7)))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 

@@ -4,14 +4,30 @@ import kr.co.inntavern.dripking.model.Category;
 import kr.co.inntavern.dripking.model.*;
 import kr.co.inntavern.dripking.model.enumType.*;
 import kr.co.inntavern.dripking.repository.*;
+import kr.co.inntavern.dripking.security.UserRole;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Configuration
 @Profile("dev")
 public class DataLoader {
+    static final List<String> LAUNCH_CATEGORY_NAMES = List.of(
+            "위스키", "럼", "보드카", "진", "데킬라", "브랜디", "리큐르", "맥주", "사케", "전통주"
+    );
+    static final List<String> LAUNCH_COUNTRY_NAMES = List.of("일본", "한국", "미국");
+    static final int DEV_ADMIN_PASSWORD_MIN_LENGTH = 16;
+    static final int DEV_ADMIN_PASSWORD_MAX_LENGTH = 32;
+
     @Bean
     public CommandLineRunner loadData(DistilleryRepository distilleryRepository,
                                       AlcoholRepository alcoholRepository,
@@ -24,28 +40,30 @@ public class DataLoader {
                                       CityRepository cityRepository) {
         return args -> {
             Long[] ids = {1L, 2L, 3L ,4L, 5L, 6L, 7L, 8L, 9L, 10L};
-            for(int i = 1; i<=10; i++){
-                String[] names = {"위스키", "럼", "보드카", "진", "데킬라", "브랜디", "리큐르", "맥주","사케", "전통주"};
+            for(int i = 1; i <= LAUNCH_CATEGORY_NAMES.size(); i++){
                 Category categories = Category.builder()
-                        .name(names[i-1])
+                        .name(LAUNCH_CATEGORY_NAMES.get(i - 1))
                         .description("맥아 효소로 녹말을 포함하고 있는 곡물 재료를 당화시키고 발효[5] 및 증류하여 오크통에 숙성시킨 증류주. 간단히 말해서 목통숙성곡물증류주(木桶熟成穀物蒸溜酒)라고 할 수 있다. " + i)
                         .build();
                 categoryRepository.save(categories);
             }
 
-            for(int i = 1; i <= 10; i++){
-                String[] names = {"대한민국", "미국", "영국", "일본", "프랑스", "러시아", "멕시코", "스페인", "일본", "독일"};
+            for(int i = 1; i <= LAUNCH_COUNTRY_NAMES.size(); i++){
                 Country country = Country.builder()
-                        .name(names[i-1])
+                        .name(LAUNCH_COUNTRY_NAMES.get(i - 1))
                         .description("국가 설명 " + i)
                         .build();
                 countryRepository.save(country);
             }
 
+            Country japan = countryRepository.findByName("일본");
+            if (japan == null) {
+                throw new IllegalStateException("일본 국가 seed가 필요합니다.");
+            }
             City city = City.builder()
                     .name("오사카")
                     .description("일본 오사카부의 현청 소재지이자, 일본 제2의 도시")
-                    .country(countryRepository.findById(4L).get())
+                    .country(japan)
                     .build();
             cityRepository.save(city);
 
@@ -141,5 +159,46 @@ public class DataLoader {
             }
 
         };
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "app.dev-admin.enabled", havingValue = "true")
+    public CommandLineRunner loadDevAdmin(UserRepository userRepository,
+                                          AuthorityRepository authorityRepository,
+                                          BCryptPasswordEncoder passwordEncoder,
+                                          @Value("${app.dev-admin.email:}") String email,
+                                          @Value("${app.dev-admin.password:}") String password,
+                                          @Value("${app.dev-admin.nickname:local-admin}") String nickname) {
+        return args -> {
+            String normalizedEmail = requireText(email, "app.dev-admin.email");
+            String normalizedPassword = requireText(password, "app.dev-admin.password");
+            if (normalizedPassword.length() < DEV_ADMIN_PASSWORD_MIN_LENGTH
+                    || normalizedPassword.length() > DEV_ADMIN_PASSWORD_MAX_LENGTH) {
+                throw new IllegalStateException("app.dev-admin.password must be 16 to 32 characters.");
+            }
+
+            Authority adminAuthority = authorityRepository.findByName(UserRole.ADMIN)
+                    .orElseGet(() -> authorityRepository.save(Authority.builder().name(UserRole.ADMIN).build()));
+
+            User admin = userRepository.findByEmail(normalizedEmail).orElseGet(User::new);
+            admin.setEmail(normalizedEmail);
+            admin.setPassword(passwordEncoder.encode(normalizedPassword));
+            admin.setNickname(requireText(nickname, "app.dev-admin.nickname"));
+            admin.setEmailVerified(true);
+            admin.setLocked(false);
+            if (admin.getCreatedAt() == null) {
+                admin.setCreatedAt(new Date());
+            }
+            admin.setRoles(new HashSet<>(Set.of(adminAuthority)));
+
+            userRepository.save(admin);
+        };
+    }
+
+    static String requireText(String value, String propertyName) {
+        if (value == null || value.trim().isEmpty()) {
+            throw new IllegalStateException(propertyName + " is required when app.dev-admin.enabled=true.");
+        }
+        return value.trim();
     }
 }

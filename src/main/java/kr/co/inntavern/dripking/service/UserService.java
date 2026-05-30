@@ -3,6 +3,7 @@ package kr.co.inntavern.dripking.service;
 import jakarta.transaction.Transactional;
 import kr.co.inntavern.dripking.dto.request.SignInRequest;
 import kr.co.inntavern.dripking.dto.request.SignUpRequest;
+import kr.co.inntavern.dripking.dto.request.UserProfileUpdateRequestDTO;
 import kr.co.inntavern.dripking.model.Authority;
 import kr.co.inntavern.dripking.model.User;
 import kr.co.inntavern.dripking.repository.AuthorityRepository;
@@ -47,11 +48,33 @@ public class UserService {
     }
 
     @Transactional
-    public void changePassword(String email, String newPassword){
-        User user = userRepository.findByEmail(email).orElseThrow();
+    public User updateProfile(String email, UserProfileUpdateRequestDTO requestDTO){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("해당 이메일의 유저가 존재하지 않습니다."));
 
+        String nickname = requestDTO.getNickname().trim();
+        if(nickname.isBlank()){
+            throw new IllegalArgumentException("닉네임을 입력해주세요.");
+        }
+
+        if(!nickname.equals(user.getNickname()) && userRepository.existsByNickname(nickname)){
+            throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
+        }
+
+        user.setNickname(nickname);
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    public void changePassword(String email, String currentPassword, String newPassword){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("해당 이메일의 유저가 존재하지 않습니다."));
+
+        if(!passwordEncoder.matches(currentPassword, user.getPassword())){
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+        }
         if(passwordEncoder.matches(newPassword, user.getPassword())){
-            throw new RuntimeException("New password must be different from the current password");
+            throw new IllegalArgumentException("새 비밀번호는 현재 비밀번호와 달라야 합니다.");
         }
 
         validateNewPassword(newPassword);
@@ -61,11 +84,8 @@ public class UserService {
     }
 
     private void validateNewPassword(String newPassword){
-        if(newPassword.length() < 16) {
-            throw new RuntimeException("Password must be at least 16 characters long");
-        }
-        if(newPassword.matches(".*[!@#$%^&*].*")){
-            throw new RuntimeException("Password must contain at least one special character");
+        if(newPassword == null || newPassword.length() < 16 || newPassword.length() > 32) {
+            throw new IllegalArgumentException("비밀번호는 16자 이상 32자 이하이어야 합니다.");
         }
     }
 

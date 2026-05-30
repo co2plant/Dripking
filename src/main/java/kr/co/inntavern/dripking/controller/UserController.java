@@ -2,9 +2,11 @@ package kr.co.inntavern.dripking.controller;
 
 import jakarta.validation.Valid;
 import kr.co.inntavern.dripking.dto.request.ChangePasswordRequestDTO;
+import kr.co.inntavern.dripking.dto.request.UserProfileUpdateRequestDTO;
 import kr.co.inntavern.dripking.dto.response.JwtTokenResponseDTO;
 import kr.co.inntavern.dripking.dto.request.SignInRequest;
 import kr.co.inntavern.dripking.dto.request.SignUpRequest;
+import kr.co.inntavern.dripking.model.User;
 import kr.co.inntavern.dripking.security.JwtUtils;
 import kr.co.inntavern.dripking.security.CustomUserDetails;
 import kr.co.inntavern.dripking.service.UserService;
@@ -14,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -107,6 +110,29 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @PatchMapping("/profile")
+    public ResponseEntity<?> updateProfile(@Valid @RequestBody UserProfileUpdateRequestDTO requestDTO,
+                                           BindingResult bindingResult,
+                                           @AuthenticationPrincipal CustomUserDetails customUserDetails){
+        Map<String, String> fieldErrors = new LinkedHashMap<>();
+
+        for(FieldError fieldError : bindingResult.getFieldErrors()){
+            fieldErrors.putIfAbsent(fieldError.getField(), fieldError.getDefaultMessage());
+        }
+
+        if(!fieldErrors.isEmpty()){
+            return ResponseEntity.badRequest().body(validationError(fieldErrors));
+        }
+
+        User updatedUser = userService.updateProfile(customUserDetails.getEmail(), requestDTO);
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("success", true);
+        response.put("message", "Profile updated");
+        response.put("data", userData(updatedUser, customUserDetails));
+        return ResponseEntity.ok(response);
+    }
+
     private Map<String, Object> validationError(Map<String, String> fieldErrors){
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("success", false);
@@ -116,19 +142,43 @@ public class UserController {
         return response;
     }
 
-    // 로그인하지 않은 상태일때도 변경할 수 있도록 - 현재 로그인 상태인 유저를 위한 기능과 분리 필요
-    @PostMapping("/changePassword")
-    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequestDTO changePasswordRequestDTO){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+    private Map<String, Object> userData(User user, CustomUserDetails customUserDetails){
+        Map<String, Object> data = new LinkedHashMap<>();
+        List<String> roles = customUserDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
 
-        try{
-            userService.changePassword(customUserDetails.getEmail(), changePasswordRequestDTO.getNewPassword());
-        }catch(Exception e){
-            Map<String, String> errorMap = new HashMap<>();
-            errorMap.put("error", e.getMessage());
-            return ResponseEntity.badRequest().body(errorMap);
+        data.put("id", user.getId());
+        data.put("email", user.getEmail());
+        data.put("nickname", user.getNickname());
+        data.put("roles", roles);
+        return data;
+    }
+
+    // 현재 로그인한 사용자의 비밀번호 변경
+    @PostMapping("/changePassword")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequestDTO changePasswordRequestDTO,
+                                            BindingResult bindingResult,
+                                            @AuthenticationPrincipal CustomUserDetails customUserDetails){
+        Map<String, String> fieldErrors = new LinkedHashMap<>();
+
+        for(FieldError fieldError : bindingResult.getFieldErrors()){
+            fieldErrors.putIfAbsent(fieldError.getField(), fieldError.getDefaultMessage());
         }
+
+        if(!Objects.equals(changePasswordRequestDTO.getNewPassword(), changePasswordRequestDTO.getConfirmPassword())){
+            fieldErrors.put("confirmPassword", "비밀번호가 일치하지 않습니다.");
+        }
+
+        if(!fieldErrors.isEmpty()){
+            return ResponseEntity.badRequest().body(validationError(fieldErrors));
+        }
+
+        userService.changePassword(
+                customUserDetails.getEmail(),
+                changePasswordRequestDTO.getCurrentPassword(),
+                changePasswordRequestDTO.getNewPassword()
+        );
 
         return ResponseEntity.ok().build();
     }
