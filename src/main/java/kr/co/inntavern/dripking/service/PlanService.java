@@ -50,7 +50,7 @@ public class PlanService {
     @Transactional(readOnly = true)
     public List<PlanResponseDTO> getPlansByTripId(Long tripId, Long userId){
         getOwnedTrip(tripId, userId);
-        return planRepository.findAllByTripIdOrderByPlanDateAscStartTimeAscIdAsc(tripId)
+        return planRepository.findAllByTripIdOrderBySortOrderAscPlanDateAscStartTimeAscIdAsc(tripId)
                 .stream()
                 .map(this::mapToPlanResponseDTO)
                 .toList();

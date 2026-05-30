@@ -18,7 +18,18 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
     @Query("SELECT p FROM Plan p WHERE p.trip.id = :tripId")
     Page<Plan> findAllByTripId(@Param("tripId")Long tripId, Pageable pageable);
 
-    List<Plan> findAllByTripIdOrderByPlanDateAscStartTimeAscIdAsc(Long tripId);
+    @Query("""
+            SELECT p
+            FROM Plan p
+            WHERE p.trip.id = :tripId
+            ORDER BY
+                CASE WHEN p.sortOrder IS NULL THEN 1 ELSE 0 END,
+                p.sortOrder ASC,
+                p.planDate ASC,
+                p.startTime ASC,
+                p.id ASC
+            """)
+    List<Plan> findAllByTripIdOrderBySortOrderAscPlanDateAscStartTimeAscIdAsc(@Param("tripId") Long tripId);
 
     void deleteById(Long id);
 
