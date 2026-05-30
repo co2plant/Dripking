@@ -28,4 +28,7 @@ public class Item {
 
     @Column
     private String imgUrl;
+
+    @Column(name = "img_object_key")
+    private String imgObjectKey;
 }

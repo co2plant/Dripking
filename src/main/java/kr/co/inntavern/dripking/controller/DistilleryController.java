@@ -1,7 +1,7 @@
 package kr.co.inntavern.dripking.controller;
 
+import kr.co.inntavern.dripking.dto.request.DistilleryRequestDTO;
 import kr.co.inntavern.dripking.dto.response.DistilleryResponseDTO;
-import kr.co.inntavern.dripking.model.Distillery;
 import kr.co.inntavern.dripking.service.DistilleryService;
 import kr.co.inntavern.dripking.util.CoordinateUtils;
 import org.springframework.data.domain.Page;
@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/distilleries")
@@ -31,7 +33,7 @@ public class DistilleryController {
         return ResponseEntity.ok(paging);
     }
 
-    @GetMapping("/destination") //endpoint 변경해야함.
+    @GetMapping("/destination") // Temporary compatibility alias; prefer GET /api/distilleries?destinationId=...
     public ResponseEntity<Page<DistilleryResponseDTO>> getAllDistilleriesByDestinationId(
             @RequestParam(value="destination") Long destinationId,
             @RequestParam(required=false,value="page", defaultValue="0") int page,
@@ -43,6 +45,11 @@ public class DistilleryController {
     @GetMapping("/{distilleryId}")
     public DistilleryResponseDTO getDistilleryById(@PathVariable Long distilleryId) {
         return distilleryService.getDistilleryById(distilleryId);
+    }
+
+    @GetMapping("/markers")
+    public ResponseEntity<List<DistilleryResponseDTO>> getDistilleryMarkers() {
+        return ResponseEntity.ok(distilleryService.getDistilleryMarkers());
     }
 
     @GetMapping("/latlng")
@@ -64,22 +71,23 @@ public class DistilleryController {
     }
 
     @GetMapping("/search/{searchKeyword}")
-    public ResponseEntity<Page<DistilleryResponseDTO>> searchDistilleriesByName(@RequestParam(value="page", defaultValue="0") int page,
-                                                                     @PathVariable String searchKeyword){
-        Page<DistilleryResponseDTO> paging = distilleryService.getAllDistilleriesByName(page, searchKeyword);
+    public ResponseEntity<Page<DistilleryResponseDTO>> searchDistilleriesByName(
+            @RequestParam(value="page", defaultValue="0") int page,
+            @RequestParam(value="size", defaultValue="10") int size,
+            @RequestParam(required=false, value="sort", defaultValue="DESC") String sort,
+            @PathVariable String searchKeyword){
+        Page<DistilleryResponseDTO> paging = distilleryService.getAllDistilleriesByName(page, size, sort, searchKeyword);
         return ResponseEntity.ok(paging);
     }
 
     @PostMapping
-    public ResponseEntity<Distillery> createDistillery(@RequestBody Distillery distillery){
-        distilleryService.createDistillery(distillery);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<DistilleryResponseDTO> createDistillery(@RequestBody DistilleryRequestDTO requestDTO){
+        return ResponseEntity.status(HttpStatus.CREATED).body(distilleryService.createDistillery(requestDTO));
     }
 
     @PutMapping("/{distilleryId}")
-    public ResponseEntity<Distillery> updateDistillery(@PathVariable Long distilleryId, @RequestBody Distillery distillery){
-        distilleryService.updateDistillery(distilleryId, distillery);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<DistilleryResponseDTO> updateDistillery(@PathVariable Long distilleryId, @RequestBody DistilleryRequestDTO requestDTO){
+        return ResponseEntity.ok(distilleryService.updateDistillery(distilleryId, requestDTO));
     }
 
     @DeleteMapping("/{distilleryId}")

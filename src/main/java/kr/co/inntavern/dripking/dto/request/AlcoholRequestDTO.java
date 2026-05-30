@@ -39,6 +39,9 @@ public class AlcoholRequestDTO {
     @Schema(description = "이미지 URL", example = "https://example.com/image.jpg")
     private String imgUrl;
 
+    @Schema(description = "이미지 저장소 객체 키", example = "content-images/alcohol/2026/05/30/example.jpg")
+    private String imgObjectKey;
+
     @Length(max = 50, message = "숙성 연도는 50자를 넘을 수 없습니다.")
     @Schema(description = "숙성 연도", example = "12년")
     private String statedAge;

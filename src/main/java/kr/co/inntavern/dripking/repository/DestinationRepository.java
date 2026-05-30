@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface DestinationRepository extends JpaRepository<Destination, Long> {
@@ -31,13 +32,20 @@ public interface DestinationRepository extends JpaRepository<Destination, Long> 
     @NonNull
     Page<Destination> findAllByNameContainingIgnoreCase(Pageable pageable, String name);
 
+    List<Destination> findAllByLatitudeIsNotNullAndLongitudeIsNotNull();
+
+    long countByLatitudeIsNullOrLongitudeIsNull();
+
     @Query("SELECT new kr.co.inntavern.dripking.dto.response.dashboard.DestinationDashboardResponseDTO(" +
             "d.id, " +
             "d.name, " +
             "co.name, " +
             "ci.name, " +
             "ca.name, " +
-            "COALESCE((SELECT AVG(r.rating) FROM Review r WHERE r.targetId = d.id AND r.itemType = kr.co.inntavern.dripking.model.enumType.ItemType.DESTINATION), 0.0)" +
+            "COALESCE((SELECT AVG(r.rating) FROM Review r " +
+            "WHERE r.targetId = d.id " +
+            "AND r.itemType = kr.co.inntavern.dripking.model.enumType.ItemType.DESTINATION " +
+            "AND (r.status IS NULL OR r.status = kr.co.inntavern.dripking.model.enumType.ReviewStatus.VISIBLE)), 0.0)" +
             ") " +
             "FROM Destination d " +
             "LEFT JOIN d.city ci " +

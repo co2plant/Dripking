@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface DistilleryRepository extends JpaRepository<Distillery, Long> {
@@ -22,5 +23,9 @@ public interface DistilleryRepository extends JpaRepository<Distillery, Long> {
     Page<Distillery> findAllByLatitudeAndLongitude(Pageable pageable, Double minLatitude, Double maxLatitude, Double minLongitude, Double maxLongitude);
 
     Page<Distillery> findAllByNameContainingIgnoreCase(Pageable pageable, String name);
+
+    List<Distillery> findAllByLatitudeIsNotNullAndLongitudeIsNotNull();
+
+    long countByLatitudeIsNullOrLongitudeIsNull();
 
 }

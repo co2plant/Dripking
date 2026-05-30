@@ -18,6 +18,8 @@ public class DestinationResponseDTO {
 
     private String imgUrl;
 
+    private String imgObjectKey;
+
     private Long countryId;
 
     private String countryName;

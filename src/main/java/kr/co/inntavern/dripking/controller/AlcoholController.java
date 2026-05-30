@@ -5,9 +5,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kr.co.inntavern.dripking.dto.request.AlcoholRequestDTO;
 import kr.co.inntavern.dripking.dto.response.AlcoholResponseDTO;
-import kr.co.inntavern.dripking.model.Alcohol;
 import kr.co.inntavern.dripking.service.AlcoholService;
+import org.springframework.http.HttpStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +48,7 @@ public class AlcoholController {
 
     }
 
-    @GetMapping("/distillery") //endpoint변경해야함.
+    @GetMapping("/distillery") // Temporary compatibility alias; prefer GET /api/alcohols?distilleryId=...
     @Operation(summary = "양조장 관련 모든 주류 조회", description = "해당 양조장의 모든 주류를 조회합니다.")
     @ApiResponse(responseCode="200", description = "성공", content = @Content(schema = @Schema(implementation = AlcoholResponseDTO.class)))
     public ResponseEntity<Page<AlcoholResponseDTO>> getAllAlcoholsByDistilleryId(
@@ -68,21 +69,23 @@ public class AlcoholController {
     @GetMapping("/search/{searchKeyword}")
     @Operation(summary = "특정 이름을 가지는 모든 주류 조회", description = "특정 이름을 가지는 모든 주류를 조회합니다.")
     @ApiResponse(responseCode="200", description = "성공", content = @Content(schema = @Schema(implementation = AlcoholResponseDTO.class)))
-    public ResponseEntity<Page<AlcoholResponseDTO>> searchAlcoholsByName(@RequestParam(value="page", defaultValue="0") int page, @PathVariable String searchKeyword){
-        Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcoholsByName(page, searchKeyword);
+    public ResponseEntity<Page<AlcoholResponseDTO>> searchAlcoholsByName(
+            @RequestParam(value="page", defaultValue="0") int page,
+            @RequestParam(value="size", defaultValue="10") int size,
+            @RequestParam(required=false, value="sort", defaultValue="DESC") String sort,
+            @PathVariable String searchKeyword){
+        Page<AlcoholResponseDTO> paging = alcoholService.getAllAlcoholsByName(page, size, sort, searchKeyword);
         return ResponseEntity.ok(paging);
     }
 
     @PostMapping
-    public ResponseEntity<Alcohol> createAlcohol(@RequestBody Alcohol alcohol){
-        alcoholService.createAlcohol(alcohol);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<AlcoholResponseDTO> createAlcohol(@RequestBody AlcoholRequestDTO requestDTO){
+        return ResponseEntity.status(HttpStatus.CREATED).body(alcoholService.createAlcohol(requestDTO));
     }
 
     @PutMapping("/{alcoholId}")
-    public ResponseEntity<Alcohol> updateAlcohol(@PathVariable Long alcoholId, @RequestBody Alcohol alcohol){
-        alcoholService.updateAlcohol(alcoholId, alcohol);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<AlcoholResponseDTO> updateAlcohol(@PathVariable Long alcoholId, @RequestBody AlcoholRequestDTO requestDTO){
+        return ResponseEntity.ok(alcoholService.updateAlcohol(alcoholId, requestDTO));
     }
 
     @DeleteMapping("/{alcoholId}")

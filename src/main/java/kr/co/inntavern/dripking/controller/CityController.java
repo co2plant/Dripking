@@ -1,9 +1,10 @@
 package kr.co.inntavern.dripking.controller;
 
+import kr.co.inntavern.dripking.dto.request.CityRequestDTO;
 import kr.co.inntavern.dripking.dto.response.CityResponseDTO;
-import kr.co.inntavern.dripking.model.City;
 import kr.co.inntavern.dripking.service.CityService;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,15 +39,13 @@ public class CityController {
     }
 
     @PostMapping
-    public ResponseEntity<City> createCity(@RequestBody City city){
-        cityService.createCity(city);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<CityResponseDTO> createCity(@RequestBody CityRequestDTO requestDTO){
+        return ResponseEntity.status(HttpStatus.CREATED).body(cityService.createCity(requestDTO));
     }
 
     @PutMapping("/{cityId}")
-    public ResponseEntity<City> updateCity(@PathVariable Long cityId, @RequestBody City city){
-        cityService.updateCity(cityId, city);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<CityResponseDTO> updateCity(@PathVariable Long cityId, @RequestBody CityRequestDTO requestDTO){
+        return ResponseEntity.ok(cityService.updateCity(cityId, requestDTO));
     }
 
     @DeleteMapping("/{cityId}")

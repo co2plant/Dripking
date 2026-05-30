@@ -38,4 +38,7 @@ public class AlcoholResponseDTO {
 
     @Schema(description = "이미지 URL", example = "https://example.com/images/beer.jpg")
     private String imgUrl;
+
+    @Schema(description = "이미지 저장소 객체 키", example = "content-images/alcohol/2026/05/30/example.jpg")
+    private String imgObjectKey;
 }
