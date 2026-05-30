@@ -2,6 +2,7 @@ package kr.co.inntavern.dripking.model;
 
 import jakarta.persistence.*;
 import kr.co.inntavern.dripking.model.enumType.ItemType;
+import kr.co.inntavern.dripking.model.enumType.ReviewStatus;
 import lombok.*;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.data.annotation.CreatedDate;
@@ -11,6 +12,15 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(
+        name = "review",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uq_review_user_target",
+                        columnNames = {"userId", "itemType", "targetId"}
+                )
+        }
+)
 @EntityListeners(AuditingEntityListener.class)
 @AllArgsConstructor
 @RequiredArgsConstructor
@@ -38,6 +48,9 @@ public class Review {
     @Column(columnDefinition = "TEXT")
     private String contents;
 
+    @Enumerated(EnumType.STRING)
+    private ReviewStatus status;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -45,5 +58,11 @@ public class Review {
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
-}
+    @PrePersist
+    void prePersist() {
+        if (status == null) {
+            status = ReviewStatus.VISIBLE;
+        }
+    }
 
+}
