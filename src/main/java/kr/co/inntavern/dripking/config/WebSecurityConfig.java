@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -91,7 +90,6 @@ public class WebSecurityConfig {
                                 "/api/v3/api-docs" // 회원가입
                         ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/interaction-events").permitAll()
-                        .requestMatchers("/h2-console/**").permitAll() // H2 콘솔
 
                         // --- USER 역할 필요 API ---
                         .requestMatchers(HttpMethod.POST, "/api/reviews").hasAuthority("ROLE_USER") // 리뷰 작성
@@ -117,8 +115,7 @@ public class WebSecurityConfig {
 
                         // --- 나머지 요청은 인증 필요 ---
                         .anyRequest().authenticated() // 위에서 정의되지 않은 모든 요청은 인증 필요
-                ).headers(headers -> headers
-                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)); // H2 콘솔 프레임 허용
+                );
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
