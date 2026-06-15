@@ -101,26 +101,44 @@ Country -> City -> Destination -> Distillery -> Alcohol
 | API | Spring Web, Validation, Springdoc OpenAPI |
 | Security | Spring Security, JWT |
 | Persistence | Spring Data JPA, Hibernate |
-| Local DB | H2 |
+| Local DB | PostgreSQL on Docker Compose |
 | Production DB | PostgreSQL |
 | Image Storage | S3-compatible object storage |
 | Test | JUnit 5, Spring Boot Test, Spring Security Test |
 
 ## 빠른 실행
 
-로컬 개발 환경은 기본적으로 `dev` profile과 H2 인메모리 DB를 사용합니다.
+로컬 개발 환경은 기본적으로 Docker Compose의 PostgreSQL과 `dev` profile을 사용합니다.
 
 ```sh
 cd Dripking
-sh gradlew bootRun
+docker compose up --build
 ```
 
 실행 후 확인할 수 있는 주소:
 
 - API base URL: `http://localhost:8080/api`
-- Swagger UI: `http://localhost:8080/swagger-ui`
+- Swagger UI: `http://localhost:8080/swagger-ui/index.html`
 - OpenAPI JSON: `http://localhost:8080/api/v3/api-docs`
-- H2 Console: `http://localhost:8080/h2-console`
+
+백엔드를 호스트 JVM에서 실행하며 빠른 재시작을 쓰고 싶다면 DB만 Docker로 먼저 띄운 뒤 `bootRun`을 실행합니다.
+
+```sh
+cd Dripking
+docker compose up -d postgres
+sh gradlew bootRun
+```
+
+`dev` profile은 기본적으로 `localhost:5432`의 PostgreSQL을 바라봅니다. Docker Compose 기본 계정은 `dripking` / `dripking`이고, DB 이름도 `dripking`입니다.
+
+개발용 seed 데이터는 `src/main/resources/db/seed/dev-seed.sql`에 있습니다. `dev` profile은 Hibernate가 테이블을 만든 뒤 이 SQL을 실행하므로, Docker Postgres 볼륨이 비어 있으면 기본 카테고리/국가/샘플 콘텐츠가 자동으로 들어갑니다. SQL은 `ON CONFLICT DO NOTHING`으로 작성되어 재시작해도 같은 seed가 중복 삽입되지 않습니다.
+
+DB를 처음 상태로 완전히 초기화하려면 Docker 볼륨까지 삭제합니다.
+
+```sh
+docker compose down -v
+docker compose up --build
+```
 
 프론트엔드까지 함께 실행하려면 별도 터미널에서:
 

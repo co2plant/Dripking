@@ -95,7 +95,7 @@ MVP 1은 추천/탐색과 일정 관리 중에서 일정 관리 경험을 우선
 - Spring Security
 - JWT
 - Spring Data JPA
-- H2 for local development
+- Docker Compose PostgreSQL for local development
 - PostgreSQL for production target
 - S3-compatible object storage
 - Springdoc OpenAPI
