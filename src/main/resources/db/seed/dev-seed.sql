@@ -102,10 +102,37 @@ SELECT
 FROM generate_series(1, 1000) AS gs
 ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO tag (tag_id, name, description)
-SELECT gs, 'Tag ' || gs, 'Description ' || gs
-FROM generate_series(1, 1000) AS gs
-ON CONFLICT (tag_id) DO NOTHING;
+INSERT INTO tag (tag_id, name, description, tag_group, sort_order, active)
+VALUES
+    (1, '과일', '과일 계열의 향', 'TASTING_AROMA', 1, TRUE),
+    (2, '꽃', '꽃 계열의 향', 'TASTING_AROMA', 2, TRUE),
+    (3, '곡물', '쌀, 보리, 밀 등 곡물 계열의 향', 'TASTING_AROMA', 3, TRUE),
+    (4, '견과', '아몬드, 밤, 호두 등 견과 계열의 향', 'TASTING_AROMA', 4, TRUE),
+    (5, '향신료', '계피, 후추 등 향신료 계열의 향', 'TASTING_AROMA', 5, TRUE),
+    (6, '허브', '풀, 민트 등 허브 계열의 향', 'TASTING_AROMA', 6, TRUE),
+    (7, '나무', '오크, 나무, 숙성감이 느껴지는 향', 'TASTING_AROMA', 7, TRUE),
+    (8, '훈연', '스모키하거나 그을린 향', 'TASTING_AROMA', 8, TRUE),
+    (9, '단맛', '입안에서 느껴지는 단맛', 'TASTING_PALATE', 1, TRUE),
+    (10, '산미', '입안에서 느껴지는 산미', 'TASTING_PALATE', 2, TRUE),
+    (11, '쓴맛', '입안에서 느껴지는 쓴맛', 'TASTING_PALATE', 3, TRUE),
+    (12, '감칠맛', '입안에서 느껴지는 감칠맛', 'TASTING_PALATE', 4, TRUE),
+    (13, '바디감', '무게감과 질감이 있는 맛', 'TASTING_PALATE', 5, TRUE),
+    (14, '탄산감', '탄산이나 발포감이 느껴지는 맛', 'TASTING_PALATE', 6, TRUE),
+    (15, '매운맛', '알코올감이나 향신료처럼 매운 느낌', 'TASTING_PALATE', 7, TRUE),
+    (16, '깔끔함', '마무리가 맑고 깨끗한 맛', 'TASTING_PALATE', 8, TRUE),
+    (17, '짧음', '빠르게 사라지는 여운', 'TASTING_FINISH', 1, TRUE),
+    (18, '긴 여운', '오래 남는 여운', 'TASTING_FINISH', 2, TRUE),
+    (19, '드라이', '단맛이 적고 건조한 여운', 'TASTING_FINISH', 3, TRUE),
+    (20, '달콤함', '마지막에 남는 달콤한 여운', 'TASTING_FINISH', 4, TRUE),
+    (21, '따뜻함', '목과 몸에 남는 따뜻한 느낌', 'TASTING_FINISH', 5, TRUE),
+    (22, '부드러움', '거칠지 않고 둥근 여운', 'TASTING_FINISH', 6, TRUE),
+    (23, '묵직함', '무게감 있게 남는 여운', 'TASTING_FINISH', 7, TRUE)
+ON CONFLICT (tag_id) DO UPDATE SET
+    name = EXCLUDED.name,
+    description = EXCLUDED.description,
+    tag_group = EXCLUDED.tag_group,
+    sort_order = EXCLUDED.sort_order,
+    active = EXCLUDED.active;
 
 INSERT INTO alcohol (id, name, strength, size, description, distillery_id, category_id, img_url, rating, datetime, stated_age, img_object_key)
 SELECT

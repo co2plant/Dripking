@@ -15,6 +15,7 @@ class DevSeedSqlTest {
 
         assertThat(sql).contains("위스키", "럼", "보드카", "진", "데킬라", "브랜디", "리큐르", "맥주", "사케", "전통주");
         assertThat(sql).contains("일본", "한국", "미국");
+        assertThat(sql).contains("TASTING_AROMA", "TASTING_PALATE", "TASTING_FINISH", "과일", "단맛", "긴 여운");
     }
 
     @Test
