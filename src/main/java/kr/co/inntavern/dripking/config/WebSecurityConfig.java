@@ -72,6 +72,8 @@ public class WebSecurityConfig {
                                 "/api/cities/**",
                                 "/api/categories", // 카테고리 조회
                                 "/api/categories/**",
+                                "/api/tags", // 태그 조회
+                                "/api/tags/**",
                                 "/api/destinations/**", // 여행지 조회
                                 "/api/destinations",
                                 "/api/alcohols/**", // 주류 조회
@@ -107,11 +109,11 @@ public class WebSecurityConfig {
 
                         // --- ADMIN 역할 필요 API (데이터 관리) ---
                         // POST (생성)
-                        .requestMatchers(HttpMethod.POST, "/api/countries", "/api/cities", "/api/categories", "/api/destinations", "/api/alcohols", "/api/distilleries").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/countries", "/api/cities", "/api/categories", "/api/tags", "/api/destinations", "/api/alcohols", "/api/distilleries").hasAuthority("ROLE_ADMIN")
                         // PUT (수정)
-                        .requestMatchers(HttpMethod.PUT, "/api/countries/**", "/api/cities/**", "/api/categories/**", "/api/destinations/**", "/api/alcohols/**", "/api/distilleries/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/countries/**", "/api/cities/**", "/api/categories/**", "/api/tags/**", "/api/destinations/**", "/api/alcohols/**", "/api/distilleries/**").hasAuthority("ROLE_ADMIN")
                         // DELETE (삭제)
-                        .requestMatchers(HttpMethod.DELETE, "/api/countries/**", "/api/cities/**", "/api/categories/**", "/api/destinations/**", "/api/alcohols/**", "/api/distilleries/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/countries/**", "/api/cities/**", "/api/categories/**", "/api/tags/**", "/api/destinations/**", "/api/alcohols/**", "/api/distilleries/**").hasAuthority("ROLE_ADMIN")
 
                         // --- 나머지 요청은 인증 필요 ---
                         .anyRequest().authenticated() // 위에서 정의되지 않은 모든 요청은 인증 필요

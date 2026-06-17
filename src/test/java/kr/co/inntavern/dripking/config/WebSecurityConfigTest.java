@@ -102,6 +102,12 @@ class WebSecurityConfigTest {
                 .andExpect(status().isCreated());
     }
 
+    @Test
+    void tagReadsStayPublic() throws Exception {
+        mockMvc.perform(get("/api/tags"))
+                .andExpect(status().isOk());
+    }
+
     @ParameterizedTest
     @CsvSource({
             "POST,/api/countries",
@@ -113,6 +119,9 @@ class WebSecurityConfigTest {
             "POST,/api/categories",
             "PUT,/api/categories/1",
             "DELETE,/api/categories/1",
+            "POST,/api/tags",
+            "PUT,/api/tags/1",
+            "DELETE,/api/tags/1",
             "POST,/api/destinations",
             "PUT,/api/destinations/1",
             "DELETE,/api/destinations/1",
