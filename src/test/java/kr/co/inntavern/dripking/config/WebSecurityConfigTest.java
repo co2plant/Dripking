@@ -222,6 +222,23 @@ class WebSecurityConfigTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void tasteProfileRequiresUserAuthority() throws Exception {
+        User user = saveUser("taste-profile-security@example.com", "taste-profile-security", "currentPassword16");
+        CustomUserDetails userDetails = userDetails(user);
+
+        mockMvc.perform(get("/api/taste-profile"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(get("/api/taste-profile")
+                        .with(user("admin").authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                .andExpect(status().isForbidden());
+
+        mockMvc.perform(get("/api/taste-profile")
+                        .with(user(userDetails)))
+                .andExpect(status().isOk());
+    }
+
     private User saveUser(String email, String nickname, String password) {
         User user = new User();
         user.setEmail(email);
