@@ -10,6 +10,7 @@ import kr.co.inntavern.dripking.model.enumType.ReviewStatus;
 import kr.co.inntavern.dripking.repository.ReviewReportRepository;
 import kr.co.inntavern.dripking.repository.ReviewRepository;
 import kr.co.inntavern.dripking.repository.UserRepository;
+import kr.co.inntavern.dripking.util.PlainTextSecurityUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -90,8 +91,14 @@ public class ReviewModerationService {
         report.setReporterUser(reporter);
         report.setStatus(ReviewReportStatus.OPEN);
         if (requestDTO != null) {
-            report.setReason(requestDTO.getReason());
-            report.setMemo(requestDTO.getMemo());
+            report.setReason(PlainTextSecurityUtils.validateAndNormalizeOptional(
+                    requestDTO.getReason(),
+                    PlainTextSecurityUtils.REVIEW_REPORT_REASON
+            ));
+            report.setMemo(PlainTextSecurityUtils.validateAndNormalizeOptional(
+                    requestDTO.getMemo(),
+                    PlainTextSecurityUtils.REVIEW_REPORT_MEMO
+            ));
         }
 
         return mapToResponseDTO(reviewReportRepository.save(report));

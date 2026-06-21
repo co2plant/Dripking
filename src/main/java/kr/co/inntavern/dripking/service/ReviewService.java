@@ -8,6 +8,7 @@ import kr.co.inntavern.dripking.model.enumType.ReviewStatus;
 import kr.co.inntavern.dripking.model.User;
 import kr.co.inntavern.dripking.repository.ReviewRepository;
 import kr.co.inntavern.dripking.repository.UserRepository;
+import kr.co.inntavern.dripking.util.PlainTextSecurityUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -69,6 +70,10 @@ public class ReviewService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 유저가 존재하지 않습니다."));
         validateReviewRequest(reviewRequestDTO);
+        String contents = PlainTextSecurityUtils.validateAndNormalize(
+                reviewRequestDTO.getContents(),
+                PlainTextSecurityUtils.REVIEW_CONTENTS
+        );
 
         Optional<Review> existingReview = reviewRepository.findByUserIdAndItemTypeAndTargetId(
                 userId,
@@ -84,7 +89,7 @@ public class ReviewService {
                 .rating(reviewRequestDTO.getRating())
                 .itemType(reviewRequestDTO.getItemType())
                 .targetId(reviewRequestDTO.getTargetId())
-                .contents(reviewRequestDTO.getContents())
+                .contents(contents)
                 .status(ReviewStatus.VISIBLE)
                 .build();
 
@@ -108,9 +113,13 @@ public class ReviewService {
         if(!review.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("해당 리뷰를 수정할 권한이 없습니다.");
         }
+        String contents = PlainTextSecurityUtils.validateAndNormalize(
+                reviewRequestDTO.getContents(),
+                PlainTextSecurityUtils.REVIEW_CONTENTS
+        );
 
         review.setRating(reviewRequestDTO.getRating());
-        review.setContents(reviewRequestDTO.getContents());
+        review.setContents(contents);
 
         Review savedReview = reviewRepository.save(review);
         reviewRatingService.recalculate(savedReview.getItemType(), savedReview.getTargetId());

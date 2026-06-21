@@ -19,6 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest(properties = {
         "spring.datasource.url=jdbc:h2:mem:review-moderation-service-test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
@@ -135,6 +136,23 @@ class ReviewModerationServiceTest {
                 .orElseThrow();
 
         assertThat(deletedReport.getReviewStatus()).isEqualTo(ReviewStatus.DELETED);
+    }
+
+    @Test
+    void reportReviewRejectsUnsafeMemo() {
+        User author = saveUser("unsafe-report-author@example.com", "unsafe-report-author");
+        User reporter = saveUser("unsafe-report-reporter@example.com", "unsafe-report-reporter");
+        Destination destination = saveDestination("Unsafe report destination");
+        ReviewResponseDTO review = reviewService.createReview(author.getId(), reviewRequest(destination.getId()));
+
+        assertThatThrownBy(() -> reviewModerationService.reportReview(
+                review.getId(),
+                reporter.getId(),
+                reportRequest("SPAM", "<script>alert(1)</script>")
+        ))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("XSS 위험 패턴");
+        assertThat(reviewReportRepository.count()).isZero();
     }
 
     private ReviewRequestDTO reviewRequest(Long targetId) {

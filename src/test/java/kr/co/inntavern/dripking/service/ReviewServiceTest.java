@@ -109,6 +109,38 @@ class ReviewServiceTest {
     }
 
     @Test
+    void reviewCreateRejectsXssContents() {
+        User user = saveUser("xss-review@example.com", "xss-review");
+        Destination destination = saveDestination("XSS review destination");
+        ReviewRequestDTO requestDTO = reviewRequest(destination.getId(), (byte) 4);
+        requestDTO.setContents("<img src=x onerror=alert(1)>");
+
+        assertThatThrownBy(() -> reviewService.createReview(user.getId(), requestDTO))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("XSS 위험 패턴");
+        assertDestinationRating(destination.getId(), 0.0f);
+    }
+
+    @Test
+    void reviewUpdateAllowsSqlLikePlainTextContents() {
+        User user = saveUser("sql-review@example.com", "sql-review");
+        Destination destination = saveDestination("SQL review destination");
+        ReviewResponseDTO review = reviewService.createReview(user.getId(), reviewRequest(destination.getId(), (byte) 4));
+        ReviewRequestDTO requestDTO = reviewRequest(destination.getId(), (byte) 5);
+        requestDTO.setContents("' OR 1=1 -- 는 SQL 예시로 자주 보입니다.");
+
+        reviewService.updateReview(user.getId(), review.getId(), requestDTO);
+
+        ReviewResponseDTO updatedReview = reviewService.getMyReview(
+                user.getId(),
+                ItemType.DESTINATION.name(),
+                destination.getId()
+        ).orElseThrow();
+        assertThat(updatedReview.getRating()).isEqualTo((byte) 5);
+        assertThat(updatedReview.getContents()).isEqualTo("' OR 1=1 -- 는 SQL 예시로 자주 보입니다.");
+    }
+
+    @Test
     void publicReviewListsExcludeHiddenAndDeletedReviews() {
         User hiddenUser = saveUser("hidden-review@example.com", "hidden-review");
         User deletedUser = saveUser("deleted-review@example.com", "deleted-review");
