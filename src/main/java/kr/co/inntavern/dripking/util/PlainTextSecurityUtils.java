@@ -10,6 +10,9 @@ public final class PlainTextSecurityUtils {
     public static final Rule REVIEW_CONTENTS = new Rule("리뷰 내용", 1200, true);
     public static final Rule REVIEW_REPORT_REASON = new Rule("신고 사유", 80, false);
     public static final Rule REVIEW_REPORT_MEMO = new Rule("신고 메모", 1000, true);
+    public static final Rule TASTING_NOTE_ALCOHOL_NAME = new Rule("술 이름", 255, false);
+    public static final Rule TASTING_NOTE_PLACE = new Rule("장소", 255, false);
+    public static final Rule TASTING_NOTE_TAG = new Rule("테이스팅 태그", 40, false);
     public static final Rule TASTING_NOTE_PAIRING = new Rule("페어링", 160, false);
     public static final Rule TASTING_NOTE_MEMO = new Rule("메모", 1200, true);
 
