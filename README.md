@@ -131,7 +131,25 @@ sh gradlew bootRun
 
 `dev` profile은 기본적으로 `localhost:5432`의 PostgreSQL을 바라봅니다. Docker Compose 기본 계정은 `dripking` / `dripking`이고, DB 이름도 `dripking`입니다.
 
-개발용 seed 데이터는 `src/main/resources/db/seed/dev-seed.sql`에 있습니다. `dev` profile은 Hibernate가 테이블을 만든 뒤 이 SQL을 실행하므로, Docker Postgres 볼륨이 비어 있으면 기본 카테고리/국가/샘플 콘텐츠가 자동으로 들어갑니다. SQL은 `ON CONFLICT DO NOTHING`으로 작성되어 재시작해도 같은 seed가 중복 삽입되지 않습니다.
+개발용 seed 데이터는 역할별로 분리되어 있습니다.
+
+| 파일 | 역할 | 기본 `dev` 실행 여부 |
+| --- | --- | --- |
+| `src/main/resources/db/seed/base-seed.sql` | 카테고리, 국가, 도시, 테이스팅 태그 같은 공통 기준 데이터 | 실행 |
+| `src/main/resources/db/seed/real-japan-seed.sql` | 검수 가능한 일본 술/생산지 starter catalog | 실행 |
+| `src/main/resources/db/seed/perf-seed.sql` | 성능 비교용 synthetic 대량 데이터. 주요 조회 테이블별 100,000 row 기준 | 미실행 |
+
+`dev` profile은 Hibernate가 테이블을 만든 뒤 `base-seed.sql`과 `real-japan-seed.sql`만 실행합니다. 성능 비교용 데이터가 필요하면 `perf` profile을 사용합니다.
+
+```sh
+SPRING_PROFILES_ACTIVE=perf sh gradlew bootRun
+```
+
+Docker Compose로 백엔드까지 띄울 때는 `.env`의 `SPRING_PROFILES_ACTIVE`를 `perf`로 바꾼 뒤 실행합니다. `perf` profile은 dev 설정을 가져온 뒤 `perf-seed.sql`을 추가로 실행합니다.
+
+`perf` seed는 `destination`, `distillery`, `alcohol`, `site_user`, `review`에 각각 100,000 synthetic row를 추가합니다. 기본 dev seed의 실제 일본 starter catalog와 섞어 조회 성능, pagination, search, join 비용을 확인하는 용도입니다.
+
+이전 로컬 볼륨에 1,000개 더미 seed가 이미 들어가 있었다면 seed 파일을 나눠도 기존 row는 자동 삭제되지 않습니다. 기본 dev 데이터를 새 구조로 다시 보려면 Docker 볼륨을 초기화합니다.
 
 DB를 처음 상태로 완전히 초기화하려면 Docker 볼륨까지 삭제합니다.
 

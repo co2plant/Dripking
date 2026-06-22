@@ -15,7 +15,20 @@ This starts:
 - `postgres`: PostgreSQL 16 with a persistent Docker volume
 - `backend`: the Spring Boot API on `http://localhost:8080`
 
-With the `dev` profile, Hibernate creates or updates the schema first and then Spring Boot runs `src/main/resources/db/seed/dev-seed.sql` against the Docker PostgreSQL database. The seed SQL is idempotent for a persistent local volume.
+With the `dev` profile, Hibernate creates or updates the schema first and then Spring Boot runs these seed files against the Docker PostgreSQL database:
+
+- `src/main/resources/db/seed/base-seed.sql`
+- `src/main/resources/db/seed/real-japan-seed.sql`
+
+Performance comparison data is intentionally separated in `src/main/resources/db/seed/perf-seed.sql`. Run it with the `perf` profile:
+
+```sh
+SPRING_PROFILES_ACTIVE=perf sh gradlew bootRun
+```
+
+The seed SQL files are idempotent for a persistent local volume, but they do not delete old synthetic rows that were inserted by earlier seed files.
+
+The `perf` seed adds 100,000 synthetic rows each to `destination`, `distillery`, `alcohol`, `site_user`, and `review`.
 
 For host-side JVM development with the same database:
 
