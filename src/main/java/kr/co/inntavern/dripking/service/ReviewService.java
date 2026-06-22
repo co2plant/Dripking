@@ -86,7 +86,7 @@ public class ReviewService {
 
         Review review = Review.builder()
                 .user(user)
-                .rating(reviewRequestDTO.getRating())
+                .rating(reviewRequestDTO.getRating().byteValue())
                 .itemType(reviewRequestDTO.getItemType())
                 .targetId(reviewRequestDTO.getTargetId())
                 .contents(contents)
@@ -118,7 +118,7 @@ public class ReviewService {
                 PlainTextSecurityUtils.REVIEW_CONTENTS
         );
 
-        review.setRating(reviewRequestDTO.getRating());
+        review.setRating(reviewRequestDTO.getRating().byteValue());
         review.setContents(contents);
 
         Review savedReview = reviewRepository.save(review);
@@ -160,13 +160,17 @@ public class ReviewService {
         }
     }
 
-    private void validateRating(Byte rating) {
+    private void validateRating(Integer rating) {
         if(rating == null) {
             throw new IllegalArgumentException("평점이 필요합니다.");
         }
-        if(rating < 0 || rating > 5) {
-            throw new IllegalArgumentException("평점은 0점에서 5점 사이여야 합니다.");
+        if(rating < 1 || rating > 5) {
+            throw new IllegalArgumentException("평점은 1점에서 5점 사이여야 합니다.");
         }
+    }
+
+    private Integer toInteger(Byte value) {
+        return value == null ? null : value.intValue();
     }
 
     private ReviewResponseDTO mapToReviewResponseDTO(Review review){
@@ -177,7 +181,7 @@ public class ReviewService {
         responseDTO.setUserId(review.getUser().getId());
         responseDTO.setItemType(review.getItemType());
         responseDTO.setTargetId(review.getTargetId());
-        responseDTO.setRating(review.getRating());
+        responseDTO.setRating(toInteger(review.getRating()));
         responseDTO.setContents(review.getContents());
         responseDTO.setStatus(review.getStatus() == null ? ReviewStatus.VISIBLE : review.getStatus());
         responseDTO.setCreatedTime(review.getCreatedAt());

@@ -159,7 +159,7 @@ class ReviewModerationServiceTest {
         ReviewRequestDTO requestDTO = new ReviewRequestDTO();
         requestDTO.setItemType(ItemType.DESTINATION);
         requestDTO.setTargetId(targetId);
-        requestDTO.setRating((byte) 4);
+        requestDTO.setRating(4);
         requestDTO.setContents("Review content");
         return requestDTO;
     }

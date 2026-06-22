@@ -71,7 +71,7 @@ class ReviewControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.code").value("INVALID_REQUEST"))
-                .andExpect(jsonPath("$.message").value("평점은 0점에서 5점 사이여야 합니다."));
+                .andExpect(jsonPath("$.message").value("평점은 1점에서 5점 사이여야 합니다."));
     }
 
     private User saveUser() {

@@ -1,5 +1,6 @@
 package kr.co.inntavern.dripking.dto.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import kr.co.inntavern.dripking.model.enumType.ItemType;
 import kr.co.inntavern.dripking.model.enumType.ReviewReportStatus;
 import kr.co.inntavern.dripking.model.enumType.ReviewStatus;
@@ -22,7 +23,8 @@ public class ReviewReportResponseDTO {
     private ReviewStatus reviewStatus;
     private ItemType itemType;
     private Long targetId;
-    private Byte rating;
+    @Schema(description = "신고된 리뷰 평점", example = "4", minimum = "1", maximum = "5")
+    private Integer rating;
     private String contents;
     private Long authorUserId;
     private String authorNickname;

@@ -136,7 +136,7 @@ public class ReviewModerationService {
         responseDTO.setReviewStatus(review.getStatus() == null ? ReviewStatus.VISIBLE : review.getStatus());
         responseDTO.setItemType(review.getItemType());
         responseDTO.setTargetId(review.getTargetId());
-        responseDTO.setRating(review.getRating());
+        responseDTO.setRating(toInteger(review.getRating()));
         responseDTO.setContents(review.getContents());
         if (author != null) {
             responseDTO.setAuthorUserId(author.getId());
@@ -154,5 +154,9 @@ public class ReviewModerationService {
         }
 
         return responseDTO;
+    }
+
+    private Integer toInteger(Byte value) {
+        return value == null ? null : value.intValue();
     }
 }

@@ -47,17 +47,17 @@ class ReviewServiceTest {
 
         ReviewResponseDTO firstReview = reviewService.createReview(
                 firstUser.getId(),
-                reviewRequest(destination.getId(), (byte) 5)
+                reviewRequest(destination.getId(), 5)
         );
         assertDestinationRating(destination.getId(), 5.0f);
 
         ReviewResponseDTO secondReview = reviewService.createReview(
                 secondUser.getId(),
-                reviewRequest(destination.getId(), (byte) 3)
+                reviewRequest(destination.getId(), 3)
         );
         assertDestinationRating(destination.getId(), 4.0f);
 
-        reviewService.updateReview(firstUser.getId(), firstReview.getId(), reviewRequest(destination.getId(), (byte) 1));
+        reviewService.updateReview(firstUser.getId(), firstReview.getId(), reviewRequest(destination.getId(), 1));
         assertDestinationRating(destination.getId(), 2.0f);
 
         reviewService.deleteReview(secondUser.getId(), secondReview.getId());
@@ -75,11 +75,11 @@ class ReviewServiceTest {
 
         ReviewResponseDTO firstReview = reviewService.createReview(
                 firstUser.getId(),
-                reviewRequest(destination.getId(), (byte) 5)
+                reviewRequest(destination.getId(), 5)
         );
         ReviewResponseDTO secondReview = reviewService.createReview(
                 secondUser.getId(),
-                reviewRequest(destination.getId(), (byte) 1)
+                reviewRequest(destination.getId(), 1)
         );
         assertDestinationRating(destination.getId(), 3.0f);
 
@@ -95,16 +95,19 @@ class ReviewServiceTest {
         User user = saveUser("rating-validation@example.com", "rating-validation");
         Destination destination = saveDestination("Rating validation destination");
 
-        assertThatThrownBy(() -> reviewService.createReview(user.getId(), reviewRequest(destination.getId(), (byte) 6)))
+        assertThatThrownBy(() -> reviewService.createReview(user.getId(), reviewRequest(destination.getId(), 6)))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("평점은 0점에서 5점 사이여야 합니다.");
+                .hasMessageContaining("평점은 1점에서 5점 사이여야 합니다.");
+        assertThatThrownBy(() -> reviewService.createReview(user.getId(), reviewRequest(destination.getId(), 0)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("평점은 1점에서 5점 사이여야 합니다.");
         assertDestinationRating(destination.getId(), 0.0f);
 
-        ReviewResponseDTO review = reviewService.createReview(user.getId(), reviewRequest(destination.getId(), (byte) 4));
+        ReviewResponseDTO review = reviewService.createReview(user.getId(), reviewRequest(destination.getId(), 4));
 
-        assertThatThrownBy(() -> reviewService.updateReview(user.getId(), review.getId(), reviewRequest(destination.getId(), (byte) -1)))
+        assertThatThrownBy(() -> reviewService.updateReview(user.getId(), review.getId(), reviewRequest(destination.getId(), -1)))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("평점은 0점에서 5점 사이여야 합니다.");
+                .hasMessageContaining("평점은 1점에서 5점 사이여야 합니다.");
         assertDestinationRating(destination.getId(), 4.0f);
     }
 
@@ -112,7 +115,7 @@ class ReviewServiceTest {
     void reviewCreateRejectsXssContents() {
         User user = saveUser("xss-review@example.com", "xss-review");
         Destination destination = saveDestination("XSS review destination");
-        ReviewRequestDTO requestDTO = reviewRequest(destination.getId(), (byte) 4);
+        ReviewRequestDTO requestDTO = reviewRequest(destination.getId(), 4);
         requestDTO.setContents("<img src=x onerror=alert(1)>");
 
         assertThatThrownBy(() -> reviewService.createReview(user.getId(), requestDTO))
@@ -125,8 +128,8 @@ class ReviewServiceTest {
     void reviewUpdateAllowsSqlLikePlainTextContents() {
         User user = saveUser("sql-review@example.com", "sql-review");
         Destination destination = saveDestination("SQL review destination");
-        ReviewResponseDTO review = reviewService.createReview(user.getId(), reviewRequest(destination.getId(), (byte) 4));
-        ReviewRequestDTO requestDTO = reviewRequest(destination.getId(), (byte) 5);
+        ReviewResponseDTO review = reviewService.createReview(user.getId(), reviewRequest(destination.getId(), 4));
+        ReviewRequestDTO requestDTO = reviewRequest(destination.getId(), 5);
         requestDTO.setContents("' OR 1=1 -- 는 SQL 예시로 자주 보입니다.");
 
         reviewService.updateReview(user.getId(), review.getId(), requestDTO);
@@ -136,7 +139,7 @@ class ReviewServiceTest {
                 ItemType.DESTINATION.name(),
                 destination.getId()
         ).orElseThrow();
-        assertThat(updatedReview.getRating()).isEqualTo((byte) 5);
+        assertThat(updatedReview.getRating()).isEqualTo(5);
         assertThat(updatedReview.getContents()).isEqualTo("' OR 1=1 -- 는 SQL 예시로 자주 보입니다.");
     }
 
@@ -149,15 +152,15 @@ class ReviewServiceTest {
 
         ReviewResponseDTO hiddenReview = reviewService.createReview(
                 hiddenUser.getId(),
-                reviewRequest(destination.getId(), (byte) 5)
+                reviewRequest(destination.getId(), 5)
         );
         ReviewResponseDTO deletedReview = reviewService.createReview(
                 deletedUser.getId(),
-                reviewRequest(destination.getId(), (byte) 4)
+                reviewRequest(destination.getId(), 4)
         );
         ReviewResponseDTO visibleReview = reviewService.createReview(
                 visibleUser.getId(),
-                reviewRequest(destination.getId(), (byte) 3)
+                reviewRequest(destination.getId(), 3)
         );
 
         reviewModerationService.hideReview(hiddenReview.getId());
@@ -184,11 +187,11 @@ class ReviewServiceTest {
 
         ReviewResponseDTO hiddenReview = reviewService.createReview(
                 hiddenUser.getId(),
-                reviewRequest(hiddenDestination.getId(), (byte) 5)
+                reviewRequest(hiddenDestination.getId(), 5)
         );
         ReviewResponseDTO deletedReview = reviewService.createReview(
                 deletedUser.getId(),
-                reviewRequest(deletedDestination.getId(), (byte) 4)
+                reviewRequest(deletedDestination.getId(), 4)
         );
 
         reviewModerationService.hideReview(hiddenReview.getId());
@@ -213,15 +216,15 @@ class ReviewServiceTest {
 
         ReviewResponseDTO firstReview = reviewService.createReview(
                 user.getId(),
-                reviewRequest(destination.getId(), (byte) 5)
+                reviewRequest(destination.getId(), 5)
         );
         ReviewResponseDTO secondReview = reviewService.createReview(
                 user.getId(),
-                reviewRequest(destination.getId(), (byte) 1)
+                reviewRequest(destination.getId(), 1)
         );
 
         assertThat(secondReview.getId()).isEqualTo(firstReview.getId());
-        assertThat(secondReview.getRating()).isEqualTo((byte) 5);
+        assertThat(secondReview.getRating()).isEqualTo(5);
         assertThat(reviewService.getAllReviewsByTargetID(
                 0,
                 10,
@@ -240,7 +243,7 @@ class ReviewServiceTest {
         ReviewRequestDTO requestDTO = new ReviewRequestDTO();
         requestDTO.setItemType(ItemType.CUSTOM_PLACE);
         requestDTO.setTargetId(1L);
-        requestDTO.setRating((byte) 3);
+        requestDTO.setRating(3);
         requestDTO.setContents("Invalid type");
 
         assertThatThrownBy(() -> reviewService.createReview(user.getId(), requestDTO))
@@ -248,7 +251,7 @@ class ReviewServiceTest {
                 .hasMessageContaining("리뷰를 작성할 수 없는 itemType");
     }
 
-    private ReviewRequestDTO reviewRequest(Long targetId, byte rating) {
+    private ReviewRequestDTO reviewRequest(Long targetId, int rating) {
         ReviewRequestDTO requestDTO = new ReviewRequestDTO();
         requestDTO.setItemType(ItemType.DESTINATION);
         requestDTO.setTargetId(targetId);
