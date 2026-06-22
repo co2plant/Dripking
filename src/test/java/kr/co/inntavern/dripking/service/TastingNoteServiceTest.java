@@ -61,7 +61,7 @@ class TastingNoteServiceTest {
         assertThat(responseDTO.getTastedAt()).isEqualTo(LocalDate.of(2026, 6, 22));
         assertThat(responseDTO.getPlace().getName()).isEqualTo("전주 여행");
         assertThat(responseDTO.getPlace().getLat()).isEqualByComparingTo("35.8151000");
-        assertThat(responseDTO.getOverall()).isEqualTo((byte) 4);
+        assertThat(responseDTO.getOverall()).isEqualTo(4);
         assertThat(responseDTO.getAromaTags()).containsExactly("배", "꿀");
         assertThat(responseDTO.getPairing()).isEqualTo("전");
         assertThat(responseDTO.getMemo()).isEqualTo("배 향이 좋았다");
@@ -163,11 +163,11 @@ class TastingNoteServiceTest {
         requestDTO.setPlace(placeDTO);
 
         TastingNoteRequestDTO.RatingsDTO ratingsDTO = new TastingNoteRequestDTO.RatingsDTO();
-        ratingsDTO.setAppearance((byte) 4);
-        ratingsDTO.setAroma((byte) 5);
-        ratingsDTO.setPalate((byte) 4);
-        ratingsDTO.setFinish((byte) 4);
-        ratingsDTO.setOverall((byte) 4);
+        ratingsDTO.setAppearance(4);
+        ratingsDTO.setAroma(5);
+        ratingsDTO.setPalate(4);
+        ratingsDTO.setFinish(4);
+        ratingsDTO.setOverall(4);
         requestDTO.setRatings(ratingsDTO);
 
         TastingNoteRequestDTO.TagsDTO tagsDTO = new TastingNoteRequestDTO.TagsDTO();

@@ -3,6 +3,8 @@ package kr.co.inntavern.dripking.dto.response;
 import lombok.Getter;
 import lombok.Setter;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,11 +19,16 @@ public class TastingNoteResponseDTO {
     private String alcoholName;
     private LocalDate tastedAt;
     private PlaceDTO place;
-    private Byte appearance;
-    private Byte aroma;
-    private Byte palate;
-    private Byte finish;
-    private Byte overall;
+    @Schema(description = "색/질감 평점", example = "3", minimum = "1", maximum = "5")
+    private Integer appearance;
+    @Schema(description = "향 평점", example = "4", minimum = "1", maximum = "5")
+    private Integer aroma;
+    @Schema(description = "맛 평점", example = "4", minimum = "1", maximum = "5")
+    private Integer palate;
+    @Schema(description = "여운 평점", example = "3", minimum = "1", maximum = "5")
+    private Integer finish;
+    @Schema(description = "총점", example = "4", minimum = "1", maximum = "5")
+    private Integer overall;
     private List<String> aromaTags;
     private List<String> palateTags;
     private List<String> finishTags;

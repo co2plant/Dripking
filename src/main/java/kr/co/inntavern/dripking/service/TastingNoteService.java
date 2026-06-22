@@ -159,7 +159,7 @@ public class TastingNoteService {
         tastingNote.setOverall(resolveRating("총점", ratings.getOverall(), tastingNote.getOverall(), requireFullFields));
     }
 
-    private Byte resolveRating(String label, Byte nextRating, Byte currentRating, boolean requireFullFields) {
+    private Byte resolveRating(String label, Integer nextRating, Byte currentRating, boolean requireFullFields) {
         if (nextRating == null) {
             if (requireFullFields) {
                 throw new IllegalArgumentException(label + " 평점이 필요합니다.");
@@ -170,7 +170,7 @@ public class TastingNoteService {
         if (nextRating < 1 || nextRating > 5) {
             throw new IllegalArgumentException(label + " 평점은 1점에서 5점 사이여야 합니다.");
         }
-        return nextRating;
+        return nextRating.byteValue();
     }
 
     private Alcohol resolveAlcohol(Long alcoholId) {
@@ -282,11 +282,11 @@ public class TastingNoteService {
         responseDTO.setAlcoholName(tastingNote.getAlcoholName());
         responseDTO.setTastedAt(tastingNote.getTastedAt());
         responseDTO.setPlace(mapPlace(tastingNote));
-        responseDTO.setAppearance(tastingNote.getAppearance());
-        responseDTO.setAroma(tastingNote.getAroma());
-        responseDTO.setPalate(tastingNote.getPalate());
-        responseDTO.setFinish(tastingNote.getFinish());
-        responseDTO.setOverall(tastingNote.getOverall());
+        responseDTO.setAppearance(toInteger(tastingNote.getAppearance()));
+        responseDTO.setAroma(toInteger(tastingNote.getAroma()));
+        responseDTO.setPalate(toInteger(tastingNote.getPalate()));
+        responseDTO.setFinish(toInteger(tastingNote.getFinish()));
+        responseDTO.setOverall(toInteger(tastingNote.getOverall()));
         responseDTO.setAromaTags(List.copyOf(tastingNote.getAromaTags()));
         responseDTO.setPalateTags(List.copyOf(tastingNote.getPalateTags()));
         responseDTO.setFinishTags(List.copyOf(tastingNote.getFinishTags()));
@@ -297,6 +297,10 @@ public class TastingNoteService {
         responseDTO.setCreatedAt(tastingNote.getCreatedAt());
         responseDTO.setUpdatedAt(tastingNote.getUpdatedAt());
         return responseDTO;
+    }
+
+    private Integer toInteger(Byte value) {
+        return value == null ? null : value.intValue();
     }
 
     private TastingNoteResponseDTO.PlaceDTO mapPlace(TastingNote tastingNote) {

@@ -1,5 +1,6 @@
 package kr.co.inntavern.dripking.dto.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,11 +31,20 @@ public class TastingNoteRequestDTO {
     @Getter
     @Setter
     public static class RatingsDTO {
-        private Byte appearance;
-        private Byte aroma;
-        private Byte palate;
-        private Byte finish;
-        private Byte overall;
+        @Schema(description = "색/질감 평점", example = "3", minimum = "1", maximum = "5")
+        private Integer appearance;
+
+        @Schema(description = "향 평점", example = "4", minimum = "1", maximum = "5")
+        private Integer aroma;
+
+        @Schema(description = "맛 평점", example = "4", minimum = "1", maximum = "5")
+        private Integer palate;
+
+        @Schema(description = "여운 평점", example = "3", minimum = "1", maximum = "5")
+        private Integer finish;
+
+        @Schema(description = "총점", example = "4", minimum = "1", maximum = "5")
+        private Integer overall;
     }
 
     @Getter
