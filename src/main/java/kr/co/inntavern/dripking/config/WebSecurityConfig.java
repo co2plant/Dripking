@@ -101,6 +101,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/plans", "/api/plans/**").hasAuthority("ROLE_USER") // 플랜 관련
                         .requestMatchers("/api/trips", "/api/trips/**").hasAuthority("ROLE_USER") // 여행 관련
                         .requestMatchers("/api/wishlist", "/api/wishlist/**").hasAuthority("ROLE_USER") // 위시리스트 관련
+                        .requestMatchers("/api/tasting-notes", "/api/tasting-notes/**").hasAuthority("ROLE_USER") // 테이스팅 노트
                         .requestMatchers("/api/user/status").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN") // 사용자 상태 확인
                         .requestMatchers(HttpMethod.PATCH, "/api/user/profile").hasAuthority("ROLE_USER") // 프로필 수정
                         .requestMatchers(HttpMethod.POST, "/api/user/changePassword").hasAuthority("ROLE_USER") // 비밀번호 변경
