@@ -37,6 +37,9 @@ class DevSeedSqlTest {
         assertThat(sql).contains("Perf Destination", "Perf Distillery", "ZZZ Dummy Alcohol");
         assertThat(sql).contains("INSERT INTO destination");
         assertThat(sql).contains("INSERT INTO alcohol");
+        assertThat(sql).contains("INSERT INTO tasting_note");
+        assertThat(sql).contains("idx_tasting_note_user_recent", "idx_tasting_note_user_alcohol_recent");
+        assertThat(sql).contains("pg_trgm", "gin_trgm_ops");
     }
 
     @Test
