@@ -34,6 +34,16 @@ public interface DestinationRepository extends JpaRepository<Destination, Long> 
 
     List<Destination> findAllByLatitudeIsNotNullAndLongitudeIsNotNull();
 
+    @Query("""
+            SELECT d FROM Destination d
+            LEFT JOIN d.city city
+            WHERE (:categoryId IS NULL OR d.category.id = :categoryId)
+            AND (:countryId IS NULL OR city.country.id = :countryId)
+            """)
+    List<Destination> findRecommendationCandidates(@Param("categoryId") Long categoryId,
+                                                   @Param("countryId") Long countryId,
+                                                   Pageable pageable);
+
     long countByLatitudeIsNullOrLongitudeIsNull();
 
     @Query("SELECT new kr.co.inntavern.dripking.dto.response.dashboard.DestinationDashboardResponseDTO(" +

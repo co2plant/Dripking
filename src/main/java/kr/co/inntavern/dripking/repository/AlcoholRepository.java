@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -21,6 +22,18 @@ public interface AlcoholRepository extends JpaRepository<Alcohol, Long> {
 
     @Query("SELECT a FROM Alcohol a WHERE a.category.id = :category_id")
     Page<Alcohol> findAllByCategoryId(Pageable pageable, @Param("category_id")Long category_id);
+
+    @Query("""
+            SELECT a FROM Alcohol a
+            LEFT JOIN a.distillery distillery
+            LEFT JOIN distillery.destination destination
+            LEFT JOIN destination.city city
+            WHERE (:categoryId IS NULL OR a.category.id = :categoryId)
+            AND (:countryId IS NULL OR city.country.id = :countryId)
+            """)
+    List<Alcohol> findRecommendationCandidates(@Param("categoryId") Long categoryId,
+                                                @Param("countryId") Long countryId,
+                                                Pageable pageable);
 
     Alcohol save(Alcohol alcohol);
 
