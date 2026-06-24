@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -25,6 +26,17 @@ public interface DistilleryRepository extends JpaRepository<Distillery, Long> {
     Page<Distillery> findAllByNameContainingIgnoreCase(Pageable pageable, String name);
 
     List<Distillery> findAllByLatitudeIsNotNullAndLongitudeIsNotNull();
+
+    @Query("""
+            SELECT d FROM Distillery d
+            LEFT JOIN d.destination destination
+            LEFT JOIN destination.city city
+            WHERE (:categoryId IS NULL OR destination.category.id = :categoryId)
+            AND (:countryId IS NULL OR city.country.id = :countryId)
+            """)
+    List<Distillery> findRecommendationCandidates(@Param("categoryId") Long categoryId,
+                                                  @Param("countryId") Long countryId,
+                                                  Pageable pageable);
 
     long countByLatitudeIsNullOrLongitudeIsNull();
 
