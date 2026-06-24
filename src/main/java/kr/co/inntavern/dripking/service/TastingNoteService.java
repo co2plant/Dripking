@@ -50,8 +50,25 @@ public class TastingNoteService {
         requireUser(userId);
         Pageable pageable = PageRequest.of(Math.max(page, 0), normalizePageSize(size), resolveSort(sort));
         String normalizedKeyword = normalizeKeyword(keyword);
-        return tastingNoteRepository.searchByUser(userId, alcoholId, normalizedKeyword, pageable)
+        return searchTastingNotes(userId, alcoholId, normalizedKeyword, pageable)
                 .map(this::mapToResponseDTO);
+    }
+
+    private Page<TastingNote> searchTastingNotes(Long userId,
+                                                 Long alcoholId,
+                                                 String keyword,
+                                                 Pageable pageable) {
+        if (keyword == null) {
+            if (alcoholId == null) {
+                return tastingNoteRepository.findAllByUserId(userId, pageable);
+            }
+            return tastingNoteRepository.findAllByUserIdAndAlcoholId(userId, alcoholId, pageable);
+        }
+
+        if (alcoholId == null) {
+            return tastingNoteRepository.searchByUserKeyword(userId, keyword, pageable);
+        }
+        return tastingNoteRepository.searchByUserAndAlcoholKeyword(userId, alcoholId, keyword, pageable);
     }
 
     @Transactional(readOnly = true)

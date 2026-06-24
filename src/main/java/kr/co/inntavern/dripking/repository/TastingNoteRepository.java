@@ -14,18 +14,33 @@ import java.util.Optional;
 public interface TastingNoteRepository extends JpaRepository<TastingNote, Long> {
     Optional<TastingNote> findByIdAndUserId(Long id, Long userId);
 
+    Page<TastingNote> findAllByUserId(Long userId, Pageable pageable);
+
+    Page<TastingNote> findAllByUserIdAndAlcoholId(Long userId, Long alcoholId, Pageable pageable);
+
     @Query("""
             SELECT note FROM TastingNote note
             WHERE note.user.id = :userId
-            AND (:alcoholId IS NULL OR note.alcohol.id = :alcoholId)
-            AND (:keyword IS NULL
-                OR LOWER(note.alcoholName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+            AND (LOWER(note.alcoholName) LIKE LOWER(CONCAT('%', :keyword, '%'))
                 OR LOWER(COALESCE(note.placeName, '')) LIKE LOWER(CONCAT('%', :keyword, '%'))
                 OR LOWER(COALESCE(note.pairing, '')) LIKE LOWER(CONCAT('%', :keyword, '%'))
                 OR LOWER(COALESCE(note.memo, '')) LIKE LOWER(CONCAT('%', :keyword, '%')))
             """)
-    Page<TastingNote> searchByUser(@Param("userId") Long userId,
-                                   @Param("alcoholId") Long alcoholId,
-                                   @Param("keyword") String keyword,
-                                   Pageable pageable);
+    Page<TastingNote> searchByUserKeyword(@Param("userId") Long userId,
+                                          @Param("keyword") String keyword,
+                                          Pageable pageable);
+
+    @Query("""
+            SELECT note FROM TastingNote note
+            WHERE note.user.id = :userId
+            AND note.alcohol.id = :alcoholId
+            AND (LOWER(note.alcoholName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                OR LOWER(COALESCE(note.placeName, '')) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                OR LOWER(COALESCE(note.pairing, '')) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                OR LOWER(COALESCE(note.memo, '')) LIKE LOWER(CONCAT('%', :keyword, '%')))
+            """)
+    Page<TastingNote> searchByUserAndAlcoholKeyword(@Param("userId") Long userId,
+                                                    @Param("alcoholId") Long alcoholId,
+                                                    @Param("keyword") String keyword,
+                                                    Pageable pageable);
 }

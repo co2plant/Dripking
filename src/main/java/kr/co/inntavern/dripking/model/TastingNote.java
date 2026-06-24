@@ -9,6 +9,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OrderColumn;
@@ -28,7 +29,10 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "tasting_note")
+@Table(name = "tasting_note", indexes = {
+        @Index(name = "idx_tasting_note_user_recent", columnList = "user_id, tasted_at DESC, tasting_note_id DESC"),
+        @Index(name = "idx_tasting_note_user_alcohol_recent", columnList = "user_id, alcohol_id, tasted_at DESC, tasting_note_id DESC")
+})
 @EntityListeners(AuditingEntityListener.class)
 public class TastingNote {
     @Id

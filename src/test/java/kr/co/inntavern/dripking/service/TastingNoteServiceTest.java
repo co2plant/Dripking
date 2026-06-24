@@ -95,6 +95,86 @@ class TastingNoteServiceTest {
     }
 
     @Test
+    void listTastingNotesCanFilterByAlcoholWithoutKeywordSearch() {
+        User user = saveUser("tasting-alcohol-filter@example.com", "tasting-alcohol-filter");
+        Alcohol selectedAlcohol = saveAlcohol("Selected sake");
+        Alcohol otherAlcohol = saveAlcohol("Other sake");
+        TastingNoteResponseDTO selectedNote = tastingNoteService.createTastingNote(
+                user.getId(),
+                request(selectedAlcohol.getId(), null, "교토", null, "selected memo")
+        );
+        tastingNoteService.createTastingNote(
+                user.getId(),
+                request(otherAlcohol.getId(), null, "오사카", null, "other memo")
+        );
+
+        List<TastingNoteResponseDTO> notes = tastingNoteService.getTastingNotes(
+                user.getId(),
+                selectedAlcohol.getId(),
+                null,
+                0,
+                20,
+                "recent"
+        ).getContent();
+
+        assertThat(notes).extracting(TastingNoteResponseDTO::getId).containsExactly(selectedNote.getId());
+    }
+
+    @Test
+    void listTastingNotesSearchesKeywordOnlyWhenKeywordExists() {
+        User user = saveUser("tasting-keyword@example.com", "tasting-keyword");
+        TastingNoteResponseDTO match = tastingNoteService.createTastingNote(
+                user.getId(),
+                request(null, "Keyword bottle", "도쿄", null, "perfmatch memo")
+        );
+        tastingNoteService.createTastingNote(
+                user.getId(),
+                request(null, "Other bottle", "오사카", null, "ordinary memo")
+        );
+
+        List<TastingNoteResponseDTO> notes = tastingNoteService.getTastingNotes(
+                user.getId(),
+                null,
+                "perfmatch",
+                0,
+                20,
+                "recent"
+        ).getContent();
+
+        assertThat(notes).extracting(TastingNoteResponseDTO::getId).containsExactly(match.getId());
+    }
+
+    @Test
+    void listTastingNotesCanSearchKeywordWithinSelectedAlcohol() {
+        User user = saveUser("tasting-keyword-alcohol@example.com", "tasting-keyword-alcohol");
+        Alcohol selectedAlcohol = saveAlcohol("Keyword alcohol");
+        Alcohol otherAlcohol = saveAlcohol("Other keyword alcohol");
+        TastingNoteResponseDTO match = tastingNoteService.createTastingNote(
+                user.getId(),
+                request(selectedAlcohol.getId(), null, "도쿄", null, "perfmatch memo")
+        );
+        tastingNoteService.createTastingNote(
+                user.getId(),
+                request(selectedAlcohol.getId(), null, "교토", null, "ordinary memo")
+        );
+        tastingNoteService.createTastingNote(
+                user.getId(),
+                request(otherAlcohol.getId(), null, "나고야", null, "perfmatch memo")
+        );
+
+        List<TastingNoteResponseDTO> notes = tastingNoteService.getTastingNotes(
+                user.getId(),
+                selectedAlcohol.getId(),
+                "perfmatch",
+                0,
+                20,
+                "recent"
+        ).getContent();
+
+        assertThat(notes).extracting(TastingNoteResponseDTO::getId).containsExactly(match.getId());
+    }
+
+    @Test
     void updateTastingNoteRejectsNonOwner() {
         User owner = saveUser("tasting-owner-update@example.com", "tasting-owner-update");
         User other = saveUser("tasting-other-update@example.com", "tasting-other-update");
