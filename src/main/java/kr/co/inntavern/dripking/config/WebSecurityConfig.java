@@ -92,6 +92,7 @@ public class WebSecurityConfig {
                                 "/api/v3/api-docs" // 회원가입
                         ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/interaction-events").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/courses/generate").permitAll()
 
                         // --- USER 역할 필요 API ---
                         .requestMatchers(HttpMethod.POST, "/api/reviews").hasAuthority("ROLE_USER") // 리뷰 작성
