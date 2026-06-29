@@ -23,12 +23,18 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final CustomUserDetailsService customUserDetailsService;
     private final AuthorityRepository authorityRepository;
+    private final CreditService creditService;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, CustomUserDetailsService customUserDetailsService, AuthorityRepository authorityRepository) {
+    public UserService(UserRepository userRepository,
+                       BCryptPasswordEncoder passwordEncoder,
+                       CustomUserDetailsService customUserDetailsService,
+                       AuthorityRepository authorityRepository,
+                       CreditService creditService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.customUserDetailsService = customUserDetailsService;
         this.authorityRepository = authorityRepository;
+        this.creditService = creditService;
     }
 
     public boolean checkEmailDuplicate(String email){
@@ -106,7 +112,8 @@ public class UserService {
         user.setLocked(false);
         //isEmailVerified <- 조정 필요
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        creditService.grantSignupCredit(savedUser);
     }
 
     public User userSignIn(SignInRequest signInRequest) {

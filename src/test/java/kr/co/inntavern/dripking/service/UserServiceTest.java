@@ -1,10 +1,13 @@
 package kr.co.inntavern.dripking.service;
 
-import kr.co.inntavern.dripking.model.User;
 import kr.co.inntavern.dripking.dto.request.UserProfileUpdateRequestDTO;
+import kr.co.inntavern.dripking.dto.request.SignUpRequest;
+import kr.co.inntavern.dripking.model.Authority;
+import kr.co.inntavern.dripking.model.User;
 import kr.co.inntavern.dripking.repository.AuthorityRepository;
 import kr.co.inntavern.dripking.repository.UserRepository;
 import kr.co.inntavern.dripking.security.CustomUserDetailsService;
+import kr.co.inntavern.dripking.security.UserRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,13 +40,16 @@ class UserServiceTest {
     @Mock
     private AuthorityRepository authorityRepository;
 
+    @Mock
+    private CreditService creditService;
+
     private BCryptPasswordEncoder passwordEncoder;
     private UserService userService;
 
     @BeforeEach
     void setUp() {
         passwordEncoder = new BCryptPasswordEncoder();
-        userService = new UserService(userRepository, passwordEncoder, customUserDetailsService, authorityRepository);
+        userService = new UserService(userRepository, passwordEncoder, customUserDetailsService, authorityRepository, creditService);
     }
 
     @Test
@@ -109,6 +116,21 @@ class UserServiceTest {
         verify(userRepository).save(user);
     }
 
+    @Test
+    void userSignUpGrantsInitialCredit() {
+        SignUpRequest request = signUpRequest();
+        Authority userAuthority = Authority.builder().name(UserRole.USER).build();
+        User savedUser = new User();
+        savedUser.setId(10L);
+        savedUser.setEmail(request.getEmail());
+        when(authorityRepository.findAllByName(UserRole.USER)).thenReturn(List.of(userAuthority));
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+
+        userService.userSignUp(request);
+
+        verify(creditService).grantSignupCredit(savedUser);
+    }
+
     private User userWithPassword(String password) {
         User user = new User();
         user.setEmail(EMAIL);
@@ -120,5 +142,15 @@ class UserServiceTest {
         UserProfileUpdateRequestDTO requestDTO = new UserProfileUpdateRequestDTO();
         requestDTO.setNickname(nickname);
         return requestDTO;
+    }
+
+    private SignUpRequest signUpRequest() {
+        SignUpRequest request = new SignUpRequest();
+        request.setEmail("new-member@example.com");
+        request.setPassword("plainPasswordValue16");
+        request.setConfirmPassword("plainPasswordValue16");
+        request.setNickname("newMember");
+        request.setAgreeToTerms(true);
+        return request;
     }
 }
