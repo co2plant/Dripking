@@ -85,14 +85,20 @@ class CourseGenerationServiceTest {
 
         CourseGenerateResponseDTO responseDTO = courseGenerationService.generate(10L, requestDTO);
 
+        assertThat(responseDTO.getCourseId()).startsWith("draft_");
         assertThat(responseDTO.getGenerationMode()).isEqualTo("RECOMMENDATION_DRAFT");
         assertThat(responseDTO.getDurationDays()).isEqualTo(2);
         assertThat(responseDTO.getSourceItemCount()).isEqualTo(2);
+        assertThat(responseDTO.getCreditCharged()).isZero();
+        assertThat(responseDTO.getRemainingCredit()).isNull();
+        assertThat(responseDTO.isCacheHit()).isFalse();
         assertThat(responseDTO.getDays()).hasSize(2);
         assertThat(responseDTO.getDays().get(0).getPlans()).hasSize(1);
         assertThat(responseDTO.getDays().get(1).getPlans()).hasSize(1);
         assertThat(responseDTO.getDays().get(0).getPlans().getFirst().getSource()).isEqualTo("WISHLIST");
         assertThat(responseDTO.getDays().get(0).getPlans().getFirst().getName()).isEqualTo("저장한 여행지");
+        assertThat(responseDTO.getDays().get(0).getPlans().getFirst().getTime()).isEqualTo("09:00");
+        assertThat(responseDTO.getDays().get(0).getPlans().getFirst().getTravelMinutesFromPrev()).isZero();
         assertThat(responseDTO.getDays().get(1).getPlans().getFirst().getItemType()).isEqualTo(ItemType.ALCOHOL);
     }
 

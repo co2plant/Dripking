@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 public class CourseGenerateResponseDTO {
+    private String courseId;
     private String generationMode;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -18,6 +19,9 @@ public class CourseGenerateResponseDTO {
     private String regionHint;
     private int durationDays;
     private int sourceItemCount;
+    private int creditCharged;
+    private Integer remainingCredit;
+    private boolean cacheHit;
     private List<DayDTO> days = new ArrayList<>();
 
     @Getter
@@ -40,5 +44,7 @@ public class CourseGenerateResponseDTO {
         private float rating;
         private double score;
         private String source;
+        private String time;
+        private Integer travelMinutesFromPrev;
     }
 }

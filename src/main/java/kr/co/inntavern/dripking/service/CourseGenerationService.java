@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.temporal.ChronoUnit;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -27,11 +28,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.StringJoiner;
+import java.util.UUID;
 
 @Service
 public class CourseGenerationService {
     private static final int MAX_COURSE_DAYS = 7;
     private static final int MAX_PLANS_PER_DAY = 3;
+    private static final int FIRST_PLAN_HOUR = 9;
+    private static final int PLAN_INTERVAL_HOURS = 2;
     private static final String GENERATION_MODE = "RECOMMENDATION_DRAFT";
 
     private final CountryRepository countryRepository;
@@ -64,6 +69,7 @@ public class CourseGenerationService {
         List<CourseItem> sourceItems = mergeSourceItems(userId, requestDTO, country.getId(), durationDays);
 
         CourseGenerateResponseDTO responseDTO = new CourseGenerateResponseDTO();
+        responseDTO.setCourseId(buildDraftCourseId(requestDTO, country.getId(), sourceItems));
         responseDTO.setGenerationMode(GENERATION_MODE);
         responseDTO.setStartDate(requestDTO.getStartDate());
         responseDTO.setEndDate(requestDTO.getEndDate());
@@ -71,6 +77,9 @@ public class CourseGenerationService {
         responseDTO.setRegionHint(trimToNull(requestDTO.getRegionHint()));
         responseDTO.setDurationDays(durationDays);
         responseDTO.setSourceItemCount(sourceItems.size());
+        responseDTO.setCreditCharged(0);
+        responseDTO.setRemainingCredit(null);
+        responseDTO.setCacheHit(false);
         responseDTO.setDays(buildDays(requestDTO, durationDays, sourceItems));
         return responseDTO;
     }
@@ -246,6 +255,30 @@ public class CourseGenerationService {
         return value.trim();
     }
 
+    private String buildDraftCourseId(CourseGenerateRequestDTO requestDTO, Long countryId, List<CourseItem> sourceItems) {
+        StringJoiner sourceKeyJoiner = new StringJoiner(",");
+        for (CourseItem sourceItem : sourceItems) {
+            sourceKeyJoiner.add(sourceItem.key());
+        }
+
+        String rawId = String.join("|",
+                requestDTO.getStartDate().toString(),
+                requestDTO.getEndDate().toString(),
+                String.valueOf(countryId),
+                String.valueOf(trimToNull(requestDTO.getRegionHint())),
+                String.join(",", normalizedCategoryIds(requestDTO).stream().map(String::valueOf).toList()),
+                String.join(",", normalizedFlavorTags(requestDTO)),
+                String.join(",", normalizedWishlistItemIds(requestDTO).stream().map(String::valueOf).toList()),
+                sourceKeyJoiner.toString()
+        );
+        return "draft_" + UUID.nameUUIDFromBytes(rawId.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private static String planTime(int order) {
+        int hour = Math.min(21, FIRST_PLAN_HOUR + Math.max(0, order - 1) * PLAN_INTERVAL_HOURS);
+        return "%02d:00".formatted(hour);
+    }
+
     private record CourseItem(ItemType itemType,
                               Long targetId,
                               String name,
@@ -318,6 +351,8 @@ public class CourseGenerationService {
             planDTO.setRating(rating);
             planDTO.setScore(score);
             planDTO.setSource(source);
+            planDTO.setTime(planTime(order));
+            planDTO.setTravelMinutesFromPrev(order == 1 ? 0 : null);
             return planDTO;
         }
 
