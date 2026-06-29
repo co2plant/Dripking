@@ -26,6 +26,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -50,6 +52,9 @@ class CourseGenerationServiceTest {
     @Mock
     private RecommendationService recommendationService;
 
+    @Mock
+    private CreditService creditService;
+
     private CourseGenerationService courseGenerationService;
 
     @BeforeEach
@@ -60,7 +65,8 @@ class CourseGenerationServiceTest {
                 alcoholRepository,
                 destinationRepository,
                 distilleryRepository,
-                recommendationService
+                recommendationService,
+                creditService
         );
     }
 
@@ -82,6 +88,8 @@ class CourseGenerationServiceTest {
         when(destinationRepository.findById(200L)).thenReturn(Optional.of(savedDestination));
         when(recommendationService.getRecommendations(10L, 20L, "fresh,peaty", 1L, 6))
                 .thenReturn(recommendations);
+        when(creditService.chargeForCourseGeneration(eq(10L), anyString(), anyString()))
+                .thenReturn(new CreditService.GenerationCreditResult(10, 40));
 
         CourseGenerateResponseDTO responseDTO = courseGenerationService.generate(10L, requestDTO);
 
@@ -89,8 +97,8 @@ class CourseGenerationServiceTest {
         assertThat(responseDTO.getGenerationMode()).isEqualTo("RECOMMENDATION_DRAFT");
         assertThat(responseDTO.getDurationDays()).isEqualTo(2);
         assertThat(responseDTO.getSourceItemCount()).isEqualTo(2);
-        assertThat(responseDTO.getCreditCharged()).isZero();
-        assertThat(responseDTO.getRemainingCredit()).isNull();
+        assertThat(responseDTO.getCreditCharged()).isEqualTo(10);
+        assertThat(responseDTO.getRemainingCredit()).isEqualTo(40);
         assertThat(responseDTO.isCacheHit()).isFalse();
         assertThat(responseDTO.getDays()).hasSize(2);
         assertThat(responseDTO.getDays().get(0).getPlans()).hasSize(1);
@@ -100,6 +108,7 @@ class CourseGenerationServiceTest {
         assertThat(responseDTO.getDays().get(0).getPlans().getFirst().getTime()).isEqualTo("09:00");
         assertThat(responseDTO.getDays().get(0).getPlans().getFirst().getTravelMinutesFromPrev()).isZero();
         assertThat(responseDTO.getDays().get(1).getPlans().getFirst().getItemType()).isEqualTo(ItemType.ALCOHOL);
+        verify(creditService).chargeForCourseGeneration(eq(10L), anyString(), anyString());
     }
 
     @Test

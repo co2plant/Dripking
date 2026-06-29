@@ -239,6 +239,23 @@ class WebSecurityConfigTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void creditsRequireUserAuthority() throws Exception {
+        User user = saveUser("credits-security@example.com", "credits-security", "currentPassword16");
+        CustomUserDetails userDetails = userDetails(user);
+
+        mockMvc.perform(get("/api/credits"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(get("/api/credits")
+                        .with(user("admin").authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                .andExpect(status().isForbidden());
+
+        mockMvc.perform(get("/api/credits")
+                        .with(user(userDetails)))
+                .andExpect(status().isOk());
+    }
+
     private User saveUser(String email, String nickname, String password) {
         User user = new User();
         user.setEmail(email);

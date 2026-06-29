@@ -107,6 +107,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/api/user/profile").hasAuthority("ROLE_USER") // 프로필 수정
                         .requestMatchers(HttpMethod.POST, "/api/user/changePassword").hasAuthority("ROLE_USER") // 비밀번호 변경
                         .requestMatchers("/api/taste-profile", "/api/taste-profile/**").hasAuthority("ROLE_USER") // 취향 프로필
+                        .requestMatchers("/api/credits", "/api/credits/**").hasAuthority("ROLE_USER") // 크레딧
                         .requestMatchers("/api/dashboard", "/api/dashboard/**").hasAuthority("ROLE_ADMIN") // 레거시 관리자 대시보드 API
                         .requestMatchers("/api/admin", "/api/admin/**").hasAuthority("ROLE_ADMIN") // 관리자 API
 

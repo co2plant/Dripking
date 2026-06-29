@@ -45,31 +45,39 @@ public class CourseGenerationService {
     private final DestinationRepository destinationRepository;
     private final DistilleryRepository distilleryRepository;
     private final RecommendationService recommendationService;
+    private final CreditService creditService;
 
     public CourseGenerationService(CountryRepository countryRepository,
                                    WishlistItemRepository wishlistItemRepository,
                                    AlcoholRepository alcoholRepository,
                                    DestinationRepository destinationRepository,
                                    DistilleryRepository distilleryRepository,
-                                   RecommendationService recommendationService) {
+                                   RecommendationService recommendationService,
+                                   CreditService creditService) {
         this.countryRepository = countryRepository;
         this.wishlistItemRepository = wishlistItemRepository;
         this.alcoholRepository = alcoholRepository;
         this.destinationRepository = destinationRepository;
         this.distilleryRepository = distilleryRepository;
         this.recommendationService = recommendationService;
+        this.creditService = creditService;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public CourseGenerateResponseDTO generate(Long userId, CourseGenerateRequestDTO requestDTO) {
         validateRequest(requestDTO);
         int durationDays = durationDays(requestDTO);
         Country country = resolveCountry(requestDTO.getCountryName());
 
         List<CourseItem> sourceItems = mergeSourceItems(userId, requestDTO, country.getId(), durationDays);
+        String inputHash = buildCourseInputHash(requestDTO, country.getId(), sourceItems);
+        String courseId = "draft_" + inputHash;
+        CreditService.GenerationCreditResult creditResult = userId == null
+                ? null
+                : creditService.chargeForCourseGeneration(userId, courseId, inputHash);
 
         CourseGenerateResponseDTO responseDTO = new CourseGenerateResponseDTO();
-        responseDTO.setCourseId(buildDraftCourseId(requestDTO, country.getId(), sourceItems));
+        responseDTO.setCourseId(courseId);
         responseDTO.setGenerationMode(GENERATION_MODE);
         responseDTO.setStartDate(requestDTO.getStartDate());
         responseDTO.setEndDate(requestDTO.getEndDate());
@@ -77,8 +85,8 @@ public class CourseGenerationService {
         responseDTO.setRegionHint(trimToNull(requestDTO.getRegionHint()));
         responseDTO.setDurationDays(durationDays);
         responseDTO.setSourceItemCount(sourceItems.size());
-        responseDTO.setCreditCharged(0);
-        responseDTO.setRemainingCredit(null);
+        responseDTO.setCreditCharged(creditResult == null ? 0 : creditResult.creditCharged());
+        responseDTO.setRemainingCredit(creditResult == null ? null : creditResult.remainingCredit());
         responseDTO.setCacheHit(false);
         responseDTO.setDays(buildDays(requestDTO, durationDays, sourceItems));
         return responseDTO;
@@ -255,7 +263,7 @@ public class CourseGenerationService {
         return value.trim();
     }
 
-    private String buildDraftCourseId(CourseGenerateRequestDTO requestDTO, Long countryId, List<CourseItem> sourceItems) {
+    private String buildCourseInputHash(CourseGenerateRequestDTO requestDTO, Long countryId, List<CourseItem> sourceItems) {
         StringJoiner sourceKeyJoiner = new StringJoiner(",");
         for (CourseItem sourceItem : sourceItems) {
             sourceKeyJoiner.add(sourceItem.key());
@@ -271,7 +279,7 @@ public class CourseGenerationService {
                 String.join(",", normalizedWishlistItemIds(requestDTO).stream().map(String::valueOf).toList()),
                 sourceKeyJoiner.toString()
         );
-        return "draft_" + UUID.nameUUIDFromBytes(rawId.getBytes(StandardCharsets.UTF_8));
+        return UUID.nameUUIDFromBytes(rawId.getBytes(StandardCharsets.UTF_8)).toString();
     }
 
     private static String planTime(int order) {
