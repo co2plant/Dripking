@@ -46,6 +46,7 @@ public class CourseGenerationService {
     private final DistilleryRepository distilleryRepository;
     private final RecommendationService recommendationService;
     private final CreditService creditService;
+    private final CourseGenerationGateService courseGenerationGateService;
 
     public CourseGenerationService(CountryRepository countryRepository,
                                    WishlistItemRepository wishlistItemRepository,
@@ -53,7 +54,8 @@ public class CourseGenerationService {
                                    DestinationRepository destinationRepository,
                                    DistilleryRepository distilleryRepository,
                                    RecommendationService recommendationService,
-                                   CreditService creditService) {
+                                   CreditService creditService,
+                                   CourseGenerationGateService courseGenerationGateService) {
         this.countryRepository = countryRepository;
         this.wishlistItemRepository = wishlistItemRepository;
         this.alcoholRepository = alcoholRepository;
@@ -61,20 +63,31 @@ public class CourseGenerationService {
         this.distilleryRepository = distilleryRepository;
         this.recommendationService = recommendationService;
         this.creditService = creditService;
+        this.courseGenerationGateService = courseGenerationGateService;
     }
 
     @Transactional
     public CourseGenerateResponseDTO generate(Long userId, CourseGenerateRequestDTO requestDTO) {
+        return generate(userId, null, requestDTO);
+    }
+
+    @Transactional
+    public CourseGenerateResponseDTO generate(Long userId, String clientIp, CourseGenerateRequestDTO requestDTO) {
         validateRequest(requestDTO);
+        CourseGenerationGateService.GateContext gateContext = courseGenerationGateService.beforeGenerate(userId, clientIp, requestDTO);
         int durationDays = durationDays(requestDTO);
         Country country = resolveCountry(requestDTO.getCountryName());
 
         List<CourseItem> sourceItems = mergeSourceItems(userId, requestDTO, country.getId(), durationDays);
         String inputHash = buildCourseInputHash(requestDTO, country.getId(), sourceItems);
         String courseId = "draft_" + inputHash;
-        CreditService.GenerationCreditResult creditResult = userId == null
-                ? null
-                : creditService.chargeForCourseGeneration(userId, courseId, inputHash);
+        CreditService.GenerationCreditResult creditResult = null;
+        CourseGenerationGateService.GuestTrialStatus guestTrialStatus = null;
+        if (userId == null) {
+            guestTrialStatus = courseGenerationGateService.recordGuestGeneration(gateContext, courseId, inputHash);
+        } else {
+            creditResult = creditService.chargeForCourseGeneration(userId, courseId, inputHash, gateContext.estimatedCost());
+        }
 
         CourseGenerateResponseDTO responseDTO = new CourseGenerateResponseDTO();
         responseDTO.setCourseId(courseId);
@@ -87,6 +100,11 @@ public class CourseGenerationService {
         responseDTO.setSourceItemCount(sourceItems.size());
         responseDTO.setCreditCharged(creditResult == null ? 0 : creditResult.creditCharged());
         responseDTO.setRemainingCredit(creditResult == null ? null : creditResult.remainingCredit());
+        if (guestTrialStatus != null) {
+            responseDTO.setGuestTrialLimit(guestTrialStatus.trialLimit());
+            responseDTO.setGuestTrialUsed(guestTrialStatus.usedCount());
+            responseDTO.setGuestTrialRemaining(guestTrialStatus.remainingCount());
+        }
         responseDTO.setCacheHit(false);
         responseDTO.setDays(buildDays(requestDTO, durationDays, sourceItems));
         return responseDTO;

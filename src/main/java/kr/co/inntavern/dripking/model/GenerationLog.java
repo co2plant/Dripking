@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 @Setter
 @Table(name = "generation_log", indexes = {
         @Index(name = "idx_generation_log_user_created", columnList = "user_id,created_at"),
+        @Index(name = "idx_generation_log_anon_created", columnList = "anon_id,created_at"),
         @Index(name = "idx_generation_log_input_hash", columnList = "input_hash")
 })
 public class GenerationLog {

@@ -21,6 +21,9 @@ public class CourseGenerateResponseDTO {
     private int sourceItemCount;
     private int creditCharged;
     private Integer remainingCredit;
+    private Integer guestTrialLimit;
+    private Integer guestTrialUsed;
+    private Integer guestTrialRemaining;
     private boolean cacheHit;
     private List<DayDTO> days = new ArrayList<>();
 

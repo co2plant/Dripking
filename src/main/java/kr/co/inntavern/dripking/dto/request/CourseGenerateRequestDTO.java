@@ -16,6 +16,7 @@ public class CourseGenerateRequestDTO {
     private String regionHint;
     private TasteDTO taste = new TasteDTO();
     private List<Long> wishlistItemIds = new ArrayList<>();
+    private String anonId;
     private String captchaToken;
 
     @Getter

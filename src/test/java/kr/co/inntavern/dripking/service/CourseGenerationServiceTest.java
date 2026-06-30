@@ -20,14 +20,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -55,10 +59,15 @@ class CourseGenerationServiceTest {
     @Mock
     private CreditService creditService;
 
+    @Mock
+    private CourseGenerationGateService courseGenerationGateService;
+
     private CourseGenerationService courseGenerationService;
 
     @BeforeEach
     void setUp() {
+        lenient().when(courseGenerationGateService.beforeGenerate(any(), any(), any()))
+                .thenReturn(CourseGenerationGateService.GateContext.authenticated(BigDecimal.ZERO));
         courseGenerationService = new CourseGenerationService(
                 countryRepository,
                 wishlistItemRepository,
@@ -66,7 +75,8 @@ class CourseGenerationServiceTest {
                 destinationRepository,
                 distilleryRepository,
                 recommendationService,
-                creditService
+                creditService,
+                courseGenerationGateService
         );
     }
 
@@ -88,7 +98,7 @@ class CourseGenerationServiceTest {
         when(destinationRepository.findById(200L)).thenReturn(Optional.of(savedDestination));
         when(recommendationService.getRecommendations(10L, 20L, "fresh,peaty", 1L, 6))
                 .thenReturn(recommendations);
-        when(creditService.chargeForCourseGeneration(eq(10L), anyString(), anyString()))
+        when(creditService.chargeForCourseGeneration(eq(10L), anyString(), anyString(), eq(BigDecimal.ZERO)))
                 .thenReturn(new CreditService.GenerationCreditResult(10, 40));
 
         CourseGenerateResponseDTO responseDTO = courseGenerationService.generate(10L, requestDTO);
@@ -108,7 +118,7 @@ class CourseGenerationServiceTest {
         assertThat(responseDTO.getDays().get(0).getPlans().getFirst().getTime()).isEqualTo("09:00");
         assertThat(responseDTO.getDays().get(0).getPlans().getFirst().getTravelMinutesFromPrev()).isZero();
         assertThat(responseDTO.getDays().get(1).getPlans().getFirst().getItemType()).isEqualTo(ItemType.ALCOHOL);
-        verify(creditService).chargeForCourseGeneration(eq(10L), anyString(), anyString());
+        verify(creditService).chargeForCourseGeneration(eq(10L), anyString(), anyString(), eq(BigDecimal.ZERO));
     }
 
     @Test
@@ -132,6 +142,32 @@ class CourseGenerationServiceTest {
         courseGenerationService.generate(null, requestDTO);
 
         verify(recommendationService).getRecommendations(null, 20L, "fresh,peaty", 1L, 6);
+    }
+
+    @Test
+    void generateGuestRecordsTrialStatusWithoutChargingCredit() {
+        CourseGenerateRequestDTO requestDTO = request();
+        requestDTO.setAnonId("anon-1");
+        requestDTO.setCaptchaToken("dev-captcha");
+        Country japan = country(1L, "일본");
+        CourseGenerationGateService.GateContext gateContext =
+                new CourseGenerationGateService.GateContext("anon-1", BigDecimal.ZERO, 2, 1);
+        when(courseGenerationGateService.beforeGenerate(null, "127.0.0.1", requestDTO)).thenReturn(gateContext);
+        when(courseGenerationGateService.recordGuestGeneration(eq(gateContext), anyString(), anyString()))
+                .thenReturn(new CourseGenerationGateService.GuestTrialStatus(2, 2, 0));
+        when(countryRepository.findByName("일본")).thenReturn(japan);
+        when(recommendationService.getRecommendations(null, 20L, "fresh,peaty", 1L, 6))
+                .thenReturn(recommendations(recommendation(ItemType.ALCOHOL, 100L, "추천 술", 0.8)));
+
+        CourseGenerateResponseDTO responseDTO = courseGenerationService.generate(null, "127.0.0.1", requestDTO);
+
+        assertThat(responseDTO.getCreditCharged()).isZero();
+        assertThat(responseDTO.getRemainingCredit()).isNull();
+        assertThat(responseDTO.getGuestTrialLimit()).isEqualTo(2);
+        assertThat(responseDTO.getGuestTrialUsed()).isEqualTo(2);
+        assertThat(responseDTO.getGuestTrialRemaining()).isZero();
+        verify(courseGenerationGateService).recordGuestGeneration(eq(gateContext), anyString(), anyString());
+        verify(creditService, never()).chargeForCourseGeneration(any(), anyString(), anyString(), any());
     }
 
     private CourseGenerateRequestDTO request() {

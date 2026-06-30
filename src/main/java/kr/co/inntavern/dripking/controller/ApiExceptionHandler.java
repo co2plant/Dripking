@@ -1,6 +1,7 @@
 package kr.co.inntavern.dripking.controller;
 
 import kr.co.inntavern.dripking.service.InsufficientCreditException;
+import kr.co.inntavern.dripking.service.CourseGenerationGateException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,5 +36,17 @@ public class ApiExceptionHandler {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("error", error);
         return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(response);
+    }
+
+    @ExceptionHandler(CourseGenerationGateException.class)
+    public ResponseEntity<Map<String, Object>> handleCourseGenerationGateException(CourseGenerationGateException exception) {
+        Map<String, Object> error = new LinkedHashMap<>();
+        error.put("code", exception.getCode());
+        error.put("message", exception.getMessage());
+        error.put("detail", exception.getDetail().isEmpty() ? null : exception.getDetail());
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("error", error);
+        return ResponseEntity.status(exception.getStatus()).body(response);
     }
 }

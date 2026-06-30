@@ -1,5 +1,6 @@
 package kr.co.inntavern.dripking.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import kr.co.inntavern.dripking.dto.request.CourseGenerateRequestDTO;
 import kr.co.inntavern.dripking.dto.response.CourseGenerateResponseDTO;
 import kr.co.inntavern.dripking.security.CustomUserDetails;
@@ -23,8 +24,17 @@ public class CourseController {
     @PostMapping("/generate")
     public ResponseEntity<CourseGenerateResponseDTO> generateCourse(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestBody CourseGenerateRequestDTO requestDTO) {
+            @RequestBody CourseGenerateRequestDTO requestDTO,
+            HttpServletRequest request) {
         Long userId = customUserDetails == null ? null : customUserDetails.getId();
-        return ResponseEntity.ok(courseGenerationService.generate(userId, requestDTO));
+        return ResponseEntity.ok(courseGenerationService.generate(userId, clientIp(request), requestDTO));
+    }
+
+    private String clientIp(HttpServletRequest request) {
+        String forwardedFor = request.getHeader("X-Forwarded-For");
+        if (forwardedFor != null && !forwardedFor.isBlank()) {
+            return forwardedFor.split(",")[0].trim();
+        }
+        return request.getRemoteAddr();
     }
 }

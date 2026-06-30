@@ -72,6 +72,14 @@ public class CreditService {
 
     @Transactional
     public GenerationCreditResult chargeForCourseGeneration(Long userId, String courseId, String inputHash) {
+        return chargeForCourseGeneration(userId, courseId, inputHash, BigDecimal.ZERO);
+    }
+
+    @Transactional
+    public GenerationCreditResult chargeForCourseGeneration(Long userId,
+                                                            String courseId,
+                                                            String inputHash,
+                                                            BigDecimal estimatedCost) {
         User user = findUser(userId);
         UserCredit userCredit = getOrCreateCredit(user);
         if (userCredit.getBalance() < COURSE_GENERATION_COST) {
@@ -94,7 +102,7 @@ public class CreditService {
         generationLog.setCourseId(courseId);
         generationLog.setTokensIn(0);
         generationLog.setTokensOut(0);
-        generationLog.setEstCost(BigDecimal.ZERO);
+        generationLog.setEstCost(estimatedCost == null ? BigDecimal.ZERO : estimatedCost.max(BigDecimal.ZERO));
         generationLog.setSavedToTrip(false);
         generationLogRepository.save(generationLog);
 
